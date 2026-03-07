@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declare Family | Called. Equipped. Sent.</title>
+
+    <style>
+        /* 1. THE FOUNDATION */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px; 
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: #0a0a0a;
+            color: white;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* 2. NAVIGATION */
+        nav {
+            background: gold;
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+            color: black;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        /* 3. IMAGE STYLING */
+        .top-profile-pic {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid gold;
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .leader-pic {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid gold;
+            margin-bottom: 15px;
+            background: #222;
+        }
+
+        /* 4. THE CTA BUTTON STYLING */
+        .cta-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 15px 40px;
+            background: #25D366; /* WhatsApp Green */
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: white;
+            color: #25D366;
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 5. SECTIONS & LAYOUT */
+        header {
+            text-align: center;
+            padding: 150px 20px 100px 20px;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8));
+            background-size: cover;
+        }
+
+        header h1 { font-size: 60px; margin: 0; letter-spacing: 2px; }
+        .motto-text { font-size: 26px; color: gold; font-weight: bold; margin-top: 10px; }
+
+        section { padding: 80px 12%; border-bottom: 1px solid #1a1a1a; }
+        h2 { color: gold; margin-bottom: 30px; font-size: 36px; border-left: 5px solid gold; padding-left: 15px; }
+        h3 { color: gold; margin-top: 0; }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #121212;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #222;
+            transition: 0.4s;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card:hover { border-color: gold; transform: translateY(-5px); }
+        .reveal { opacity: 1 !important; transform: translateY(0) !important; }
+
+        .centered-identity { text-align: center; max-width: 800px; margin: 0 auto; }
+        
+        footer { background: black; text-align: center; padding: 50px; color: #777; border-top: 2px solid gold; }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#vision">Vision</a>
+        <a href="#programs">Programs</a>
+        <a href="#leaders">Leadership</a>
+    </nav>
+
+    <header id="home">
+        <img src="hero-image.jpg.jpeg" alt="Declare Family Center" class="top-profile-pic">
+        <h1>DECLARE FAMILY</h1>
+        <div class="motto-text">Called. Equipped. Sent.</div>
+        <a href="https://chat.whatsapp.com/FX30xp5GSbB5TR1v4jnZAf" target="_blank" class="cta-button">Join WhatsApp Group</a>
+    </header>
+
+    <section id="about">
+        <h2>About Declare Family</h2>
+        <p><strong>Declare Family</strong> is a vibrant youth-driven community committed to empowering young people to grow, lead, and create meaningful impact across every dimension of life.</p>
+        <p>We bring together passionate individuals who are determined to pursue growth not only spiritually, but also intellectually, socially, psychologically, and economically.</p>
+        <p>At the heart of Declare Family is the belief that young people thrive best within a supportive ecosystem where learning, collaboration, mentorship, and service intersect.</p>
+        <p>Declare Family is more than a gathering—it is a <strong>network of emerging leaders and change-makers</strong> committed to personal excellence and collective advancement.</p>
+    </section>
+
+    <section id="vision">
+        <div class="grid-3">
+            <div class="card">
+                <h3>Our Vision</h3>
+                <p>To cultivate a generation of visionary and purpose-driven young leaders who are empowered to positively influence society and contribute meaningfully to the advancement of their communities and the world.</p>
+            </div>
+            <div class="card">
+                <h3>Our Mission</h3>
+                <p>Our mission is to <strong>identify, nurture, and empower young people</strong> by providing an environment that fosters holistic growth, critical thinking, leadership development, and community engagement.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Our Core Values</h2>
+        <div class="grid-3">
+            <div class="card"><h3>Growth</h3><p>We believe in continuous intellectual, spiritual, and personal development.</p></div>
+            <div class="card"><h3>Unity</h3><p>We foster a culture of belonging, collaboration, and mutual support.</p></div>
+            <div class="card"><h3>Leadership</h3><p>We encourage initiative, responsibility, and visionary thinking.</p></div>
+            <div class="card"><h3>Integrity</h3><p>We uphold honesty, accountability, and ethical character.</p></div>
+            <div class="card"><h3>Impact</h3><p>We are committed to creating meaningful change within our communities.</p></div>
+        </div>
+    </section>
+
+    <section id="programs">
+        <h2>Our Programs & Activities</h2>
+        <p>Declare Family operates through carefully structured programs designed to inspire growth, dialogue, and meaningful engagement among young people.</p>
+        <div class="grid-3">
+            <div class="card"><h3>Scriptural Insight</h3><p>Weekly knowledge exchange exploring biblical teachings and everyday life.</p></div>
+            <div class="card"><h3>Daily Wisdom Capsules</h3><p>Short, impactful reflections for guidance and practical life insights.</p></div>
+            <div class="card"><h3>“Hot Seat” Series</h3><p>Dynamic Sunday discussion platform for pressing youth issues.</p></div>
+            <div class="card"><h3>Community Compassion</h3><p>Outreach programs dedicated to supporting vulnerable individuals.</p></div>
+            <div class="card"><h3>Strategic Prayer</h3><p>Moments of intentional reflection and collective spiritual alignment.</p></div>
+            <div class="card"><h3>Civic Support Projects</h3><p>Collaborative initiatives focused on community needs and volunteerism.</p></div>
+            <div class="card"><h3>Personal Excellence Forums</h3><p>Interactive sessions for leadership development and confidence building.</p></div>
+            <div class="card"><h3>Faith Engagement</h3><p>Strengthening the connection between youth and faith communities.</p></div>
+            <div class="card"><h3>Financial Intelligence</h3><p>Conversations on literacy, entrepreneurship, and wealth creation.</p></div>
+        </div>
+    </section>
+
+    <section id="leaders">
+        <h2>2026 / 2027 Declare Vision Pioneers</h2>
+        <div class="grid-3" style="text-align: center;">
+            <div class="card"><img src="Edana final.jpeg" alt="Tracy" class="leader-pic"><h3>Chief Visionary Steward</h3><p>Mary Tracy</p></div>
+            <div class="card"><img src="Gad final.png" alt="Gadner" class="leader-pic"><h3>Ministry Operations Architect</h3><p>Gadner Amos</p></div>
+            <div class="card"><img src="Goshen.jpg" alt="Goshen" class="leader-pic"><h3>Missions Coordinator</h3><p>Goshen Faithful</p></div>
+            <div class="card"><img src="lawy final.jpeg" alt="Lawrence" class="leader-pic"><h3>Resource Strategist</h3><p>Lawrence Owino</p></div>
+            <div class="card"><img src="ann.jpg" alt="Ann" class="leader-pic"><h3>Bible Study Facilitator</h3><p>Miss Ann</p></div>
+            <div class="card"><img src="Marvel final.png" alt="Marvel" class="leader-pic"><h3>Prayer & Intercession Lead</h3><p>Marvel Omondi</p></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Why Join Declare Family?</h2>
+        <div class="grid-3">
+            <div class="card"><h3>Investment in Growth</h3><p>An environment where young people discover their unique strengths.</p></div>
+            <div class="card"><h3>Meaningful Connections</h3><p>A supportive network of like-minded individuals.</p></div>
+            <div class="card"><h3>Leadership Development</h3><p>Develop abilities that extend into real-world opportunities.</p></div>
+            <div class="card"><h3>Holistic Empowerment</h3><p>Addressing spiritual, mental, and financial dimensions.</p></div>
+            <div class="card"><h3>Real Impact</h3><p>Participate in projects that transform communities.</p></div>
+            <div class="card"><h3>Platform for Purpose</h3><p>Sharpen your abilities and step into your role as a leader.</p></div>
+        </div>
+    </section>
+
+    <section class="centered-identity">
+        <h2>Our Identity</h2>
+        <p>At Declare Family, we believe that every young person carries the capacity to shape the future.</p>
+        <p><strong>They only need the right environment to discover it.</strong></p>
+        <p>That environment is <strong>Declare Family.</strong></p>
+        <div style="font-size: 32px; font-weight: bold; color: gold; margin-top: 30px;">
+            CALLED.<br>EQUIPPED.<br>SENT.
+        </div>
+        <a href="https://chat.whatsapp.com/FX30xp5GSbB5TR1v4jnZAf" target="_blank" class="cta-button">Join the WhatsApp Community</a>
+    </section>
+
+    <footer>
+        © 2026 Declare Family | Building a Generation of Leaders
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
