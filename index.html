@@ -61,14 +61,38 @@
             border-radius: 50%;
             border: 3px solid gold;
             margin-bottom: 15px;
-            background: #222; /* Placeholder color if image is missing */
+            background: #222;
         }
 
-        /* 4. SECTIONS & LAYOUT */
+        /* 4. THE CTA BUTTON STYLING */
+        .cta-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 15px 40px;
+            background: #25D366; /* WhatsApp Green */
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 50px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: white;
+            color: #25D366;
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 5. SECTIONS & LAYOUT */
         header {
             text-align: center;
             padding: 150px 20px 100px 20px;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('your-bg.jpg');
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8));
             background-size: cover;
         }
 
@@ -101,9 +125,7 @@
         .centered-identity { text-align: center; max-width: 800px; margin: 0 auto; }
         
         footer { background: black; text-align: center; padding: 50px; color: #777; border-top: 2px solid gold; }
-
     </style>
-    
 </head>
 
 <body>
@@ -120,6 +142,7 @@
         <img src="hero-image.jpg.jpeg" alt="Declare Family Center" class="top-profile-pic">
         <h1>DECLARE FAMILY</h1>
         <div class="motto-text">Called. Equipped. Sent.</div>
+        <a href="https://chat.whatsapp.com/FX30xp5GSbB5TR1v4jnZAf" target="_blank" class="cta-button">Join WhatsApp Group</a>
     </header>
 
     <section id="about">
@@ -172,45 +195,13 @@
 
     <section id="leaders">
         <h2>2026 / 2027 Declare Vision Pioneers</h2>
-        <p>The Vision Pioneers represent a dedicated leadership team entrusted with guiding the Declare Family community.</p>
         <div class="grid-3" style="text-align: center;">
-            
-            <div class="card">
-                <img src="Edana final.jpeg" alt="Tracy" class="leader-pic">
-                <h3>Chief Visionary Steward</h3>
-                <p>Mary Tracy</p>
-            </div>
-
-            <div class="card">
-                <img src="Gad final.png" alt="Gadner" class="leader-pic">
-                <h3>Ministry Operations Architect</h3>
-                <p>Gadner Amos</p>
-            </div>
-
-            <div class="card">
-                <img src="Goshen.jpg" alt="Goshen" class="leader-pic">
-                <h3>Missions Coordinator</h3>
-                <p>Goshen Faithful</p>
-            </div>
-
-            <div class="card">
-                <img src="lawy final.jpeg" alt="Lawrence" class="leader-pic">
-                <h3>Resource Strategist</h3>
-                <p>Lawrence Owino</p>
-            </div>
-
-            <div class="card">
-                <img src="ann.jpg" alt="Ann" class="leader-pic">
-                <h3>Bible Study Facilitator</h3>
-                <p>Miss Ann</p>
-            </div>
-
-            <div class="card">
-                <img src="Marvel final.png" alt="Marvel" class="leader-pic">
-                <h3>Prayer & Intercession Lead</h3>
-                <p>Marvel Omondi</p>
-            </div>
-
+            <div class="card"><img src="Edana final.jpeg" alt="Tracy" class="leader-pic"><h3>Chief Visionary Steward</h3><p>Mary Tracy</p></div>
+            <div class="card"><img src="Gad final.png" alt="Gadner" class="leader-pic"><h3>Ministry Operations Architect</h3><p>Gadner Amos</p></div>
+            <div class="card"><img src="Goshen.jpg" alt="Goshen" class="leader-pic"><h3>Missions Coordinator</h3><p>Goshen Faithful</p></div>
+            <div class="card"><img src="lawy final.jpeg" alt="Lawrence" class="leader-pic"><h3>Resource Strategist</h3><p>Lawrence Owino</p></div>
+            <div class="card"><img src="Ann.jpg" alt="Ann" class="leader-pic"><h3>Bible Study Facilitator</h3><p>Ann Gloria</p></div>
+            <div class="card"><img src="Marvel final.png" alt="Marvel" class="leader-pic"><h3>Prayer & Intercession Lead</h3><p>Marvel Omondi</p></div>
         </div>
     </section>
 
@@ -234,6 +225,7 @@
         <div style="font-size: 32px; font-weight: bold; color: gold; margin-top: 30px;">
             CALLED.<br>EQUIPPED.<br>SENT.
         </div>
+        <a href="https://chat.whatsapp.com/FX30xp5GSbB5TR1v4jnZAf" target="_blank" class="cta-button">Join the WhatsApp Community</a>
     </section>
 
     <footer>
@@ -251,6 +243,5 @@
 
         document.querySelectorAll('.card').forEach((el) => observer.observe(el));
     </script>
-
 </body>
 </html>
