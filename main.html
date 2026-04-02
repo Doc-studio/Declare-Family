@@ -32,6 +32,10 @@
             width: 100%;
             z-index: 1000;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         nav a {
@@ -41,6 +45,19 @@
             color: black;
             font-size: 14px;
             text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        /* Dashboard Link Highlight */
+        .nav-dashboard {
+            background: black;
+            color: gold !important;
+            padding: 5px 15px;
+            border-radius: 20px;
         }
 
         /* 3. IMAGE STYLING */
@@ -132,11 +149,13 @@
 
     <nav>
         <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#vision">Vision</a>
-    <a href="#programs">Programs</a>
-    <a href="#leaders">Leadership</a>
-    <a href="#" id="logoutBtn">Logout</a>
+        <a href="#about">About</a>
+        <a href="#vision">Vision</a>
+        <a href="#programs">Programs</a>
+        <a href="#leaders">Leadership</a>
+        <a href="dashboard.html" id="dashboardLink" class="nav-dashboard" style="display: none;">My Dashboard</a>
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="#" id="logoutBtn" style="display: none;">Logout</a>
     </nav>
 
     <header id="home">
@@ -234,6 +253,28 @@
     </footer>
 
     <script>
+        // --- 1. LOGIN STATE MANAGEMENT ---
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        const dashboardLink = document.getElementById("dashboardLink");
+        const loginLink = document.getElementById("loginLink");
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        if (loggedInUser) {
+            // User is logged in: Show Dashboard and Logout, Hide Login
+            dashboardLink.style.display = "inline-block";
+            logoutBtn.style.display = "inline-block";
+            loginLink.style.display = "none";
+        }
+
+        // --- 2. LOGOUT LOGIC ---
+        logoutBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            // Removes the correct session key used in login.html/dashboard.html
+            localStorage.removeItem("loggedInUser");
+            window.location.reload(); 
+        });
+
+        // --- 3. ANIMATION LOGIC ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -243,12 +284,6 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.card').forEach((el) => observer.observe(el));
-        
-   document.getElementById("logoutBtn").addEventListener("click", function() {
-    localStorage.removeItem("user");
-    window.location.href = "login.html";
-});     
-        
     </script>
 </body>
 </html>
