@@ -243,10 +243,12 @@
         }, { threshold: 0.1 });
 
         document.querySelectorAll('.card').forEach((el) => observer.observe(el));
- document.getElementById("logoutBtn").addEventListener("click", function() {
+        
+   document.getElementById("logoutBtn").addEventListener("click", function() {
     localStorage.removeItem("user");
     window.location.href = "login.html";
 });     
+        
     </script>
 </body>
 </html>
