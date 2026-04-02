@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Growth Academy | Declare Family</title>
+    <style>
+        :root { --gold: #ffd700; --dark: #0a0a0a; --card: #161616; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 40px; }
+        .header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 40px; }
+        .class-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .class-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; transition: 0.3s; }
+        .class-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .thumbnail { height: 160px; background: #222; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--gold); border-bottom: 1px solid #333; }
+        .content { padding: 20px; }
+        .tag { font-size: 10px; background: var(--gold); color: black; padding: 3px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+        .btn-watch { display: inline-block; margin-top: 15px; color: var(--gold); text-decoration: none; font-weight: bold; border: 1px solid var(--gold); padding: 8px 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Growth Academy</h1>
+        <p>Sharpening the mind. Building the character.</p>
+    </div>
+
+    <div class="class-grid">
+        <div class="class-card">
+            <div class="thumbnail" style="background: linear-gradient(45deg, #1a1a1a, #000);">LIVE TONIGHT @ 8PM</div>
+            <div class="content">
+                <span class="tag">Leadership</span>
+                <h3>The Architecture of Purpose</h3>
+                <p>A deep dive into aligning your daily habits with your long-term vision.</p>
+                <a href="#" class="btn-watch">Join Live Session</a>
+            </div>
+        </div>
+
+        <div class="class-card">
+            <div class="thumbnail">MASTERCLASS</div>
+            <div class="content">
+                <span class="tag">Finance</span>
+                <h3>Financial Intelligence 101</h3>
+                <p>Understanding savings, investments, and the mindset of wealth.</p>
+                <a href="#" class="btn-watch">Watch Recording</a>
+            </div>
+        </div>
+    </div>
+    <br><a href="hub.html" style="color: #777; text-decoration: none;">← Back to Hub</a>
+</body>
+</html>

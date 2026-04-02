@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Active Projects | Declare Family</title>
+    <style>
+        :root { --gold: #ffd700; --dark: #0a0a0a; --card: #121212; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; padding: 40px; }
+        .project-container { max-width: 900px; margin: 0 auto; }
+        .project-card { 
+            background: var(--card); 
+            border: 1px solid #222; 
+            border-radius: 15px; 
+            padding: 30px; 
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold);
+        }
+        h2 { color: var(--gold); margin-top: 0; }
+        .progress-bar { 
+            background: #222; 
+            height: 12px; 
+            border-radius: 10px; 
+            margin: 20px 0; 
+            overflow: hidden; 
+        }
+        .progress-fill { background: var(--gold); height: 100%; transition: 1s ease-in-out; }
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; font-size: 13px; color: #888; }
+        .btn-involved { 
+            background: transparent; border: 1px solid var(--gold); color: var(--gold); 
+            padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px;
+        }
+        .btn-involved:hover { background: var(--gold); color: black; }
+    </style>
+</head>
+<body>
+    <div class="project-container">
+        <h1 style="border-left: 5px solid gold; padding-left: 15px;">🚀 Active Projects</h1>
+        <p style="color: #888; margin-bottom: 40px;">Current initiatives driving the Declare Family vision forward.</p>
+
+        <div class="project-card">
+            <h2>Project Uplift: Civic Support</h2>
+            <p>Providing stationery and mentorship to 100+ students in local community schools.</p>
+            <div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div>
+            <div class="meta-grid">
+                <div><strong>Status:</strong> Execution Phase</div>
+                <div><strong>Lead:</strong> Goshen Faithful</div>
+                <div><strong>Target:</strong> June 2026</div>
+            </div>
+            <button class="btn-involved">Get Involved</button>
+        </div>
+
+        <div class="project-card">
+            <h2>Digital Literacy Drive</h2>
+            <p>Training members on media strategy, SEO, and content creation for modern leadership.</p>
+            <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+            <div class="meta-grid">
+                <div><strong>Status:</strong> Curriculum Dev</div>
+                <div><strong>Lead:</strong> Media Team</div>
+                <div><strong>Target:</strong> August 2026</div>
+            </div>
+            <button class="btn-involved">Register as Tutor</button>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="hub.html" style="color: gold; text-decoration: none;">← Return to Hub</a>
+    </div>
+</body>
+</html>

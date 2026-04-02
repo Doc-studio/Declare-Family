@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stewardship Portal | Declare Family</title>
+    <style>
+        :root {
+            --gold: #ffd700;
+            --dark-bg: #0a0a0a;
+            --card-bg: #121212;
+            --input-bg: #1a1a1a;
+            --text-gray: #b0b0b0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            line-height: 1.6;
+        }
+
+        .container {
+            padding: 40px 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Inspiration Header */
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('hero-image.jpg.jpeg');
+            background-size: cover;
+            border-radius: 15px;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .verse {
+            font-size: 0.9rem;
+            color: white;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .account-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        /* Pillars of Impact */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .pillar-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 3px solid var(--gold);
+            text-align: center;
+        }
+
+        .pillar-card h4 {
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+
+        .pillar-card p {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        /* Contribution Form */
+        .contribution-portal {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #222;
+        }
+
+        .form-title {
+            color: var(--gold);
+            margin-bottom: 25px;
+            border-left: 4px solid var(--gold);
+            padding-left: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .service-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background: #000;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-item input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .btn-submit {
+            grid-column: span 2;
+            background: var(--gold);
+            color: black;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        /* Ledger Table */
+        .ledger-section {
+            margin-top: 60px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--gold);
+            color: black;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        .empty-msg {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-gray);
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .btn-submit { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header-section">
+            <div class="quote">"True leadership is not found in what we take, but in the legacy we build through what we give."</div>
+            <div class="verse">"Each of you should give what you have decided in your heart to give... for God loves a cheerful giver." — 2 Corinthians 9:7</div>
+            <div class="account-badge">Steward: <span id="userAccountName">Loading...</span></div>
+        </div>
+
+        <h2 class="form-title">Pillars of Impact</h2>
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <h4>Kinship Shield</h4>
+                <p>Comprehensive welfare cover ensuring no member stands alone in times of need.</p>
+            </div>
+            <div class="pillar-card">
+                <h4>Harvest Mission</h4>
+                <p>Fueling our outreach ministry to impact communities and change lives.</p>
+            </div>
+            <div class="pillar-card">
+                <h4>Fortress Fund</h4>
+                <p>An emergency financial strategy designed for swift response and resilience.</p>
+            </div>
+            <div class="pillar-card">
+                <h4>Legacy Security</h4>
+                <p>Building long-term family financial security and economic empowerment.</p>
+            </div>
+            <div class="pillar-card">
+                <h4>Momentum Events</h4>
+                <p>Supporting transformative events and critical community activities.</p>
+            </div>
+        </div>
+
+        <div class="contribution-portal">
+            <h2 class="form-title">Contribution Portal</h2>
+            <form id="givingForm" class="form-grid">
+                <div>
+                    <label>Amount (Ksh)</label>
+                    <input type="number" id="amount" placeholder="Min. 100" min="100" required>
+                </div>
+
+                <div>
+                    <label>Designated Month</label>
+                    <select id="month" required>
+                        <option value="" disabled selected>Select Month</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label>Service Designation (Select up to 2)</label>
+                    <div class="service-options">
+                        <label class="checkbox-item"><input type="checkbox" name="service" value="Monthly Covenant"> Monthly Covenant</label>
+                        <label class="checkbox-item"><input type="checkbox" name="service" value="Kinship Shield"> Kinship Shield</label>
+                        <label class="checkbox-item"><input type="checkbox" name="service" value="Fortress Aid"> Fortress Aid</label>
+                        <label class="checkbox-item"><input type="checkbox" name="service" value="Foundation Stability"> Foundation Stability</label>
+                    </div>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label>Other Giving / Specific Vision Support</label>
+                    <textarea id="otherGiving" rows="2" placeholder="Tell us more about this specific contribution..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Confirm Contribution</button>
+            </form>
+        </div>
+
+        <div class="ledger-section">
+            <h2 class="form-title">My Giving Ledger</h2>
+            <table id="givingTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Month</th>
+                        <th>Designation</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="ledgerBody">
+                    <tr>
+                        <td colspan="4" class="empty-msg">No transactions recorded yet. Your first contribution will appear here.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a href="dashboard.html" class="back-link">← Return to Dashboard</a>
+
+    </div>
+
+    <script>
+        // 1. SECURITY & PERSONALIZATION
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+        if (!loggedInUser) {
+            window.location.href = "login.html";
+        } else {
+            document.getElementById("userAccountName").innerText = loggedInUser.name;
+        }
+
+        // 2. LIMIT CHECKBOX TO TWO OPTIONS
+        const checkboxes = document.querySelectorAll('input[name="service"]');
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const checked = document.querySelectorAll('input[name="service"]:checked');
+                if (checked.length > 2) {
+                    cb.checked = false;
+                    alert("Please select a maximum of two designations per transaction.");
+                }
+            });
+        });
+
+        // 3. HANDLE FORM SUBMISSION & LEDGER UPDATE
+        let firstTransaction = true;
+
+        document.getElementById("givingForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            const amount = document.getElementById("amount").value;
+            const month = document.getElementById("month").value;
+            const other = document.getElementById("otherGiving").value;
+            const selectedServices = Array.from(document.querySelectorAll('input[name="service"]:checked'))
+                                         .map(c => c.value);
+            
+            if (selectedServices.length === 0 && !other) {
+                alert("Please select a service or specify your giving.");
+                return;
+            }
+
+            const tableBody = document.getElementById("ledgerBody");
+            
+            // Remove the "Empty" message on the first successful payment
+            if (firstTransaction) {
+                tableBody.innerHTML = "";
+                firstTransaction = false;
+            }
+
+            // Create new entry
+            const newRow = tableBody.insertRow(0);
+            const today = new Date().toLocaleDateString('en-GB');
+            
+            newRow.innerHTML = `
+                <td>${today}</td>
+                <td>${month}</td>
+                <td>${selectedServices.join(", ") || "Other Support"}</td>
+                <td style="font-weight:bold; color:#25D366;">Ksh ${amount}</td>
+            `;
+
+            alert("Thank you for your faithful stewardship, " + loggedInUser.name + "!");
+            this.reset();
+        });
+    </script>
+</body>
+</html>

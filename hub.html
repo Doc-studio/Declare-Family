@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declare Hub | The Living Community</title>
+    <style>
+        :root {
+            --gold: #ffd700;
+            --dark-bg: #0a0a0a;
+            --card-bg: #121212;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: 280px;
+            background: black;
+            border-right: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            color: var(--gold);
+            font-size: 20px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .nav-group { margin-bottom: 25px; }
+        .nav-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--glass);
+            color: var(--gold);
+        }
+
+        .leader-access {
+            border: 1px dashed var(--gold);
+            margin-top: auto;
+            color: var(--gold);
+        }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: url('hero-image.jpg.jpeg'); /* Using your existing asset */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .overlay {
+            flex: 1;
+            background: rgba(10, 10, 10, 0.9);
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- TOP BAR --- */
+        .hub-header {
+            padding: 20px 40px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- INTERACTION FEED (The Chat/Community) --- */
+        .hub-body {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .feed-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #222;
+        }
+
+        .post-header { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); color: black; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .post-meta h5 { margin: 0; color: var(--gold); }
+        .post-meta span { font-size: 11px; color: #666; }
+
+        /* --- INTERACTIVE CHAT BOX --- */
+        .chat-input-area {
+            padding: 20px 40px;
+            background: #000;
+            display: flex;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .send-btn {
+            background: var(--gold);
+            color: black;
+            border: none;
+            padding: 0 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* --- SIDE INFO (Discovery Wing) --- */
+        .discovery-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-box {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .info-box h4 { margin-top: 0; color: var(--gold); text-transform: uppercase; font-size: 14px; }
+        .info-box p { font-size: 13px; color: #ccc; line-height: 1.5; }
+
+        .tag { font-size: 10px; background: var(--gold); color: black; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>DECLARE HUB</h2>
+        
+       <div class="nav-group">
+    <span class="nav-label">The Family Network</span>
+    <a href="hub.html" class="nav-item active">💬 Community Feed</a>
+    <a href="academy.html" class="nav-item">📚 Development Classes</a>
+    <a href="talents.html" class="nav-item">🎨 Talent Showcase</a>
+    <a href="faith.html" class="nav-item">🕊️ Prayer Room</a>
+</div>
+
+        <div class="nav-group">
+    <span class="nav-label">Archives</span>
+    <a href="projects.html" class="nav-item">🚀 Active Projects</a>
+    <a href="achievements.html" class="nav-item">🏆 Past Achievements</a>
+</div>
+
+        <div id="leaderSection" style="display: none; margin-top: auto;">
+            <span class="nav-label">Leadership Only</span>
+            <a href="leadership.html" class="nav-item leader-access">🛡️ Pioneer Dashboard</a>
+        </div>
+
+        <a href="dashboard.html" class="nav-item" style="margin-top: 10px;">⬅ Back to Portal</a>
+    </div>
+
+    <div class="main-content">
+        <div class="overlay">
+            
+            <div class="hub-header">
+                <div>
+                    <h3 style="margin:0;">Global Interaction</h3>
+                    <span id="onlineCount" style="color: #25D366; font-size: 12px;">● 12 Family Members Online</span>
+                </div>
+                <div id="userBadge" class="avatar">?</div>
+            </div>
+
+            <div class="hub-body">
+                <div class="feed-container" id="chatFeed">
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar">DF</div>
+                            <div class="post-meta">
+                                <h5>Declare Family Bot <span class="tag">System</span></h5>
+                                <span>Insight of the Day</span>
+                            </div>
+                        </div>
+                        <p>Welcome to the Hub! This is our deeper ecosystem for personal development, Bible study, and strategic interaction. Every member is a contributor here.</p>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar" style="background: #555;">T</div>
+                            <div class="post-meta">
+                                <h5>Mary Tracy <span class="tag">Pioneer</span></h5>
+                                <span>2 hours ago</span>
+                            </div>
+                        </div>
+                        <p>Our upcoming Bible Study session will focus on "The Architecture of Purpose." Prepare your insights! 📖</p>
+                    </div>
+                </div>
+
+                <div class="discovery-pane">
+                    <div class="info-box">
+                        <h4>About The Family</h4>
+                        <p>Declare Family is a youth-driven network of emerging leaders. We transition from simple gathering to a strategic family committed to intellectual and spiritual excellence.</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Current Project</h4>
+                        <p><strong>"Project Uplift"</strong>: Coordinating civic support for local education initiatives. 85% Funded.</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Occasional Discussions</h4>
+                        <p>Today's Topic: <em>"Navigating Career Ethics in the Digital Age."</em> Join the thread below!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <input type="text" id="messageInput" placeholder="Share an insight, prayer request, or talent with the family...">
+                <button class="send-btn" id="sendBtn">Send Message</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 1. SESSION & SECURITY
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+        if (!user) {
+            window.location.href = "login.html";
+        } else {
+            // Update UI with User info
+            document.getElementById("userBadge").innerText = user.name.charAt(0).toUpperCase();
+            
+            // 2. LEADERSHIP LOGIC
+            if (user.role === "leader" || user.role === "admin") {
+                document.getElementById("leaderSection").style.display = "block";
+            }
+        }
+
+        // 3. CHAT SIMULATION
+        const sendBtn = document.getElementById("sendBtn");
+        const messageInput = document.getElementById("messageInput");
+        const chatFeed = document.getElementById("chatFeed");
+
+        sendBtn.addEventListener("click", function() {
+            const msg = messageInput.value.trim();
+            if (msg === "") return;
+
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const newPost = `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="avatar" style="background:var(--gold); color:black;">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="post-meta">
+                            <h5>${user.name}</h5>
+                            <span>Just now</span>
+                        </div>
+                    </div>
+                    <p>${msg}</p>
+                </div>
+            `;
+
+            chatFeed.insertAdjacentHTML('afterbegin', newPost);
+            messageInput.value = "";
+            chatFeed.scrollTop = 0;
+        });
+
+        // Allow 'Enter' key to send
+        messageInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") sendBtn.click();
+        });
+    </script>
+</body>
+</html>
