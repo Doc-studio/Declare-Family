@@ -10,6 +10,7 @@
             --dark-bg: #0a0a0a;
             --card-bg: #121212;
             --glass: rgba(255, 255, 255, 0.05);
+            --online-green: #25D366;
         }
 
         body {
@@ -30,6 +31,7 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
+            z-index: 10;
         }
 
         .sidebar h2 {
@@ -72,14 +74,13 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: url('hero-image.jpg.jpeg'); /* Using your existing asset */
-            background-size: cover;
-            background-position: center;
+            background: #0a0a0a;
+            position: relative;
         }
 
         .overlay {
             flex: 1;
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(10, 10, 10, 0.95);
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(10px);
@@ -94,7 +95,17 @@
             align-items: center;
         }
 
-        /* --- INTERACTION FEED (The Chat/Community) --- */
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: var(--online-green);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            box-shadow: 0 0 10px var(--online-green);
+        }
+
+        /* --- INTERACTION FEED --- */
         .hub-body {
             flex: 1;
             padding: 30px 40px;
@@ -115,6 +126,12 @@
             border-radius: 12px;
             padding: 20px;
             border: 1px solid #222;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .post-header { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
@@ -128,6 +145,7 @@
             background: #000;
             display: flex;
             gap: 15px;
+            border-top: 1px solid #222;
         }
 
         input[type="text"] {
@@ -149,7 +167,7 @@
             cursor: pointer;
         }
 
-        /* --- SIDE INFO (Discovery Wing) --- */
+        /* --- SIDE INFO --- */
         .discovery-pane {
             display: flex;
             flex-direction: column;
@@ -174,26 +192,26 @@
     <div class="sidebar">
         <h2>DECLARE HUB</h2>
         
-       <div class="nav-group">
-    <span class="nav-label">The Family Network</span>
-    <a href="hub.html" class="nav-item active">💬 Community Feed</a>
-    <a href="academy.html" class="nav-item">📚 Development Classes</a>
-    <a href="talents.html" class="nav-item">🎨 Talent Showcase</a>
-    <a href="faith.html" class="nav-item">🕊️ Prayer Room</a>
-</div>
+        <div class="nav-group">
+            <span class="nav-label">The Family Network</span>
+            <a href="hub.html" class="nav-item active">💬 Community Feed</a>
+            <a href="academy.html" class="nav-item">📚 Development Classes</a>
+            <a href="talents.html" class="nav-item">🎨 Talent Showcase</a>
+            <a href="faith.html" class="nav-item">🕊️ Prayer Room</a>
+        </div>
 
         <div class="nav-group">
-    <span class="nav-label">Archives</span>
-    <a href="projects.html" class="nav-item">🚀 Active Projects</a>
-    <a href="achievements.html" class="nav-item">🏆 Past Achievements</a>
-</div>
+            <span class="nav-label">Archives</span>
+            <a href="projects.html" class="nav-item">🚀 Active Projects</a>
+            <a href="achievements.html" class="nav-item">🏆 Past Achievements</a>
+        </div>
 
         <div id="leaderSection" style="display: none; margin-top: auto;">
             <span class="nav-label">Leadership Only</span>
-            <a href="leadership.html" class="nav-item leader-access">🛡️ Pioneer Dashboard</a>
+            <a href="#" onclick="checkGate()" class="nav-item leader-access">🛡️ Pioneer Dashboard</a>
         </div>
 
-        <a href="Dashboard.html" class="nav-item" style="margin-top: 10px;">⬅ Back to Portal</a>
+        <a href="dashboard.html" class="nav-item" style="margin-top: 10px; border-top: 1px solid #333; padding-top: 15px;">⬅ Back to Portal</a>
     </div>
 
     <div class="main-content">
@@ -201,41 +219,22 @@
             
             <div class="hub-header">
                 <div>
-                    <h3 style="margin:0;">Global Interaction</h3>
-                    <span id="onlineCount" style="color: #25D366; font-size: 12px;">● 12 Family Members Online</span>
+                    <h3 style="margin:0;">Global Connection</h3>
+                    <span style="color: var(--online-green); font-size: 12px; font-weight: bold;">
+                        <span class="status-dot"></span> <span id="trueOnlineCount">0</span> Member(s) Online
+                    </span>
                 </div>
                 <div id="userBadge" class="avatar">?</div>
             </div>
 
             <div class="hub-body">
                 <div class="feed-container" id="chatFeed">
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div class="avatar">DF</div>
-                            <div class="post-meta">
-                                <h5>Declare Family Bot <span class="tag">System</span></h5>
-                                <span>Insight of the Day</span>
-                            </div>
-                        </div>
-                        <p>Welcome to the Hub! This is our deeper ecosystem for personal development, Bible study, and strategic interaction. Every member is a contributor here.</p>
                     </div>
-
-                    <div class="post-card">
-                        <div class="post-header">
-                            <div class="avatar" style="background: #555;">T</div>
-                            <div class="post-meta">
-                                <h5>Mary Tracy <span class="tag">Pioneer</span></h5>
-                                <span>2 hours ago</span>
-                            </div>
-                        </div>
-                        <p>Our upcoming Bible Study session will focus on "The Architecture of Purpose." Prepare your insights! 📖</p>
-                    </div>
-                </div>
 
                 <div class="discovery-pane">
                     <div class="info-box">
                         <h4>About The Family</h4>
-                        <p>Declare Family is a youth-driven network of emerging leaders. We transition from simple gathering to a strategic family committed to intellectual and spiritual excellence.</p>
+                        <p>Declare Family is a youth-driven network of emerging leaders committed to excellence.</p>
                     </div>
 
                     <div class="info-box">
@@ -243,15 +242,20 @@
                         <p><strong>"Project Uplift"</strong>: Coordinating civic support for local education initiatives. 85% Funded.</p>
                     </div>
 
-                    <div class="info-box">
-                        <h4>Occasional Discussions</h4>
-                        <p>Today's Topic: <em>"Navigating Career Ethics in the Digital Age."</em> Join the thread below!</p>
-                    </div>
+                   <div class="info-box">
+    <h4>Daily Topic</h4>
+    <p>Topic: <em>"Navigating Career Ethics in the Digital Age."</em> 
+       <br><br>
+       <a href="#" onclick="checkGate()" style="color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px solid var(--gold); padding-bottom: 2px; cursor: pointer;">
+       👉 Join the Thread
+       </a>
+    </p>
+</div>
                 </div>
             </div>
 
             <div class="chat-input-area">
-                <input type="text" id="messageInput" placeholder="Share an insight, prayer request, or talent with the family...">
+                <input type="text" id="messageInput" placeholder="Share an insight or prayer request...">
                 <button class="send-btn" id="sendBtn">Send Message</button>
             </div>
 
@@ -259,54 +263,156 @@
     </div>
 
     <script>
-        // 1. SESSION & SECURITY
+        // --- LEADERSHIP REGISTRY ---
+        const leadershipRegistry = {
+            "DF-2026-124": "Markfire Prince"
+        };
+
+        // 1. SESSION & INITIALIZATION
         const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
-        if (!user) {
-            window.location.href = "login.html";
-        } else {
-            // Update UI with User info
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Update Header
             document.getElementById("userBadge").innerText = user.name.charAt(0).toUpperCase();
             
-            // 2. LEADERSHIP LOGIC
-            if (user.role === "leader" || user.role === "admin") {
+            // Handle Leader Visibility based on Role or Registry ID
+            if (user.role === "leader" || user.role === "admin" || leadershipRegistry[user.id]) {
                 document.getElementById("leaderSection").style.display = "block";
+            }
+
+            // Run Systems
+            initializeBot();
+            setupChat();
+            updatePresence(); 
+            
+            // Presence Heartbeat: Every 5 seconds
+            setInterval(updatePresence, 5000);
+        });
+
+        // --- GATEKEEPER LOGIC ---
+        function checkGate() {
+            if (!user) {
+                const idInput = prompt("ENTER MEMBER ID NUMBER:");
+                if (!idInput) return;
+                
+                const newUser = {
+                    id: idInput,
+                    name: leadershipRegistry[idInput] || "Declare Member",
+                    role: leadershipRegistry[idInput] ? "admin" : "member"
+                };
+                localStorage.setItem("loggedInUser", JSON.stringify(newUser));
+                window.location.reload();
+                return;
+            }
+
+            // Redirect based on ID Clearance
+            if (leadershipRegistry[user.id]) {
+                window.location.href = "leadership.html";
+            } else {
+                window.location.href = "thread.html";
             }
         }
 
-        // 3. CHAT SIMULATION
-        const sendBtn = document.getElementById("sendBtn");
-        const messageInput = document.getElementById("messageInput");
-        const chatFeed = document.getElementById("chatFeed");
+        // 2. TRUE ONLINE COUNTER SYSTEM
+        function updatePresence() {
+            let presenceMap = JSON.parse(localStorage.getItem("presenceMap")) || {};
+            const now = Date.now();
 
-        sendBtn.addEventListener("click", function() {
-            const msg = messageInput.value.trim();
-            if (msg === "") return;
+            presenceMap[user.email || user.id] = now;
 
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            const newPost = `
-                <div class="post-card">
+            let activeCount = 0;
+            for (let id in presenceMap) {
+                if (now - presenceMap[id] < 20000) { 
+                    activeCount++;
+                } else {
+                    delete presenceMap[id];
+                }
+            }
+
+            localStorage.setItem("presenceMap", JSON.stringify(presenceMap));
+            document.getElementById("trueOnlineCount").innerText = activeCount;
+        }
+
+        // 3. DECLARE FAMILY BOT SYSTEM
+        function initializeBot() {
+            const chatFeed = document.getElementById("chatFeed");
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('en-GB', options);
+
+            const dailyBotContent = [
+                {
+                    verse: "Proverbs 29:18 - 'Where there is no vision, the people perish.'",
+                    motion: "Write down your top 3 goals for this month and share one below."
+                },
+                {
+                    verse: "Matthew 5:14 - 'You are the light of the world.'",
+                    motion: "Encourage one fellow member privately or in the feed today."
+                },
+                {
+                    verse: "Philippians 4:13 - 'I can do all things through Christ who strengthens me.'",
+                    motion: "Identify the biggest obstacle in your current project and tackle it first."
+                }
+            ];
+
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const content = dailyBotContent[dayOfYear % dailyBotContent.length];
+
+            const botPost = `
+                <div class="post-card" style="border: 2px solid var(--gold); background: rgba(255, 215, 0, 0.05);">
                     <div class="post-header">
-                        <div class="avatar" style="background:var(--gold); color:black;">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="avatar" style="background: black; color: var(--gold); border: 1px solid var(--gold);">DF</div>
                         <div class="post-meta">
-                            <h5>${user.name}</h5>
-                            <span>Just now</span>
+                            <h5>Declare Family Bot <span class="tag">SYSTEM</span></h5>
+                            <span style="color: var(--gold); font-weight: bold;">${dateString}</span>
                         </div>
                     </div>
-                    <p>${msg}</p>
+                    <div style="padding: 10px; border-left: 3px solid var(--gold); margin-bottom: 10px; font-style: italic;">
+                        "${content.verse}"
+                    </div>
+                    <p><strong>Today's Momentum Motion:</strong> ${content.motion}</p>
                 </div>
             `;
+            chatFeed.innerHTML = botPost;
+        }
 
-            chatFeed.insertAdjacentHTML('afterbegin', newPost);
-            messageInput.value = "";
-            chatFeed.scrollTop = 0;
-        });
+        // 4. CHAT SYSTEM
+        function setupChat() {
+            const sendBtn = document.getElementById("sendBtn");
+            const messageInput = document.getElementById("messageInput");
+            const chatFeed = document.getElementById("chatFeed");
 
-        // Allow 'Enter' key to send
-        messageInput.addEventListener("keypress", function(e) {
-            if (e.key === "Enter") sendBtn.click();
-        });
+            sendBtn.addEventListener("click", function() {
+                const msg = messageInput.value.trim();
+                if (msg === "") return;
+
+                const newPost = `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar" style="background:var(--gold); color:black;">${user.name.charAt(0).toUpperCase()}</div>
+                            <div class="post-meta">
+                                <h5>${user.name}</h5>
+                                <span>Just now</span>
+                            </div>
+                        </div>
+                        <p>${msg}</p>
+                    </div>
+                `;
+
+                chatFeed.insertAdjacentHTML('afterbegin', newPost);
+                messageInput.value = "";
+                chatFeed.scrollTop = 0;
+            });
+
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") sendBtn.click();
+            });
+        }
     </script>
 </body>
 </html>
