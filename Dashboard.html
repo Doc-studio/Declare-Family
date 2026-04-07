@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Declare Family</title>
+    <style>
+
+    :root {
+        --gold: #ffd700;
+        --dark-bg: #0a0a0a;
+        --card-bg: #121212;
+        --red: #ff4d4d;
+        --green: #00ff94;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background: var(--dark-bg);
+        color: white;
+    }
+
+    .container {
+        padding: 40px 5%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* --- BOLD/BRIGHT HOVER STRATEGY --- */
+    .card {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 15px;
+        border: 1px solid #222;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+    }
+
+    .card:hover {
+        border-color: var(--gold);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(255, 215, 0, 0.15);
+        background: rgba(255, 215, 0, 0.02);
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--gold);
+        border: none;
+        border-radius: 8px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: white;
+        box-shadow: 0 0 15px var(--gold);
+    }
+
+    /* --- DYNAMIC STATUS COLORS --- */
+    .status-active { color: var(--green) !important; font-weight: bold; text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
+    .status-inactive { color: var(--red) !important; font-weight: bold; text-shadow: 0 0 10px rgba(255, 77, 77, 0.3); }
+
+    /* --- AUTOMATIC DEVICE DETECTION --- */
+    @media (min-width: 769px) {
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .container { padding: 20px; }
+        .user-header h2 { font-size: 1.5rem; }
+    }
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background: var(--dark-bg);
+        color: white;
+        padding-top: 60px; /* Adds space so the header isn't under the nav */
+    }
+
+    /* --- TOP NAVIGATION BAR --- */
+    nav {
+        background: var(--gold);
+        padding: 12px 5%;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    nav a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+</head>
+<body>
+
+    <div class="user-header" style="text-align: center; margin-top: 40px; padding: 0 20px;">
+        <img src="hero-image.jpg.jpeg" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 15px; object-fit: cover;">
+        <h2 id="welcomeName" style="margin: 0; font-size: 2rem;">Shalom, Family Member</h2>
+        <p id="userRole" style="color: #888; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">DECLARE PIONEER</p>
+    </div>
+
+    <div class="container">
+        
+        <div class="section-title">Verified Identity</div>
+        <div class="card" style="border: 1px solid var(--gold); background: linear-gradient(145deg, #111 0%, #000 100%); margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <p style="margin: 0; font-size: 0.7rem; color: #555; letter-spacing: 1px;">MEMBER SERIAL</p>
+                    <h3 id="memberID" style="margin: 5px 0; font-family: 'Courier New', monospace; font-size: 1.5rem; color: var(--gold);">DF-2026/...</h3>
+                </div>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=VERIFIED-MEMBER" style="width: 45px; height: 45px; filter: invert(1) opacity(0.6);">
+            </div>
+            <p style="margin: 10px 0 0 0; font-size: 0.7rem; color: #00ff94; font-weight: bold;">● SYSTEM ACTIVE</p>
+        </div>
+
+        <div class="section-title">Ecosystem Access</div>
+        <div class="grid">
+            <div class="card">
+                <h4>💳 Subscription</h4>
+                <p>Manage your monthly access and partner with the vision.</p>
+                <button class="btn" onclick="window.location.href='subscriptions.html'">Manage Giving</button>
+            </div>
+
+            <div class="card">
+                <h4>🌐 Declare Hub</h4>
+                <p>Enter the heart of the family. Classes, talents, and interaction.</p>
+                <button class="btn" onclick="window.location.href='hub.html'">Enter Hub</button>
+            </div>
+
+            <div class="card">
+                <h4>🎓 Academy</h4>
+                <p>Access your media and broadcast production units.</p>
+                <button class="btn btn-outline" onclick="window.location.href='academy.html'">Open Classroom</button>
+            </div>
+
+            <div id="leaderPanel" class="card" style="display:none; border-color: gold;">
+                <h4>👑 Leadership</h4>
+                <p>Private tools for 2026/2027 Vision Pioneers.</p>
+                <button class="btn">Admin Access</button>
+            </div>
+        </div>
+
+        <div class="section-title">Account Status</div>
+        <div class="grid">
+            <div class="card" style="text-align: center; padding: 15px;">
+                <p style="margin-bottom: 5px;">Your Role</p>
+                <span class="status-value" id="displayRole" style="color: var(--gold);">Member</span>
+            </div>
+
+            <div class="card" style="text-align: center; padding: 15px;">
+                <p style="margin-bottom: 5px;">Payment</p>
+                <span class="status-value" id="displaySub">Inactive</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-bottom: 40px;">
+            <button id="logout" style="background: none; border: 1px solid #333; color: #555; padding: 10px 30px; border-radius: 8px; cursor: pointer;">Logout Securely</button>
+        </div>
+
+    </div>
+
+    <script>
+    window.onload = function() {
+    // 1. SETUP: Get user data
+    let session = JSON.parse(localStorage.getItem("loggedInUser"));
+    let allUsers = JSON.parse(localStorage.getItem("users")) || [];
+    
+    // UI Elements
+    const nameDisplay = document.getElementById("welcomeName");
+    const memberIDElement = document.getElementById("memberID");
+    const roleDisplay = document.getElementById("displayRole");
+    const subDisplay = document.getElementById("displaySub"); // The subscription text
+
+    // Security Check
+    if (!session) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Find the specific user profile
+    let userIndex = allUsers.findIndex(u => u.email === session.email);
+    let currentUser = allUsers[userIndex];
+
+    if (currentUser) {
+        // 2. NAME & ROLE IDENTIFICATION
+        nameDisplay.innerText = "Shalom, " + (currentUser.name || "Family Member");
+        if(roleDisplay) {
+            roleDisplay.innerText = currentUser.role || "Member";
+        }
+
+        // 3. AUTOMATIC SUBSCRIPTION CHECK (Green/Red Logic)
+        if (currentUser.expiryDate) {
+            const today = new Date();
+            const expiry = new Date(currentUser.expiryDate);
+
+            if (expiry > today) {
+                // SUCCESS: Subscription is active
+                subDisplay.innerText = "ACTIVE";
+                subDisplay.className = "status-active"; // Turns Green
+            } else {
+                // EXPIRED: Date has passed
+                subDisplay.innerText = "EXPIRED";
+                subDisplay.className = "status-inactive"; // Turns Red
+            }
+        } else {
+            // NEVER PAID: Default state
+            subDisplay.innerText = "INACTIVE";
+            subDisplay.className = "status-inactive"; // Turns Red
+        }
+
+        // 4. SECURE ID CRAFT (Short & Smart)
+        if (!currentUser.memberID) {
+            const names = (currentUser.name || "User").split(" ");
+            let initials = names[0].charAt(0); 
+            if (names.length > 1) {
+                initials += names[names.length - 1].charAt(0);
+            }
+            initials = initials.toUpperCase();
+
+            const smartSum = currentUser.email.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            const shortCode = (smartSum % 900) + 100;
+
+            currentUser.memberID = `DF-2026-${shortCode}/${initials}`;
+            
+            // Save newly generated ID to the master list
+            allUsers[userIndex] = currentUser;
+            localStorage.setItem("users", JSON.stringify(allUsers));
+        }
+
+        if (memberIDElement) {
+            memberIDElement.innerText = currentUser.memberID;
+        }
+    }
+    
+    // 5. LOGOUT LOGIC
+    document.getElementById('logout').onclick = function() {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login.html";
+    };
+};
+    </script>
+</body>
+<body>
+    <nav>
+        <a href="main.html">← Back to Main Website</a>
+        <span style="color: black; font-size: 0.7rem; letter-spacing: 2px;">DECLARE DASHBOARD</span>
+    </nav>
+</html>
