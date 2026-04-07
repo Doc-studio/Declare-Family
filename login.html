@@ -87,31 +87,35 @@ a {
 </div>
 
 <script>
-// Handle Login
+// Handle Login Logic
 document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    // Get users from localStorage
+    // 1. Retrieve the registered users database
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // Find matching user
+    // 2. Find matching user credentials
     const user = users.find(u => u.email === email && u.password === password);
 
     if (!user) {
-        alert("Invalid email or password!");
+        alert("Access Denied: Invalid email or password!");
         return;
     }
 
-    // Save logged in user (session)
+    // 3. Establish the session (Save current logged-in user)
+    // This allows the profile page to know WHO is logged in
     localStorage.setItem("loggedInUser", JSON.stringify(user));
 
-    alert("Login successful!");
-
-    // Redirect to dashboard
-    window.location.href = "main.html";
+   // 4. THE REDIRECT ROUTER
+    if (user.role === "admin" || user.role === "leader") {
+        console.log("Leadership Session Detected...");
+        window.location.href = "leadership.html"; // Updated to match your filename
+    } else {
+        window.location.href = "main.html";
+    }
 });
 </script>
 
