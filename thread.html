@@ -12,11 +12,19 @@
             --text-main: #E1E1E1; --text-dim: #88888E; --green: #00FF94;
         }
 
+        /* --- GLOBAL & SCROLLING --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: #000; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; height: 100vh; display: flex; overflow: hidden; }
+        
+        body { 
+            background: #000; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; height: 100vh; display: flex; overflow: hidden; 
+        }
 
         /* --- NAVIGATION SIDEBAR --- */
-        .nav-sidebar { width: 260px; background: #000; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; }
+        .nav-sidebar { 
+            width: 260px; background: #000; border-right: 1px solid var(--border); 
+            display: flex; flex-direction: column; padding: 20px; transition: 0.3s;
+        }
         .nav-brand { color: var(--gold); font-weight: 800; font-size: 18px; letter-spacing: 2px; margin-bottom: 30px; text-align: center; border: 1px solid var(--gold); padding: 5px; }
         .nav-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 1.5px; margin: 20px 0 10px; display: block; }
         .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; color: var(--text-dim); text-decoration: none; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; }
@@ -35,6 +43,7 @@
             background: #000;
             overflow-y: auto;
             align-content: start;
+            -webkit-overflow-scrolling: touch; /* Professional mobile scroll */
         }
 
         .participant-box {
@@ -70,20 +79,50 @@
         }
 
         /* --- TOOLS & OPS --- */
-        .tool-grid { padding: 15px 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; border-top: 1px solid var(--border); }
+        .tool-grid { padding: 15px 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; border-top: 1px solid var(--border); background: #000; }
         .tool-btn { background: var(--panel); border: 1px solid var(--border); color: var(--text-dim); padding: 12px 0; border-radius: 12px; font-size: 10px; font-weight: 800; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: 0.3s; }
         .tool-btn:hover { background: #151515; }
         .tool-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-muted); }
 
         /* --- RIGHT SIDEBAR --- */
-        .right-sidebar { width: 360px; background: #000; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
-        .chat-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column-reverse; gap: 12px; }
+        .right-sidebar { 
+            width: 360px; background: #000; border-left: 1px solid var(--border); 
+            display: flex; flex-direction: column; transition: 0.3s;
+        }
+        .chat-header { padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 800; color: var(--gold); }
+        .chat-list { 
+            flex: 1; overflow-y: auto; padding: 20px; display: flex; 
+            flex-direction: column-reverse; gap: 12px; -webkit-overflow-scrolling: touch; 
+        }
         .bubble { background: var(--panel); padding: 12px; border-radius: 15px; border: 1px solid var(--border); }
         .bubble strong { font-size: 11px; color: var(--gold); display: block; margin-bottom: 4px; }
         .pioneer-msg { border-left: 3px solid var(--green); background: rgba(0, 255, 148, 0.03); }
 
         .input-wrap { padding: 20px; background: #080808; border-top: 1px solid var(--border); display: flex; gap: 10px; }
         textarea { flex: 1; background: #111; border: 1px solid #222; border-radius: 10px; color: #fff; padding: 10px; resize: none; height: 40px; font-size: 13px; }
+
+        /* --- MOBILE MEDIA QUERIES (THE FIX) --- */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow-y: auto; }
+            .nav-sidebar { 
+                width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border);
+                flex-direction: row; overflow-x: auto; padding: 10px; gap: 10px;
+                white-space: nowrap; -webkit-overflow-scrolling: touch;
+            }
+            .nav-brand { margin-bottom: 0; font-size: 14px; padding: 5px 10px; }
+            .nav-label { display: none; }
+            .nav-item { padding: 8px 12px; font-size: 11px; }
+            .pioneer-only { display: contents !important; }
+
+            .center-stage { height: 60vh; width: 100%; }
+            .video-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); padding: 10px; }
+            
+            .right-sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); height: 50vh; }
+            .chat-list { height: 100%; }
+            
+            .tool-grid { padding: 10px; gap: 8px; }
+            .tool-btn { padding: 8px 0; font-size: 9px; }
+        }
 
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
@@ -92,16 +131,12 @@
 
     <div class="nav-sidebar">
         <div class="nav-brand">DECLARE FAMILY</div>
-        <span class="nav-label">Core Navigation</span>
-        <a href="hub.html" class="nav-item">💬 Global Hub</a>
-        <a href="thread.html" class="nav-item active">🟦 The Square</a>
+        <a href="hub.html" class="nav-item">💬 Hub</a>
+        <a href="thread.html" class="nav-item active">🟦 Square</a>
         <a href="academy.html" class="nav-item">📚 Academy</a>
-        
-        <span class="nav-label">Resources</span>
-        <a href="https://www.biblegateway.com" target="_blank" class="nav-item">📖 Open Word</a>
+        <a href="https://www.biblegateway.com" target="_blank" class="nav-item">📖 Bible</a>
         
         <div id="pioneerLink" class="pioneer-only">
-            <span class="nav-label" style="color: var(--green);">Leadership Command</span>
             <a href="leadership.html" class="nav-item" style="color: var(--green);">🛠️ Pioneer Dashboard</a>
         </div>
     </div>
@@ -131,11 +166,11 @@
     </div>
 
     <div class="right-sidebar">
-        <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 800; color: var(--gold);">SESSION CHAT</div>
+        <div class="chat-header">SESSION CHAT</div>
         <div class="chat-list" id="chatList"></div>
         <div class="input-wrap">
             <textarea id="msgInput" placeholder="Send a message..."></textarea>
-            <button onclick="post()" style="background: var(--gold); border: none; padding: 0 15px; border-radius: 8px; font-weight: 800; cursor: pointer;">SEND</button>
+            <button onclick="post()" style="background: var(--gold); border: none; padding: 0 15px; border-radius: 8px; font-weight: 800; cursor: pointer; color: #000;">SEND</button>
         </div>
     </div>
 
@@ -164,7 +199,6 @@
             requestAnimationFrame(frameUpdate);
         }
 
-        // --- CORE FUNCTION: MIC & CAMERA ---
         async function toggleLocalMedia(type) {
             const btn = document.getElementById(type + 'Btn');
             const myId = "box-" + user.id;
@@ -213,7 +247,6 @@
             }
         }
 
-        // --- CORE FUNCTION: TOOLS ---
         async function shareScreen() {
             const btn = document.getElementById('shareBtn');
             if (!btn.classList.contains('active')) {
@@ -262,7 +295,6 @@
             if (id === 'rec') toggleRecording();
         }
 
-        // --- MODERATION, CHAT & SCHEDULING ---
         function listenForModeration() {
             const commands = JSON.parse(localStorage.getItem("systemCommands")) || {};
             if (commands[user.id] === "MUTE") {
