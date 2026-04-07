@@ -31,7 +31,8 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-            z-index: 10;
+            z-index: 100;
+            transition: 0.3s;
         }
 
         .sidebar h2 {
@@ -69,6 +70,21 @@
             color: var(--gold);
         }
 
+        /* --- MOBILE MENU TOGGLE --- */
+        .mobile-nav-toggle {
+            display: none;
+            background: black;
+            color: var(--gold);
+            border: none;
+            padding: 15px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 1px solid #222;
+            width: 100%;
+            z-index: 101;
+        }
+
         /* --- MAIN CONTENT AREA --- */
         .main-content {
             flex: 1;
@@ -76,6 +92,7 @@
             flex-direction: column;
             background: #0a0a0a;
             position: relative;
+            overflow-y: auto;
         }
 
         .overlay {
@@ -84,6 +101,7 @@
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(10px);
+            min-height: 100%;
         }
 
         /* --- TOP BAR --- */
@@ -109,7 +127,6 @@
         .hub-body {
             flex: 1;
             padding: 30px 40px;
-            overflow-y: auto;
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 30px;
@@ -146,6 +163,8 @@
             display: flex;
             gap: 15px;
             border-top: 1px solid #222;
+            position: sticky;
+            bottom: 0;
         }
 
         input[type="text"] {
@@ -185,11 +204,30 @@
         .info-box p { font-size: 13px; color: #ccc; line-height: 1.5; }
 
         .tag { font-size: 10px; background: var(--gold); color: black; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+        /* --- MOBILE ADAPTATION --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { 
+                width: 100%; 
+                border-right: none; 
+                display: none; /* Hidden by default on mobile */
+                height: auto;
+                padding-bottom: 30px;
+            }
+            .sidebar.active { display: flex; }
+            .mobile-nav-toggle { display: block; }
+            .hub-body { grid-template-columns: 1fr; padding: 20px; }
+            .hub-header { padding: 15px 20px; }
+            .chat-input-area { padding: 15px 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
+    <button class="mobile-nav-toggle" onclick="toggleMenu()">☰ SHOW NAVIGATION</button>
+
+    <div class="sidebar" id="mainSidebar">
         <h2>DECLARE HUB</h2>
         
         <div class="nav-group">
@@ -245,10 +283,10 @@
                    <div class="info-box">
     <h4>Daily Topic</h4>
     <p>Topic: <em>"Navigating Career Ethics in the Digital Age."</em> 
-       <br><br>
-       <a href="#" onclick="checkGate()" style="color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px solid var(--gold); padding-bottom: 2px; cursor: pointer;">
-       👉 Join the Thread
-       </a>
+        <br><br>
+        <a href="#" onclick="checkGate()" style="color: var(--gold); text-decoration: none; font-weight: bold; border-bottom: 1px solid var(--gold); padding-bottom: 2px; cursor: pointer;">
+        👉 Join the Thread
+        </a>
     </p>
 </div>
                 </div>
@@ -263,6 +301,14 @@
     </div>
 
     <script>
+        // --- MOBILE TOGGLE LOGIC ---
+        function toggleMenu() {
+            const side = document.getElementById("mainSidebar");
+            const btn = document.querySelector(".mobile-nav-toggle");
+            side.classList.toggle("active");
+            btn.innerText = side.classList.contains("active") ? "✕ CLOSE NAVIGATION" : "☰ SHOW NAVIGATION";
+        }
+
         // --- LEADERSHIP REGISTRY ---
         const leadershipRegistry = {
             "DF-2026-124": "Markfire Prince"
@@ -342,6 +388,8 @@
         function initializeBot() {
             const chatFeed = document.getElementById("chatFeed");
             const now = new Date();
+            const day = now.getDay(); 
+            const hours = now.getHours();
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const dateString = now.toLocaleDateString('en-GB', options);
 
@@ -363,16 +411,25 @@
             const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
             const content = dailyBotContent[dayOfYear % dailyBotContent.length];
 
+            let sessionNotice = "SYSTEM: No live sessions currently active. Check back Thursday or Sunday at 8:30 PM.";
+            
+            if (day === 4 && hours >= 20) {
+                sessionNotice = "📖 LIVE NOW: Thursday Night Bible Study. Join the Square for the deep dive.";
+            } 
+            else if (day === 0 && hours >= 20) {
+                sessionNotice = "🔥 LIVE NOW: Sunday Hot Seat Talk. The Square is currently active.";
+            }
+
             const botPost = `
-                <div class="post-card" style="border: 2px solid var(--gold); background: rgba(255, 215, 0, 0.05);">
+                <div class="post-card" style="border: 2px solid var(--gold); background: rgba(255, 215, 0, 0.05); margin-bottom: 20px;">
                     <div class="post-header">
                         <div class="avatar" style="background: black; color: var(--gold); border: 1px solid var(--gold);">DF</div>
                         <div class="post-meta">
-                            <h5>Declare Family Bot <span class="tag">SYSTEM</span></h5>
-                            <span style="color: var(--gold); font-weight: bold;">${dateString}</span>
+                            <h5>Declare Family Intelligence</h5>
+                            <span style="color: var(--gold); font-weight: bold;">${sessionNotice}</span>
                         </div>
                     </div>
-                    <div style="padding: 10px; border-left: 3px solid var(--gold); margin-bottom: 10px; font-style: italic;">
+                    <div style="padding: 10px; border-left: 3px solid var(--gold); margin-bottom: 10px; font-style: italic; font-size: 13px;">
                         "${content.verse}"
                     </div>
                     <p><strong>Today's Momentum Motion:</strong> ${content.motion}</p>
@@ -380,40 +437,6 @@
             `;
             chatFeed.innerHTML = botPost;
         }
-        // --- HUB AUTOMATED SCHEDULING SYSTEM ---
-function initializeBot() {
-    const chatFeed = document.getElementById("chatFeed");
-    const now = new Date();
-    const day = now.getDay(); // 0=Sun, 4=Thu
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-
-    let sessionNotice = "SYSTEM: No live sessions currently active. Check back Thursday or Sunday at 8:30 PM.";
-    
-    // Bible Study: Thursday 8:30 PM (20:30)
-    if (day === 4 && hours >= 20) {
-        sessionNotice = "📖 LIVE NOW: Thursday Night Bible Study. Join the Square for the deep dive.";
-    } 
-    // Hot Seat: Sunday 8:30 PM (20:30)
-    else if (day === 0 && hours >= 20) {
-        sessionNotice = "🔥 LIVE NOW: Sunday Hot Seat Talk. The Square is currently active.";
-    }
-
-    // Logic to push this to the UI
-    const botPost = `
-        <div class="post-card" style="border: 2px solid var(--gold); background: rgba(255, 215, 0, 0.05);">
-            <div class="post-header">
-                <div class="avatar" style="background: black; color: var(--gold); border: 1px solid var(--gold);">DF</div>
-                <div class="post-meta">
-                    <h5>Declare Family Intelligence</h5>
-                    <span style="color: var(--gold); font-weight: bold;">${sessionNotice}</span>
-                </div>
-            </div>
-            <p><strong>Note:</strong> All sessions are transmitted in 4K UHD. Ensure your connection is stable.</p>
-        </div>
-    `;
-    chatFeed.insertAdjacentHTML('afterbegin', botPost);
-}
 
         // 4. CHAT SYSTEM
         function setupChat() {
