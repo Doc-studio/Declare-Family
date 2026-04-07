@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declare Academy | Entry Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #FFD700; --dark: #050505; --panel: #111; --border: rgba(255,255,255,0.1); }
+        body { 
+            margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--dark); color: white; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .portal-card {
+            background: var(--panel); border: 1px solid var(--gold);
+            padding: 40px; border-radius: 24px; width: 100%; max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
+        }
+        .tab-group { display: flex; gap: 10px; margin-bottom: 30px; background: #000; padding: 5px; border-radius: 12px; }
+        .tab { flex: 1; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 800; transition: 0.3s; }
+        .tab.active { background: var(--gold); color: black; }
+        
+        input, select { 
+            width: 100%; padding: 15px; margin-bottom: 15px; background: #000; 
+            border: 1px solid #333; color: white; border-radius: 12px; box-sizing: border-box;
+        }
+        .reg-btn { 
+            width: 100%; padding: 15px; border: none; border-radius: 12px; 
+            background: var(--gold); color: black; font-weight: 800; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="portal-card">
+    <h2 id="portalTitle">Class Enrollment</h2>
+    <p id="portalSub" style="color: #666; font-size: 14px; margin-bottom: 25px;">Enter your details to join the session.</p>
+
+    <div class="tab-group">
+        <div class="tab active" id="learnerTab" onclick="switchMode('learner')">LEARNER</div>
+        <div class="tab" id="tutorTab" onclick="switchMode('tutor')">TUTOR</div>
+    </div>
+
+    <input type="text" id="regName" placeholder="Full Name">
+    <select id="regClass">
+        <option value="Financial Growth">Financial Growth Class</option>
+        <option value="Spiritual Growth">Spiritual Growth Class</option>
+        <option value="Psychology">Psychology Class</option>
+        <option value="Leadership">Leadership Class</option>
+    </select>
+
+    <button class="reg-btn" onclick="processRegistration()">REGISTER NOW</button>
+</div>
+
+<script>
+    let currentMode = 'learner';
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.getElementById('learnerTab').classList.toggle('active', mode === 'learner');
+        document.getElementById('tutorTab').classList.toggle('active', mode === 'tutor');
+        document.getElementById('portalTitle').innerText = mode === 'learner' ? 'Class Enrollment' : 'Tutor Application';
+    }
+
+    function generateTitle(className, name) {
+        const titles = {
+            "Financial Growth": "Economist",
+            "Spiritual Growth": "Steward",
+            "Psychology": "Architect",
+            "Leadership": "Sovereign"
+        };
+        return `${titles[className] || "Pioneer"} ${name}`;
+    }
+
+    function processRegistration() {
+        const name = document.getElementById('regName').value;
+        const className = document.getElementById('regClass').value;
+        
+        if(!name) return alert("Please enter your name");
+
+        const requestData = {
+            id: Date.now(),
+            name: name,
+            class: className,
+            mode: currentMode,
+            title: generateTitle(className, name),
+            status: 'pending'
+        };
+
+        // 1. Send to Leader Notifications
+        let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
+        adminNotify.push(requestData);
+        localStorage.setItem("adminNotifications", JSON.stringify(adminNotify));
+
+        if(currentMode === 'learner') {
+            // Learners get immediate access for this version
+            localStorage.setItem(`enrolled_${className}`, JSON.stringify(requestData));
+            alert(`Welcome, ${requestData.title}! Redirecting to class...`);
+            window.location.href = "academy.html"; 
+        } else {
+            alert("Tutor application submitted! Please wait for Leader approval.");
+            window.location.href = "academy.html";
+        }
+    }
+    function processRegistration() {
+    const name = document.getElementById('regName').value;
+    const className = document.getElementById('regClass').value;
+    
+    if(!name) return alert("Please enter your name");
+
+    const requestData = {
+        id: Date.now(),
+        name: name,
+        class: className,
+        mode: currentMode,
+        title: generateTitle(className, name),
+        status: currentMode === 'learner' ? 'approved' : 'pending',
+        timestamp: new Date().toISOString()
+    };
+
+    if(currentMode === 'learner') {
+        // --- INSTANT ACCESS FOR LEARNERS ---
+        let enrolled = JSON.parse(localStorage.getItem(`enrolled_${className}`)) || [];
+        enrolled.push(requestData);
+        localStorage.setItem(`enrolled_${className}`, JSON.stringify(enrolled));
+        
+        // Mark session as registered to prevent re-registration
+        localStorage.setItem(`isRegistered_${className}`, "true");
+        
+        alert(`Welcome, ${requestData.title}! Your seat in ${className} is reserved.`);
+        window.location.href = "academy.html"; 
+    } else {
+        // --- TUTORS GO TO LEADER QUEUE ---
+        let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
+        adminNotify.push(requestData);
+        localStorage.setItem("adminNotifications", JSON.stringify(adminNotify));
+        
+        alert("Tutor Application Received. A Pioneer Leader will review your credentials shortly.");
+        window.location.href = "hub.html";
+    }
+}
+</script>
+</body>
+</html>
