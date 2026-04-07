@@ -380,6 +380,40 @@
             `;
             chatFeed.innerHTML = botPost;
         }
+        // --- HUB AUTOMATED SCHEDULING SYSTEM ---
+function initializeBot() {
+    const chatFeed = document.getElementById("chatFeed");
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun, 4=Thu
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    let sessionNotice = "SYSTEM: No live sessions currently active. Check back Thursday or Sunday at 8:30 PM.";
+    
+    // Bible Study: Thursday 8:30 PM (20:30)
+    if (day === 4 && hours >= 20) {
+        sessionNotice = "📖 LIVE NOW: Thursday Night Bible Study. Join the Square for the deep dive.";
+    } 
+    // Hot Seat: Sunday 8:30 PM (20:30)
+    else if (day === 0 && hours >= 20) {
+        sessionNotice = "🔥 LIVE NOW: Sunday Hot Seat Talk. The Square is currently active.";
+    }
+
+    // Logic to push this to the UI
+    const botPost = `
+        <div class="post-card" style="border: 2px solid var(--gold); background: rgba(255, 215, 0, 0.05);">
+            <div class="post-header">
+                <div class="avatar" style="background: black; color: var(--gold); border: 1px solid var(--gold);">DF</div>
+                <div class="post-meta">
+                    <h5>Declare Family Intelligence</h5>
+                    <span style="color: var(--gold); font-weight: bold;">${sessionNotice}</span>
+                </div>
+            </div>
+            <p><strong>Note:</strong> All sessions are transmitted in 4K UHD. Ensure your connection is stable.</p>
+        </div>
+    `;
+    chatFeed.insertAdjacentHTML('afterbegin', botPost);
+}
 
         // 4. CHAT SYSTEM
         function setupChat() {
