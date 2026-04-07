@@ -34,7 +34,7 @@ h2 {
 }
 
 /* Inputs */
-input {
+input, select {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
@@ -68,6 +68,11 @@ a {
     display: block;
     margin-top: 15px;
 }
+
+.secret-field {
+    display: none; /* Hidden by default */
+    border: 1px dashed gold;
+}
 </style>
 </head>
 
@@ -79,6 +84,15 @@ a {
     <form id="registerForm">
         <input type="text" id="name" placeholder="Full Name" required>
         <input type="email" id="email" placeholder="Email Address" required>
+        
+        <select id="role" onchange="toggleAdminField()">
+            <option value="member">General Member</option>
+            <option value="leader">Pioneer (Leader)</option>
+            <option value="admin">System Administrator</option>
+        </select>
+
+        <input type="password" id="secretKey" class="secret-field" placeholder="Enter Access Key">
+
         <input type="password" id="password" placeholder="Password" required>
         <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
 
@@ -89,48 +103,98 @@ a {
 </div>
 
 <script>
+// Toggle secret field visibility
+function toggleAdminField() {
+    const role = document.getElementById("role").value;
+    const keyField = document.getElementById("secretKey");
+    keyField.style.display = (role === "admin" || role === "leader") ? "block" : "none";
+}
+
+// Generate ID Function
+function generateDeclareID(fullName, role) {
+    const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+    const year = "26";
+
+    if (role === "admin") {
+        // Checking existing admins to assign 001 or 002
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        const adminCount = users.filter(u => u.role === "admin").length;
+        const adminNum = adminCount === 0 ? "001" : "002";
+        return `DF-ADM-${adminNum}/${year}-${initials}`;
+    } 
+    
+    if (role === "leader") {
+        return `DF-PNR-001/${year}-${initials}`;
+    }
+
+    // System generated for members
+    const randomNum = Math.floor(100 + Math.random() * 899);
+    return `DF-2026-${randomNum}/${initials}`;
+}
+
 // Handle Registration
 document.getElementById("registerForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
+    const role = document.getElementById("role").value;
+    const secretKey = document.getElementById("secretKey").value;
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
 
-    // Basic Validation
+    // 1. Password Validation
     if (password !== confirmPassword) {
         alert("Passwords do not match!");
         return;
     }
 
-    // Get existing users
+    // 2. Secret Key Validation (Only for Admins/Leaders)
+    const ADMIN_SECRET = "DF-ADMIN-2026"; // Change this to your preferred secret key
+    if ((role === "admin" || role === "leader") && secretKey !== ADMIN_SECRET) {
+        alert("Invalid Access Key! You cannot register as a Leader/Admin.");
+        return;
+    }
+
+    // 3. Get existing users
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
     // Check if email exists
-    const userExists = users.find(user => user.email === email);
-    if (userExists) {
+    if (users.find(user => user.email === email)) {
         alert("User already exists!");
         return;
     }
 
-    // Create new user
+    // 4. Generate Unique ID
+    const generatedID = generateDeclareID(name, role);
+
+    // 5. Create new user
     const newUser = {
         name,
         email,
-        password, // (we improve this later)
-        role: "member"
+        password,
+        role,
+        memberID: generatedID,
+        joinedDate: new Date().toLocaleDateString()
     };
 
     users.push(newUser);
 
-    // Save to localStorage
+    // Save to database (localStorage)
     localStorage.setItem("users", JSON.stringify(users));
+    
+    // Set current session
+    localStorage.setItem("loggedInUser", JSON.stringify(newUser));
 
-    alert("Registration successful!");
+    alert(`Registration successful! Welcome, ${generatedID}`);
 
-    // Redirect to login
-    window.location.href = "main.html";
+   // 6. Professional Redirect Router
+    if (role === "admin" || role === "leader") {
+        console.log("Redirecting to Leadership Pane...");
+        window.location.href = "leadership.html"; // Updated to match your filename
+    } else {
+        window.location.href = "main.html"; 
+    }
 });
 </script>
 
