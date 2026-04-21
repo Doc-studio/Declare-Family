@@ -1,479 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Command | Declare Family</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold: #FFD700; --red: #FF3B30; --dark: #050505; --panel: #0E0E10;
-            --border: rgba(255, 255, 255, 0.1); --green: #00FF94; --text-dim: #aaa;
-            --accent: #111113;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Executive Command | Declare Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700; --gold-soft:rgba(255,215,0,0.08);
+  --dark:#050505; --panel:#0E0E10; --border:rgba(255,255,255,0.09);
+  --green:#00FF94; --green-soft:rgba(0,255,148,0.06);
+  --red:#FF3B30; --red-soft:rgba(255,59,48,0.08);
+  --blue:#4A9EFF; --blue-soft:rgba(74,158,255,0.08);
+  --teal:#2DD4BF; --amber:#FF9F43; --purple:#A855F7;
+  --dim:#888; --text:#e8e8e8;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;display:flex;}
 
-        * { box-sizing: border-box; scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
-        body {
-            background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0; height: 100vh; display: flex; overflow: hidden;
-        }
+/* ── SIDEBAR ──────────────────────────────────── */
+.side{
+  width:280px;background:#000;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:26px 18px;overflow-y:auto;flex-shrink:0;
+}
+.brand-row{display:flex;align-items:center;gap:13px;margin-bottom:36px;}
+.brand-logo{width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;}
+.brand-txt{font-weight:800;font-size:12px;letter-spacing:.5px;line-height:1.4;}
+.brand-txt span{display:block;color:var(--gold);font-size:10px;letter-spacing:2px;}
+.nav-label{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:2px;margin:22px 0 8px 8px;display:block;}
+.nav-link{
+  padding:12px 16px;border-radius:12px;cursor:pointer;transition:.25s;
+  color:var(--dim);text-decoration:none;display:flex;align-items:center;
+  gap:13px;font-size:13px;font-weight:600;margin-bottom:4px;border:1px solid transparent;
+}
+.nav-link:hover{background:var(--gold-soft);color:#fff;border-color:rgba(255,215,0,.1);}
+.nav-link.active{background:var(--gold);color:#000;font-weight:800;}
+.mgmt-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px;margin-top:8px;}
+.sub-link{padding:9px 12px;font-size:12px;color:#666;text-decoration:none;display:flex;align-items:center;gap:9px;border-radius:8px;transition:.2s;}
+.sub-link:hover{color:var(--gold);background:#181818;}
+.back-link{margin-top:auto;color:var(--dim);font-size:12px;text-decoration:none;padding:10px;display:flex;align-items:center;gap:8px;}
+.back-link:hover{color:var(--gold);}
 
-        /* --- 1. EXPANDED SIDE NAVIGATION (PC) --- */
-        .side-nav {
-            width: 320px; background: #000; border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 30px 20px; z-index: 100;
-            overflow-y: auto;
-        }
+/* ── MAIN STAGE ───────────────────────────────── */
+.stage{flex:1;overflow-y:auto;background:#080808;-webkit-overflow-scrolling:touch;}
+.stage-inner{padding:32px 36px;max-width:1000px;margin:0 auto;}
 
-        .brand-container { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
-        .nav-logo { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--gold); padding: 2px; }
-        .nav-brand-text { font-weight: 800; font-size: 14px; letter-spacing: 1px; }
+/* HUD */
+.hud{
+  background:var(--panel);border:1px solid var(--border);border-radius:20px;
+  padding:28px;display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:28px;gap:20px;
+}
+.hud-left h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;margin-bottom:4px;}
+.hud-left p{color:var(--gold);font-size:13px;font-weight:600;}
+.hud-right{text-align:right;max-width:380px;}
+#quoteDisplay{font-style:italic;color:var(--dim);font-size:13px;line-height:1.6;transition:opacity .5s;}
+.live-pill{
+  display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--green);
+  background:var(--green-soft);border:1px solid rgba(0,255,148,.2);padding:5px 14px;border-radius:20px;margin-top:10px;
+}
+.live-pill .dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:pls 1.5s infinite;}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.25}}
 
-        .nav-label { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 12px 10px; display: block; }
-        .nav-link { 
-            padding: 14px 18px; border-radius: 14px; cursor: pointer; transition: 0.3s; 
-            color: var(--text-dim); text-decoration: none; display: flex; align-items: center; 
-            gap: 15px; font-size: 14px; font-weight: 600; margin-bottom: 5px; border: 1px solid transparent;
-        }
-        .nav-link:hover { background: rgba(255, 215, 0, 0.05); color: #fff; border-color: rgba(255, 215, 0, 0.1); }
-        .nav-link.active { background: var(--gold); color: #000; font-weight: 800; }
+/* BOT CARD */
+.bot-card{
+  background:linear-gradient(135deg,#121214,#000);border:1px solid var(--gold);
+  border-radius:20px;padding:22px;display:flex;align-items:center;gap:18px;margin-bottom:28px;
+}
+.bot-avatar{width:54px;height:54px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 0 18px rgba(255,215,0,.25);}
+.bot-text{font-size:14px;line-height:1.6;color:#ddd;}
 
-        .mgmt-grid { display: grid; grid-template-columns: 1fr; gap: 8px; background: var(--accent); padding: 10px; border-radius: 18px; border: 1px solid var(--border); }
-        .sub-link { padding: 10px; font-size: 12px; color: #888; text-decoration: none; display: flex; align-items: center; gap: 10px; border-radius: 10px; transition: 0.2s; }
-        .sub-link:hover { color: var(--gold); background: #1a1a1c; }
+/* SECTION LABEL */
+.sec-label{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 
-        /* --- 2. MAIN COMMAND STAGE --- */
-        .main-stage { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: #080808; padding: 40px; position: relative; scroll-behavior: smooth; }
+/* COMMAND CARDS */
+.cmd-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:22px;}
+.cmd-card.highlight-gold{border-color:rgba(255,215,0,.3);}
+.cmd-card.highlight-green{border-color:rgba(0,255,148,.25);background:var(--green-soft);}
+.cmd-card.highlight-red{border-color:rgba(255,59,48,.25);background:var(--red-soft);}
+.cmd-card.highlight-blue{border-color:rgba(74,158,255,.25);background:var(--blue-soft);}
 
-        /* TOP HUD: GREETING & QUOTE LOOP */
-        .hud-header {
-            width: 100%; display: flex; justify-content: space-between; align-items: flex-start;
-            margin-bottom: 40px; background: var(--panel); padding: 30px; border-radius: 24px; border: 1px solid var(--border);
-        }
-        .greeting-box h1 { font-size: 2.2rem; margin: 0; letter-spacing: -1px; }
-        .greeting-box p { color: var(--gold); font-size: 1rem; margin-top: 5px; font-weight: 600; opacity: 0.8; }
-        
-        .quote-box { max-width: 400px; text-align: right; }
-        #quoteDisplay { font-style: italic; color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; animation: fadeInOut 6s infinite; }
+/* Approval queue */
+.approval-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;background:#000;border-radius:12px;margin-bottom:10px;
+  border:1px solid var(--border);gap:12px;
+}
+.approval-info{flex:1;min-width:0;}
+.approval-info .tag{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;display:block;}
+.approval-info h4{font-size:15px;font-weight:800;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.approval-info p{font-size:11px;color:#666;margin:0;}
+.approval-btns{display:flex;gap:8px;flex-shrink:0;}
+.btn-approve{background:var(--green);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;}
+.btn-approve:hover{background:#00cc76;}
+.btn-deny{background:transparent;color:var(--red);border:1px solid var(--red);padding:8px 16px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;}
+.btn-deny:hover{background:var(--red);color:#fff;}
 
-        /* --- 3. THE AI SYSTEM BOT --- */
-        .bot-card {
-            background: linear-gradient(145deg, #121214 0%, #000 100%);
-            border: 1px solid var(--gold); border-radius: 24px; padding: 25px;
-            display: flex; align-items: center; gap: 20px; margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.05);
-        }
-        .bot-avatar { width: 60px; height: 60px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
-        .bot-msg { font-size: 15px; line-height: 1.6; color: #eee; }
+/* Pioneer code system */
+.code-display{
+  background:#000;border:1px solid rgba(0,255,148,.3);border-radius:12px;padding:16px 20px;
+  margin-top:14px;display:none;
+}
+.code-display .code-val{font-family:'Courier New',monospace;font-size:18px;color:var(--green);font-weight:800;letter-spacing:3px;word-break:break-all;}
+.code-display .code-note{font-size:11px;color:#555;margin-top:6px;}
+.copy-btn{background:var(--gold);border:none;padding:5px 14px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;margin-left:10px;font-family:inherit;}
 
-        /* --- 4. ATTENTION & ACTIVITY FEED --- */
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-        
-        .attention-zone { display: flex; flex-direction: column; gap: 20px; }
-        .section-label { font-size: 12px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+/* Input row */
+.input-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.input-row input,.input-row select{
+  flex:1;min-width:140px;background:#1a1a1a;border:1px solid var(--border);
+  padding:11px 14px;border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;transition:.2s;
+}
+.input-row input:focus,.input-row select:focus{border-color:var(--gold);}
+.action-btn{
+  background:#1a1a1d;border:1px solid var(--border);color:#ccc;
+  padding:11px 18px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;
+  transition:.2s;font-family:inherit;white-space:nowrap;
+}
+.action-btn:hover{border-color:var(--gold);color:var(--gold);}
+.action-btn.gold{background:var(--gold);color:#000;border-color:var(--gold);}
+.action-btn.gold:hover{background:#fff;}
+.action-btn.danger{color:var(--red);}
+.action-btn.danger:hover{border-color:var(--red);background:rgba(255,59,48,.08);}
+.result-box{margin-top:12px;padding:14px;background:#000;border-radius:10px;border:1px solid var(--border);display:none;font-size:13px;}
 
-        /* FEED ITEMS */
-        .feed-item {
-            background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 25px;
-            transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
-        }
-        .feed-item:hover { border-color: var(--gold); transform: scale(1.01); background: #121215; }
-        .feed-item.urgent { border-left: 4px solid var(--red); }
-        
-        .item-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--gold); margin-bottom: 10px; font-weight: 800; }
-        .item-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; display: block; }
-        .item-desc { color: #888; font-size: 14px; line-height: 1.5; }
+/* Bot post panel */
+.bot-announce-area{display:flex;gap:10px;margin-bottom:12px;}
+.bot-announce-area textarea{flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:10px;color:#fff;padding:11px 14px;resize:none;height:70px;font-family:inherit;font-size:13px;outline:none;transition:.2s;}
+.bot-announce-area textarea:focus{border-color:var(--gold);}
 
-        /* COFFEE ICON */
-        .coffee-corner { position: fixed; bottom: 30px; right: 30px; text-align: center; }
-        .smoke { font-size: 20px; animation: smokeMove 3s infinite linear; opacity: 0; position: absolute; top: -20px; left: 10px; }
+/* Pending registration list */
+.reg-request-row{
+  display:flex;align-items:center;gap:12px;padding:14px;background:#000;
+  border-radius:12px;margin-bottom:8px;border:1px solid var(--border);flex-wrap:wrap;
+}
+.reg-request-row .info{flex:1;min-width:160px;}
+.reg-request-row .info strong{font-size:14px;display:block;margin-bottom:2px;}
+.reg-request-row .info span{font-size:11px;color:#666;}
 
-        /* --- AUTOMATIC MOBILE ADJUSTMENT (THUMB SCROLLING) --- */
-        @media screen and (max-width: 850px) {
-            body { flex-direction: column; overflow-y: auto; height: auto; }
-            .side-nav { display: none; } /* Hide side nav on mobile to prioritize command feed */
-            .main-stage { padding: 20px; overflow-y: visible; }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .hud-header { flex-direction: column; gap: 15px; padding: 20px; }
-            .quote-box { text-align: left; }
-            .greeting-box h1 { font-size: 1.6rem; }
-            .bot-card { flex-direction: column; text-align: center; padding: 20px; }
-            #liveStatusLine { right: 20px; top: 10px; font-size: 9px; }
-            .coffee-corner { bottom: 15px; right: 15px; scale: 0.7; }
-        }
-
-        @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
-        @keyframes smokeMove {
-            0% { transform: translateY(0) scale(0.8); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-    </style>
+/* ── MOBILE ───────────────────────────────────── */
+@media(max-width:850px){
+  body{flex-direction:column;overflow-y:auto;height:auto;}
+  .side{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:16px;}
+  .hud{flex-direction:column;gap:14px;}
+  .hud-right{text-align:left;max-width:100%;}
+  .stage-inner{padding:20px 16px;}
+  .bot-card{flex-direction:column;text-align:center;}
+  .approval-row{flex-direction:column;align-items:flex-start;}
+  .approval-btns{align-self:flex-end;}
+  .input-row{flex-direction:column;}
+}
+@media(orientation:landscape)and(max-height:500px){
+  .hud{padding:18px;}
+  .stage-inner{padding:18px;}
+}
+</style>
 </head>
 <body>
 
-    <div class="side-nav">
-        <div class="brand-container">
-            <img src="hero-image.jpg.jpeg" class="nav-logo" alt="Declare">
-            <div class="nav-brand-text">DECLARE FAMILY<br><span style="color:var(--gold); font-size:10px;">EXECUTIVE COMMAND</span></div>
-        </div>
-        
-        <span class="nav-label">Main Navigation</span>
-        <a href="#" class="nav-link">👤 My Profile</a>
-        <a href="hub.html" class="nav-link">🌐 Declare Hub</a>
-        <a href="Dashboard.html" class="nav-link">📊 My Dashboard</a>
-        <a href="#" class="nav-link active">🛡️ Leader's Hub</a>
+<!-- SIDEBAR -->
+<nav class="side">
+  <div class="brand-row">
+    <img src="hero-image.jpg.jpeg" class="brand-logo" alt="Declare">
+    <div class="brand-txt">DECLARE FAMILY<span>EXECUTIVE COMMAND</span></div>
+  </div>
 
-        <span class="nav-label">Family Management</span>
-        <div class="mgmt-grid">
-            <a href="#" class="sub-link">🦅 Threads Management</a>
-            <a href="#" class="sub-link">🙏 Prayer Room Manager</a>
-            <a href="#" class="sub-link">🎨 Talents & Skills</a>
-            <a href="#" class="sub-link">🏗️ Project Oversight</a>
-            <a href="#" class="sub-link">🏆 Achievement Logs</a>
-            <a href="#" class="sub-link">🎓 Development School</a>
-        </div>
-        
-        <a href="main.html" class="nav-link" style="margin-top: 40px;">🏠 Back to Main</a>
+  <span class="nav-label">Navigation</span>
+  <a href="Dashboard.html" class="nav-link">📊 My Dashboard</a>
+  <a href="hub.html"        class="nav-link">🌐 Declare Hub</a>
+  <a href="thread.html"     class="nav-link">🟦 The Square</a>
+  <a href="leadership.html" class="nav-link active">🛡️ Command Centre</a>
+
+  <span class="nav-label">Family Management</span>
+  <div class="mgmt-box">
+    <a href="thread.html"     class="sub-link">🦅 The Square</a>
+    <a href="faith.html"      class="sub-link">🙏 Prayer Room</a>
+    <a href="talents.html"    class="sub-link">🎨 Talents</a>
+    <a href="projects.html"   class="sub-link">🏗️ Projects</a>
+    <a href="achievements.html" class="sub-link">🏆 Achievements</a>
+    <a href="academy.html"    class="sub-link">🎓 Academy</a>
+  </div>
+
+  <a href="main.html" class="back-link">🏠 Back to Main Site</a>
+</nav>
+
+<!-- MAIN STAGE -->
+<main class="stage">
+<div class="stage-inner">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-left">
+      <h1 id="greetName">Shalom, Leader</h1>
+      <p>Called. Equipped. Sent. — Executive Command Active</p>
+      <div class="live-pill"><span class="dot"></span><span id="sessionCount">0 Pioneer(s) · 0 Member(s) Online</span></div>
     </div>
-
-    <div class="main-stage">
-        <div id="liveStatusLine" style="position: absolute; top: 20px; right: 40px; color: var(--green); font-family: monospace; font-size: 11px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; z-index: 1000;">
-            <span style="width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite;"></span>
-            <span id="sessionCount">0 Pioneer(s) | 0 Member(s) Online</span>
-        </div>
-
-        <div class="hud-header">
-            <div class="greeting-box">
-                <h1 id="greetName">Shalom, Leader</h1>
-                <p>Called. Equipped. Sent.</p>
-            </div>
-            <div class="quote-box">
-                <div id="quoteDisplay">"Vision is the art of seeing what is invisible to others."</div>
-            </div>
-        </div>
-
-        <div class="bot-card">
-            <div class="bot-avatar">🤖</div>
-            <div class="bot-msg">
-                <strong>System Intelligence:</strong> Welcome back, Leader. 
-                There are <span style="color:var(--gold)">3 new prayer requests</span> and 
-                <span style="color:var(--gold)">1 skill upload</span> pending your review. 
-                How shall we proceed today?
-            </div>
-        </div>
-
-        <div class="attention-zone">
-    <span class="section-label">Academy Gatekeeper: Pending Approvals</span>
-    <div class="feed-item" id="approvalContainer" style="border: 1px dashed var(--gold); background: rgba(255, 215, 0, 0.02);">
-        <div id="noRequestsMsg" style="text-align: center; padding: 20px; color: #555;">
-            <span style="font-size: 24px;">🛡️</span>
-            <p>The gates are clear. No pending applications.</p>
-        </div>
-        <div id="pendingList">
-            </div>
+    <div class="hud-right">
+      <div id="quoteDisplay">"Vision is the art of seeing what is invisible to others."</div>
+      <div style="font-size:11px;color:#444;margin-top:8px;" id="deviceTag">Detecting...</div>
     </div>
+  </div>
 
-    <span class="section-label">Command Feed: Priority Attention</span>
-    ...
+  <!-- BOT CARD -->
+  <div class="bot-card">
+    <div class="bot-avatar">🤖</div>
+    <div class="bot-text" id="botMsg">
+      <strong>System Intelligence:</strong> Welcome back, Leader. Loading family status...
+    </div>
+  </div>
+
+  <!-- ── 1. PIONEER REGISTRATION APPROVALS ── -->
+  <div class="cmd-card highlight-gold" id="regApprovalCard">
+    <div class="sec-label">🛡️ Pioneer Registration Requests</div>
+    <p style="font-size:12px;color:#666;margin-bottom:16px;">Members who requested Pioneer or Admin access. Verify identity before approving. Upon approval, an access code is auto-generated for you to share with them manually.</p>
+    <div id="pioneerRequestList">
+      <p style="color:#555;text-align:center;padding:20px;font-size:13px;">No pending pioneer registration requests.</p>
+    </div>
+  </div>
+
+  <!-- ── 2. ACADEMY TUTOR APPROVALS ── -->
+  <div class="cmd-card highlight-gold">
+    <div class="sec-label">🎓 Academy Gatekeeper — Pending Applications</div>
+    <div id="pendingList">
+      <p style="color:#555;text-align:center;padding:20px;font-size:13px;">The gates are clear. No pending applications.</p>
+    </div>
+  </div>
+
+  <!-- ── 3. BOT BROADCAST ── -->
+  <div class="cmd-card highlight-green">
+    <div class="sec-label">📢 Post a Global Announcement</div>
+    <p style="font-size:12px;color:#666;margin-bottom:14px;">This message will appear in the Live Ticker and the Hub feed for all members.</p>
+    <div class="bot-announce-area">
+      <textarea id="announceInput" placeholder="Write your announcement here..."></textarea>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <select id="announceCategory" style="background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;">
+          <option>Announcement</option>
+          <option>Upcoming Session</option>
+          <option>Physical Event</option>
+          <option>Current Project</option>
+          <option>Pioneer Spotlight</option>
+          <option>Today's Momentum</option>
+          <option>Partnership</option>
+        </select>
+        <input type="text" id="announceDate" placeholder="Date (e.g. 25 Apr 2026)" style="background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;">
+        <input type="text" id="announceExpiry" placeholder="Expires YYYY-MM-DD (optional)" style="background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;">
+        <button class="action-btn gold" onclick="postAnnouncement()">BROADCAST</button>
+      </div>
+    </div>
+    <div id="announceHistory" style="margin-top:16px;"></div>
+  </div>
+
+  <!-- ── 4. SQUARE MODERATION ── -->
+  <div class="cmd-card highlight-red">
+    <div class="sec-label">🟦 Square Moderation</div>
+    <div class="input-row" style="margin-top:0;">
+      <input type="text" id="targetID" placeholder="Enter Member ID (e.g. DF-2026-123/AB)">
+      <button class="action-btn" onclick="verifyTarget()">VERIFY</button>
+    </div>
+    <div id="targetResult" class="result-box"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+      <button class="action-btn" onclick="issueCmd('MUTE')">🔇 Mute Mic</button>
+      <button class="action-btn danger" onclick="issueCmd('KICK')">🚷 Remove from Session</button>
+      <button class="action-btn" onclick="purgeChatLog()">🗑️ Purge Chat Log</button>
+    </div>
+  </div>
+
+  <!-- ── 5. MEMBER RECOVERY ── -->
+  <div class="cmd-card highlight-blue">
+    <div class="sec-label">🔑 Member Account Recovery</div>
+    <div class="input-row" style="margin-top:0;">
+      <input type="text" id="recovSearch" placeholder="Search name or email">
+      <button class="action-btn" onclick="findMember()">SEARCH</button>
+    </div>
+    <div id="recovResult" class="result-box"></div>
+  </div>
+
+  <!-- ── 6. LIVE STATS ── -->
+  <div class="cmd-card">
+    <div class="sec-label">📊 Live Family Stats</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-top:4px;" id="statsGrid">
+      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Members Registered</div>
+        <div style="font-size:24px;font-weight:800;color:var(--gold);" id="statMembers">0</div>
+      </div>
+      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Currently Online</div>
+        <div style="font-size:24px;font-weight:800;color:var(--green);" id="statOnline">0</div>
+      </div>
+      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Pending Requests</div>
+        <div style="font-size:24px;font-weight:800;color:var(--amber);" id="statPending">0</div>
+      </div>
+      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
+        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Active Broadcasts</div>
+        <div style="font-size:24px;font-weight:800;color:var(--blue);" id="statBroadcasts">0</div>
+      </div>
+    </div>
+  </div>
+
 </div>
-<span class="section-label">Square Command: Live Moderator</span>
-<div class="feed-item" style="border: 1px solid var(--green);">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h4 style="margin:0;">Live Participants</h4>
-        <span class="tag" style="background: var(--green);">4K TRANSITION STABLE</span>
-    </div>
-    
-    <div id="participantList">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #000; border-radius: 8px; margin-bottom: 5px;">
-            <span>Markfire Prince (Broadcasting)</span>
-            <div style="display:flex; gap: 5px;">
-                <button onclick="sendCommand('MUTE', 'user_id_here')" style="background: #333; color: var(--gold); border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">MUTE</button>
-                <button onclick="sendCommand('KICK', 'user_id_here')" style="background: var(--red); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">REMOVE</button>
-            </div>
-        </div>
-    </div>
-</div>
+</main>
 
 <script>
-    function sendCommand(action, userId) {
-        let commands = JSON.parse(localStorage.getItem("systemCommands")) || {};
-        commands[userId] = action;
-        localStorage.setItem("systemCommands", JSON.stringify(commands));
-        alert(`COMMAND SENT: ${action} for User ${userId}`);
-    }
-    
-    // Broadcast a global update to the Hub from here
-    function postGlobalUpdate(text) {
-        let threadMsgs = JSON.parse(localStorage.getItem("threadComments")) || [];
-        threadMsgs.unshift({
-            name: "PIONEER COMMAND",
-            text: "📢 " + text,
-            urgent: true
-        });
-        localStorage.setItem("threadComments", JSON.stringify(threadMsgs));
-    }
-</script>
-<script>
-    // --- ACADEMY APPROVAL SYSTEM ---
+(function(){
+'use strict';
 
-    function syncAcademyRequests() {
-        const pendingList = document.getElementById('pendingList');
-        const noRequestsMsg = document.getElementById('noRequestsMsg');
-        
-        // Retrieve notifications sent from the Gateway
-        let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
+/* ── helpers ─────────────────────────────────── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
+function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
+function simpleHash(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h;}return h.toString(36);}
 
-        if (adminNotify.length === 0) {
-            pendingList.innerHTML = "";
-            noRequestsMsg.style.display = "block";
-            return;
-        }
+var currentUser=session();
 
-        noRequestsMsg.style.display = "none";
-        
-        pendingList.innerHTML = adminNotify.map(req => `
-            <div class="request-row" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #000; border-radius: 12px; margin-bottom: 10px; border: 1px solid #222;">
-                <div>
-                    <span style="font-size: 10px; font-weight: 800; color: ${req.mode === 'tutor' ? 'var(--green)' : 'var(--gold)'}; text-transform: uppercase;">
-                        ${req.mode} REQUEST
-                    </span>
-                    <h4 style="margin: 5px 0 0 0; font-size: 16px;">${req.name}</h4>
-                    <p style="font-size: 12px; color: #777; margin: 2px 0;">Class: <strong>${req.class}</strong> | Title: <em>"${req.title}"</em></p>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="processGatekeeping(${req.id}, 'approve')" style="background: var(--green); color: #000; border: none; padding: 8px 15px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 12px;">APPROVE</button>
-                    <button onclick="processGatekeeping(${req.id}, 'deny')" style="background: transparent; color: var(--red); border: 1px solid var(--red); padding: 8px 15px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 12px;">DENY</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function processGatekeeping(id, action) {
-        let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
-        const request = adminNotify.find(r => r.id === id);
-
-        if (action === 'approve') {
-            if (request.mode === 'tutor') {
-                // Add to approved tutors registry
-                let approvedTutors = JSON.parse(localStorage.getItem("approvedTutors")) || [];
-                approvedTutors.push({
-                    ...request,
-                    approvedAt: new Date().toISOString()
-                });
-                localStorage.setItem("approvedTutors", JSON.stringify(approvedTutors));
-                
-                // Add a system notification for the Academy Hub
-                let botNotices = JSON.parse(localStorage.getItem("botNotices")) || [];
-                botNotices.unshift(`System: ${request.name} has been appointed as a Tutor for ${request.class}.`);
-                localStorage.setItem("botNotices", JSON.stringify(botNotices));
-            } else {
-                // Add to enrolled learners
-                let enrolled = JSON.parse(localStorage.getItem(`enrolled_${request.class}`)) || [];
-                enrolled.push(request);
-                localStorage.setItem(`enrolled_${request.class}`, JSON.stringify(enrolled));
-            }
-            alert(`SUCCESS: ${request.title} has been granted access.`);
-        }
-
-        // Remove from pending list
-        adminNotify = adminNotify.filter(r => r.id !== id);
-        localStorage.setItem("adminNotifications", JSON.stringify(adminNotify));
-        
-        // Refresh UI
-        syncAcademyRequests();
-    }
-
-    // Update the DOMContentLoaded listener to include the sync
-    document.addEventListener("DOMContentLoaded", () => {
-        if (checkLeadershipAccess()) {
-            updateLiveCounter();
-            syncAcademyRequests(); // Initial load
-            
-            // Auto-refresh notifications every 10 seconds
-            setInterval(syncAcademyRequests, 10000);
-            
-            setInterval(rotateQuotes, 6000);
-            setInterval(updateLiveCounter, 5000);
-        }
-    });
-</script>
-
-                <div class="feed-item urgent">
-                    <div class="item-meta">
-                        <span>NEW PRAYER CONCERN</span>
-                        <span>2 MINS AGO</span>
-                    </div>
-                    <span class="item-title">Urgent Prayer: Family Transition</span>
-                    <p class="item-desc">A member has posted a concern regarding a new job transition. Needs a priestly response and encouragement in the Prayer Room.</p>
-                </div>
-
-                <div class="feed-item">
-                    <div class="item-meta">
-                        <span>SKILL UPLOAD</span>
-                        <span>1 HOUR AGO</span>
-                    </div>
-                    <span class="item-title">Graphic Design Portfolio: Patrick</span>
-                    <p class="item-desc">New talent assets uploaded for the Media Department. Review needed for approval to the Talents Hub.</p>
-                </div>
-            </div>
-
-            <div class="reminders-zone">
-                <span class="section-label">Room Reminders</span>
-                <div class="feed-item" style="margin-bottom: 15px; padding: 20px;">
-                    <span style="color:var(--gold); font-weight: 800; font-size: 11px;">SCHOOL</span>
-                    <p style="font-size: 13px; margin: 5px 0;">2 Tutor applications pending.</p>
-                </div>
-                <div class="feed-item" style="padding: 20px;">
-                    <span style="color:var(--gold); font-weight: 800; font-size: 11px;">PROJECTS</span>
-                    <p style="font-size: 13px; margin: 5px 0;">Update due for 'Vision 2026' logs.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="coffee-corner">
-        <div class="smoke">💨</div>
-        <div class="coffee-icon" style="font-size: 50px;">☕</div>
-    </div>
-
-    <script>
-        const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-        function checkLeadershipAccess() {
-            if (!currentUser) {
-                alert("Authorization Required: No session found.");
-                window.location.href = "login.html";
-                return false;
-            }
-            const role = currentUser.role ? currentUser.role.toLowerCase() : "";
-            if (role !== "leader" && role !== "admin") {
-                alert("Restricted Area: Leadership Credentials Required.");
-                window.location.href = "main.html"; 
-                return false;
-            }
-            document.getElementById('greetName').innerText = `Shalom, ${currentUser.name.split(' ')[0]}`;
-            return true;
-        }
-
-        const quotes = [
-            "\"True leaders don't create followers, they create more leaders.\"",
-            "\"Vision is the art of seeing what is invisible to others.\"",
-            "\"The family's strength is in our unity and divine calling.\"",
-            "\"Managing the heart of the family requires wisdom and grace.\"",
-            "\"Your influence today shapes the generation of tomorrow.\""
-        ];
-        
-        let qIdx = 0;
-        function rotateQuotes() {
-            qIdx = (qIdx + 1) % quotes.length;
-            document.getElementById('quoteDisplay').innerText = quotes[qIdx];
-        }
-
-        function updateLiveCounter() {
-            try {
-                const comments = JSON.parse(localStorage.getItem("threadComments")) || [];
-                const users = JSON.parse(localStorage.getItem("users")) || [];
-                const activeNames = [...new Set(comments.map(c => c.name))];
-                let pioneersOnline = 0;
-                let membersOnline = 0;
-                activeNames.forEach(name => {
-                    const userProfile = users.find(u => u.name === name);
-                    if (userProfile && (userProfile.role === 'leader' || userProfile.role === 'admin')) {
-                        pioneersOnline++;
-                    } else {
-                        membersOnline++;
-                    }
-                });
-                const finalPioneers = pioneersOnline || 1; 
-                document.getElementById('sessionCount').innerText = `${finalPioneers} Pioneer(s) | ${membersOnline} Member(s) Online`;
-                const botMsg = document.querySelector('.bot-msg');
-                if (botMsg) {
-                    botMsg.innerHTML = `<strong>System Intelligence:</strong> Data stream stable. There are <span style="color:var(--gold)">${finalPioneers} Pioneer(s)</span> and <span style="color:var(--gold)">${membersOnline} Member(s)</span> currently synced to the family grid.`;
-                }
-            } catch (e) { console.log("Counter sync waiting..."); }
-        }
-
-        function searchUser() {
-            const query = document.getElementById('searchMember').value.toLowerCase();
-            const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-            const resultDiv = document.getElementById('searchResult');
-            if (!query) return;
-            const found = allUsers.find(u => u.name.toLowerCase().includes(query) || u.memberID.toLowerCase().includes(query));
-            if (found) {
-                resultDiv.style.display = "block";
-                resultDiv.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><div><strong style="color: var(--gold);">${found.name}</strong><br><span style="font-size: 11px; color: #888;">ID: ${found.memberID}</span></div><button onclick="resetUserPassword('${found.memberID}')" style="background: var(--red); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer;">ISSUE RECOVERY KEY</button></div>`;
-            } else {
-                resultDiv.style.display = "block";
-                resultDiv.innerHTML = `<span style="color: var(--red); font-size: 12px;">No member found.</span>`;
-            }
-        }
-
-        function resetUserPassword(id) {
-            if (confirm("Pioneer Verification: Have two Pioneers verified this identity?")) {
-                let allUsers = JSON.parse(localStorage.getItem("users")) || [];
-                const userIndex = allUsers.findIndex(u => u.memberID === id);
-                if (userIndex !== -1) {
-                    const tempPass = "Declare" + Math.floor(1000 + Math.random() * 9000);
-                    allUsers[userIndex].password = tempPass;
-                    localStorage.setItem("users", JSON.stringify(allUsers));
-                    alert(`SUCCESS: Account Restored.\nTemporary Password: ${tempPass}`);
-                }
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            if (checkLeadershipAccess()) {
-                updateLiveCounter();
-                setInterval(rotateQuotes, 6000);
-                setInterval(updateLiveCounter, 5000);
-            }
-            function processGatekeeping(id, action) {
-    // 1. Fetch current pending requests
-    let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
-    const request = adminNotify.find(r => r.id === id);
-
-    if (!request) return;
-
-    if (action === 'approve') {
-        // Finalize the Tutor's official status
-        let approvedTutors = JSON.parse(localStorage.getItem("approvedTutors")) || [];
-        approvedTutors.push({
-            ...request,
-            status: 'active',
-            approvedBy: currentUser.name,
-            approvalDate: new Date().toISOString()
-        });
-        localStorage.setItem("approvedTutors", JSON.stringify(approvedTutors));
-        
-        // Announce the new Tutor to the Academy Bot
-        let botNotices = JSON.parse(localStorage.getItem("botNotices")) || [];
-        botNotices.unshift({
-            type: "APPOINTMENT",
-            msg: `OFFICIAL: ${request.title} has been appointed as a Tutor for the ${request.class} department.`
-        });
-        localStorage.setItem("botNotices", JSON.stringify(botNotices));
-        
-        alert(`ACCESS GRANTED: ${request.name} is now an active Tutor.`);
-    } else {
-        alert(`REQUEST DENIED: Notification removed.`);
-    }
-
-    // 2. REMOVE FROM TIMELINE: Filter out the processed ID
-    adminNotify = adminNotify.filter(r => r.id !== id);
-    
-    // 3. SAVE & REFRESH: Update storage and trigger the UI sync
-    localStorage.setItem("adminNotifications", JSON.stringify(adminNotify));
-    
-    // This call immediately re-renders the list, making the item "disappear"
-    syncAcademyRequests(); 
+/* ── auth guard ─────────────────────────────── */
+function guardLeader(){
+  if(!currentUser){window.location.href='login.html';return false;}
+  if(!isLeader(currentUser)){
+    alert('RESTRICTED: Pioneer credentials required.');
+    window.location.href='Dashboard.html';return false;
+  }
+  return true;
 }
-        });
-    </script>
+
+/* ── device detection ───────────────────────── */
+function detectDevice(){
+  var w=window.innerWidth,tag=document.getElementById('deviceTag');
+  if(!tag)return;
+  tag.textContent=w<768?'MOBILE CONSOLE':w<1024?'TABLET INTERFACE':'DESKTOP COMMAND STATION';
+}
+
+/* ── quotes ─────────────────────────────────── */
+var QUOTES=[
+  '"True leaders don\'t create followers — they create more leaders."',
+  '"Vision is the art of seeing what is invisible to others."',
+  '"The family\'s strength is in our unity and divine calling."',
+  '"Managing the heart of the family requires wisdom and grace."',
+  '"Your influence today shapes the generation of tomorrow."',
+  '"A Pioneer builds the bridge others will walk across."',
+  '"Integrity in leadership is the highest form of worship."'
+];
+var qIdx=0;
+function rotateQuotes(){
+  qIdx=(qIdx+1)%QUOTES.length;
+  var el=document.getElementById('quoteDisplay');
+  if(el){el.style.opacity='0';setTimeout(function(){el.textContent=QUOTES[qIdx];el.style.opacity='1';},400);}
+}
+
+/* ── live counter ───────────────────────────── */
+var PRESENCE_TTL=25000;
+function updateLiveCounter(){
+  var map={};try{map=JSON.parse(localStorage.getItem('presenceMap'))||{};}catch(e){}
+  var now=Date.now(),c=0,pioneers=0,members=0;
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  Object.keys(map).forEach(function(k){
+    if(now-map[k]<PRESENCE_TTL){
+      c++;
+      var u=users.find(function(u2){return u2.email===k||u2.id===k;});
+      if(u&&isLeader(u))pioneers++;else members++;
+    }
+  });
+  var el=document.getElementById('sessionCount');
+  if(el)el.textContent=pioneers+' Pioneer(s) · '+members+' Member(s) Online';
+  var el2=document.getElementById('statOnline');if(el2)el2.textContent=c;
+  updateBotMsg(pioneers,members);
+}
+
+function updateBotMsg(p,m){
+  var el=document.getElementById('botMsg');
+  if(!el)return;
+  var adminNotif=[];try{adminNotif=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
+  var pioneer=[];try{pioneer=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var parts=[];
+  if(pioneer.length>0)parts.push('<span style="color:var(--gold)">'+pioneer.length+' pioneer registration request(s)</span> awaiting your verification');
+  if(adminNotif.length>0)parts.push('<span style="color:var(--gold)">'+adminNotif.length+' academy application(s)</span> pending approval');
+  parts.push('<span style="color:var(--green)">'+p+' Pioneer(s)</span> and <span style="color:var(--gold)">'+m+' Member(s)</span> currently active');
+  el.innerHTML='<strong>System Intelligence:</strong> Shalom, Leader. '+parts.join(' · ')+'.';
+}
+
+/* ── live stats ─────────────────────────────── */
+function updateStats(){
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var notif=[];try{notif=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
+  var pioneer=[];try{pioneer=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  var el=document.getElementById('statMembers');if(el)el.textContent=users.length;
+  var el2=document.getElementById('statPending');if(el2)el2.textContent=notif.length+pioneer.length;
+  var el3=document.getElementById('statBroadcasts');if(el3)el3.textContent=updates.length;
+}
+
+/* ── pioneer code generator ─────────────────── */
+function genPioneerCode(){
+  return 'DF-PNR-'+Math.random().toString(36).slice(2,8).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();
+}
+
+/* ── pioneer registration requests ─────────── */
+function loadPioneerRequests(){
+  var list=[];try{list=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var el=document.getElementById('pioneerRequestList');if(!el)return;
+  if(!list.length){
+    el.innerHTML='<p style="color:#555;text-align:center;padding:20px;font-size:13px;">No pending pioneer registration requests.</p>';
+    return;
+  }
+  el.innerHTML=list.map(function(req){
+    return '<div class="reg-request-row" id="preq-'+req.id+'">'+
+      '<div class="info">'+
+        '<strong>'+esc(req.name)+'</strong>'+
+        '<span>'+esc(req.email)+' · Requested: '+esc(req.roleRequested||'Pioneer')+'</span>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
+        '<button class="btn-approve" onclick="approvePioneer('+req.id+')">✓ APPROVE + GENERATE CODE</button>'+
+        '<button class="btn-deny"    onclick="denyPioneer('+req.id+')">✗ DENY</button>'+
+      '</div>'+
+      '<div class="code-display" id="code-'+req.id+'">'+
+        '<div style="font-size:10px;color:var(--green);font-weight:800;margin-bottom:6px;">GENERATED ACCESS CODE — Share this with '+esc(req.name)+' manually</div>'+
+        '<div class="code-val" id="codeval-'+req.id+'"></div>'+
+        '<div class="code-note">This code expires after first use. Keep it confidential.</div>'+
+        '<button class="copy-btn" onclick="copyCode('+req.id+')">COPY CODE</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+window.approvePioneer=function(id){
+  var list=[];try{list=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var req=list.find(function(r){return r.id===id;});
+  if(!req)return;
+  var code=genPioneerCode();
+  // Store approved pioneer codes so they can register using it
+  var codes={}; try{codes=JSON.parse(localStorage.getItem('approvedPioneerCodes'))||{};}catch(e){}
+  codes[code]={email:req.email,role:req.roleRequested||'leader',name:req.name,usedAt:null};
+  localStorage.setItem('approvedPioneerCodes',JSON.stringify(codes));
+  // Show code in UI
+  var codeBox=document.getElementById('code-'+id);
+  var codeVal=document.getElementById('codeval-'+id);
+  if(codeBox&&codeVal){codeVal.textContent=code;codeBox.style.display='block';}
+  // Notify via bot
+  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  updates.unshift({id:Date.now(),category:'Pioneer Spotlight',icon:'🛡️',text:'A new Pioneer has been approved and is joining the Declare Family leadership team.',date:'Today'});
+  localStorage.setItem('declareUpdates',JSON.stringify(updates));
+  alert('Code generated for '+req.name+'. Share the code displayed on screen with them directly.');
+};
+
+window.denyPioneer=function(id){
+  var list=[];try{list=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  list=list.filter(function(r){return r.id!==id;});
+  localStorage.setItem('pioneerRequests',JSON.stringify(list));
+  loadPioneerRequests();
+  alert('Request denied and removed.');
+};
+
+window.copyCode=function(id){
+  var el=document.getElementById('codeval-'+id);
+  if(!el)return;
+  navigator.clipboard.writeText(el.textContent).then(function(){alert('Code copied to clipboard.');});
+};
+
+/* ── academy approvals ──────────────────────── */
+function loadAcademyApprovals(){
+  var list=[];try{list=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
+  var el=document.getElementById('pendingList');if(!el)return;
+  if(!list.length){
+    el.innerHTML='<p style="color:#555;text-align:center;padding:20px;font-size:13px;">The gates are clear. No pending applications.</p>';
+    return;
+  }
+  el.innerHTML=list.map(function(req){
+    var isLeaderReq=req.mode==='tutor';
+    return '<div class="approval-row">'+
+      '<div class="approval-info">'+
+        '<span class="tag" style="color:'+(isLeaderReq?'var(--green)':'var(--gold)')+'">'+esc(req.mode||'learner')+' Request</span>'+
+        '<h4>'+esc(req.name||'Unknown')+'</h4>'+
+        '<p>Class: <strong>'+esc(req.class||'')+'</strong> · Title: <em>'+esc(req.title||'')+'</em></p>'+
+      '</div>'+
+      '<div class="approval-btns">'+
+        '<button class="btn-approve" onclick="processAcademy('+req.id+',\'approve\')">APPROVE</button>'+
+        '<button class="btn-deny"    onclick="processAcademy('+req.id+',\'deny\')">DENY</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+window.processAcademy=function(id,action){
+  var list=[];try{list=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
+  var req=list.find(function(r){return r.id===id;});
+  if(!req)return;
+  if(action==='approve'){
+    if(req.mode==='tutor'){
+      var tutors=[];try{tutors=JSON.parse(localStorage.getItem('approvedTutors'))||[];}catch(e){}
+      tutors.push(Object.assign({},req,{status:'active',approvedBy:currentUser.name,approvedAt:new Date().toISOString()}));
+      localStorage.setItem('approvedTutors',JSON.stringify(tutors));
+    }else{
+      var enrolled=[];try{enrolled=JSON.parse(localStorage.getItem('enrolled_'+req.class))||[];}catch(e){}
+      enrolled.push(req);localStorage.setItem('enrolled_'+req.class,JSON.stringify(enrolled));
+      localStorage.setItem('isRegistered_'+req.class,'true');
+    }
+    // Bot notification
+    var botNotices=[];try{botNotices=JSON.parse(localStorage.getItem('botNotices'))||[];}catch(e){}
+    botNotices.unshift({type:'APPOINTMENT',msg:'OFFICIAL: '+req.title+' has been '+(req.mode==='tutor'?'appointed as a Tutor for':'enrolled in')+' the '+req.class+' class.'});
+    localStorage.setItem('botNotices',JSON.stringify(botNotices));
+    alert('ACCESS GRANTED: '+req.name+' approved.');
+  }else{
+    alert('Request denied and removed.');
+  }
+  list=list.filter(function(r){return r.id!==id;});
+  localStorage.setItem('adminNotifications',JSON.stringify(list));
+  loadAcademyApprovals();updateStats();
+};
+
+/* ── announcement / bot post ────────────────── */
+window.postAnnouncement=function(){
+  var text=(document.getElementById('announceInput').value||'').trim();
+  if(!text){alert('Please enter an announcement.');return;}
+  var cat=document.getElementById('announceCategory').value;
+  var date=document.getElementById('announceDate').value;
+  var expiry=document.getElementById('announceExpiry').value;
+  var iconMap={'Announcement':'📢','Upcoming Session':'📅','Physical Event':'📍','Current Project':'🚀','Pioneer Spotlight':'👑',"Today's Momentum":'⚡','Partnership':'🤝'};
+  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  var entry={id:Date.now(),category:cat,icon:iconMap[cat]||'📢',text:text,date:date||'',expires:expiry||null,postedBy:currentUser.name};
+  updates.unshift(entry);localStorage.setItem('declareUpdates',JSON.stringify(updates));
+  document.getElementById('announceInput').value='';document.getElementById('announceDate').value='';document.getElementById('announceExpiry').value='';
+  loadAnnouncementHistory();
+  alert('Announcement broadcast successfully. It will appear in the Live Ticker and Hub within 30 seconds.');
+};
+
+function loadAnnouncementHistory(){
+  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  var el=document.getElementById('announceHistory');if(!el)return;
+  if(!updates.length){el.innerHTML='';return;}
+  el.innerHTML='<div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recent Broadcasts</div>'+
+    updates.slice(0,5).map(function(u){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#000;border-radius:8px;margin-bottom:6px;border:1px solid var(--border);">'+
+        '<span style="font-size:12px;">'+esc(u.icon||'')+'&nbsp;'+esc(u.text.slice(0,60))+(u.text.length>60?'…':'')+'</span>'+
+        '<button onclick="removeAnnouncement('+u.id+')" style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:2px 6px;border-radius:4px;" title="Remove">✕</button>'+
+      '</div>';
+    }).join('');
+}
+window.removeAnnouncement=function(id){
+  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  updates=updates.filter(function(u){return u.id!==id;});
+  localStorage.setItem('declareUpdates',JSON.stringify(updates));
+  loadAnnouncementHistory();updateStats();
+};
+
+/* ── square commands ────────────────────────── */
+window.verifyTarget=function(){
+  var id=(document.getElementById('targetID').value||'').trim();
+  if(!id){alert('Enter a member ID first.');return;}
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var found=users.find(function(u){return u.memberID===id;});
+  var res=document.getElementById('targetResult');
+  res.style.display='block';
+  if(found)res.innerHTML='<strong style="color:var(--green)">✓ VERIFIED:</strong> '+esc(found.name)+' · '+esc(found.email)+' · Role: '+esc(found.role||'member');
+  else res.innerHTML='<span style="color:var(--red)">✗ ID not found in system.</span>';
+};
+
+window.issueCmd=function(action){
+  var id=(document.getElementById('targetID').value||'').trim();
+  if(!id){alert('Enter a member ID first.');return;}
+  var cmds={};try{cmds=JSON.parse(localStorage.getItem('systemCommands'))||{};}catch(e){}
+  cmds[id]=action;localStorage.setItem('systemCommands',JSON.stringify(cmds));
+  alert('COMMAND ISSUED: '+action+' sent to '+id);
+};
+
+window.purgeChatLog=function(){
+  if(confirm('This will permanently delete all Square chat messages. Proceed?')){
+    localStorage.removeItem('threadComments');alert('Chat log purged.');
+  }
+};
+
+/* ── member recovery ────────────────────────── */
+window.findMember=function(){
+  var q=(document.getElementById('recovSearch').value||'').toLowerCase();
+  if(!q)return;
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var found=users.find(function(u){return (u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
+  var res=document.getElementById('recovResult');
+  res.style.display='block';
+  if(found)res.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><div><strong style="color:var(--gold)">'+esc(found.name)+'</strong><br><span style="font-size:11px;color:#666;">ID: '+esc(found.memberID||'—')+'  ·  '+esc(found.email)+'</span></div><button class="action-btn gold" style="padding:8px 14px;font-size:11px;" onclick="issueRecoveryKey(\''+esc(found.memberID||found.email)+'\')">ISSUE RECOVERY KEY</button></div>';
+  else res.innerHTML='<span style="color:var(--red);font-size:12px;">No member found.</span>';
+};
+
+window.issueRecoveryKey=function(id){
+  if(!confirm('Have two Pioneers verified this person\'s identity?'))return;
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var idx=users.findIndex(function(u){return u.memberID===id||u.email===id;});
+  if(idx===-1){alert('User not found.');return;}
+  var tempKey='Declare'+Math.floor(1000+Math.random()*9000);
+  // Store as hash
+  var h=0;for(var i=0;i<tempKey.length;i++){h=((h<<5)-h)+tempKey.charCodeAt(i);h=h&h;}
+  users[idx].passwordHash=h.toString(36);
+  delete users[idx].password;
+  localStorage.setItem('users',JSON.stringify(users));
+  alert('SUCCESS. Temporary Recovery Key: '+tempKey+'\n\nShare this with the member. They can login then change their password.');
+};
+
+/* ── INIT ───────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',function(){
+  if(!guardLeader())return;
+
+  document.getElementById('greetName').textContent='Shalom, '+(currentUser.name||'Leader').split(' ')[0];
+  detectDevice();
+
+  loadPioneerRequests();
+  loadAcademyApprovals();
+  loadAnnouncementHistory();
+  updateLiveCounter();
+  updateStats();
+
+  setInterval(rotateQuotes,7000);
+  setInterval(updateLiveCounter,5000);
+  setInterval(function(){loadPioneerRequests();loadAcademyApprovals();updateStats();},10000);
+  window.addEventListener('resize',detectDevice);
+  window.addEventListener('orientationchange',function(){setTimeout(detectDevice,200);});
+});
+
+})();
+</script>
 </body>
 </html>
