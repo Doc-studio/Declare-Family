@@ -4,199 +4,225 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register | Declare Family</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #0a0a0a;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
+:root{--gold:#FFD700;--dark:#0a0a0a;--panel:#111;--border:rgba(255,255,255,0.08);--green:#00FF94;--red:#ff4d4d;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
+.bg-glow{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.06) 0%,transparent 70%);pointer-events:none;}
+.container{background:var(--panel);padding:40px;border-radius:24px;width:100%;max-width:420px;border:1px solid var(--border);box-shadow:0 30px 60px rgba(0,0,0,.6);position:relative;z-index:1;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.logo-area{text-align:center;margin-bottom:28px;}
+.logo-area h2{color:var(--gold);font-size:20px;font-weight:800;letter-spacing:2px;}
+.logo-area p{color:#555;font-size:13px;margin-top:6px;}
+label{display:block;font-size:10px;font-weight:800;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.field{margin-bottom:16px;}
+input,select{width:100%;padding:13px 15px;border:1px solid #222;border-radius:12px;background:#000;color:#fff;font-family:inherit;font-size:13px;transition:border-color .2s;outline:none;}
+input:focus,select:focus{border-color:var(--gold);}
+input::placeholder{color:#3a3a3a;}
+select option{background:#111;}
+.btn{width:100%;padding:14px;background:var(--gold);border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:4px;}
+.btn:hover{background:#fff;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.error-msg{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.3);color:#ff6b6b;padding:12px 15px;border-radius:10px;font-size:12px;margin-bottom:15px;display:none;}
+.success-msg{background:rgba(0,255,148,.08);border:1px solid rgba(0,255,148,.3);color:var(--green);padding:12px 15px;border-radius:10px;font-size:12px;margin-bottom:15px;display:none;}
+.link-row{text-align:center;margin-top:18px;}
+a{color:var(--gold);text-decoration:none;font-size:12px;font-weight:600;}
+a:hover{text-decoration:underline;}
+.hint{font-size:11px;color:#3a3a3a;margin-top:5px;line-height:1.5;}
+.pioneer-notice{background:rgba(255,215,0,.05);border:1px dashed rgba(255,215,0,.3);border-radius:10px;padding:12px 14px;font-size:12px;color:#888;margin-top:8px;display:none;line-height:1.6;}
 
-/* Container */
-.container {
-    background: #121212;
-    padding: 40px;
-    border-radius: 15px;
-    width: 350px;
-    box-shadow: 0 0 25px rgba(255,215,0,0.2);
-    text-align: center;
-}
-
-/* Title */
-h2 {
-    color: gold;
-    margin-bottom: 20px;
-}
-
-/* Inputs */
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 8px;
-    background: #1a1a1a;
-    color: white;
-}
-
-/* Button */
-button {
-    width: 100%;
-    padding: 12px;
-    background: gold;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
-}
-
-/* Hover */
-button:hover {
-    background: white;
-}
-
-/* Link */
-a {
-    color: gold;
-    text-decoration: none;
-    display: block;
-    margin-top: 15px;
-}
-
-.secret-field {
-    display: none; /* Hidden by default */
-    border: 1px dashed gold;
-}
+/* Pioneer code field — only visible when role is pioneer/admin */
+#codeField{display:none;}
+/* Request-to-join panel — shown when no code yet */
+#requestPanel{display:none;}
 </style>
 </head>
-
 <body>
-
+<div class="bg-glow"></div>
 <div class="container">
-    <h2>Create Account</h2>
+  <div class="logo-area">
+    <h2>CREATE ACCOUNT</h2>
+    <p>Join the Declare Family ecosystem</p>
+  </div>
 
-    <form id="registerForm">
-        <input type="text" id="name" placeholder="Full Name" required>
-        <input type="email" id="email" placeholder="Email Address" required>
-        
-        <select id="role" onchange="toggleAdminField()">
-            <option value="member">General Member</option>
-            <option value="leader">Pioneer (Leader)</option>
-            <option value="admin">System Administrator</option>
-        </select>
+  <div class="error-msg"   id="errorMsg"></div>
+  <div class="success-msg" id="successMsg"></div>
 
-        <input type="password" id="secretKey" class="secret-field" placeholder="Enter Access Key">
+  <div class="field">
+    <label>Full Name</label>
+    <input type="text" id="name" placeholder="Your full name" autocomplete="name">
+  </div>
+  <div class="field">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+  </div>
+  <div class="field">
+    <label>Account Type</label>
+    <select id="role" onchange="onRoleChange()">
+      <option value="member">General Member</option>
+      <option value="leader">Pioneer (Leader)</option>
+      <option value="admin">System Administrator</option>
+    </select>
+  </div>
 
-        <input type="password" id="password" placeholder="Password" required>
-        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+  <!-- PIONEER CODE FIELD (shown when pioneer/admin selected AND they have a code) -->
+  <div class="field" id="codeField">
+    <label>Pioneer Access Code</label>
+    <input type="text" id="pioneerCode" placeholder="Code provided by your admin (e.g. DF-PNR-XXXXXX-XXXX)" autocomplete="off">
+    <p class="hint">This code is issued by a Declare Family admin after verifying your pioneer registration request.</p>
+    <div class="pioneer-notice" id="pioneerNotice"></div>
+  </div>
 
-        <button type="submit">Register</button>
-    </form>
+  <!-- REQUEST PANEL (shown when pioneer/admin selected but no code yet) -->
+  <div id="requestPanel">
+    <p style="font-size:12px;color:#666;margin-bottom:10px;line-height:1.6;">
+      Pioneer &amp; Admin accounts require an access code issued by an existing admin.<br>
+      Request access below and an admin will review and provide your code.
+    </p>
+    <div class="field">
+      <label>Why are you requesting Pioneer access?</label>
+      <input type="text" id="requestReason" placeholder="Brief reason (e.g. Invited by Gadner Amos)">
+    </div>
+    <button class="btn" id="requestBtn" onclick="submitPioneerRequest()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);">REQUEST PIONEER ACCESS</button>
+    <p style="font-size:11px;color:#444;margin-top:8px;text-align:center;">Or enter your code below if you already have one:</p>
+    <div class="field" style="margin-top:8px;">
+      <input type="text" id="pioneerCodeAlt" placeholder="Already have a code? Enter it here" autocomplete="off" oninput="document.getElementById('pioneerCode').value=this.value">
+    </div>
+  </div>
 
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Min. 6 characters" autocomplete="new-password">
+  </div>
+  <div class="field">
+    <label>Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="Repeat password" autocomplete="new-password">
+  </div>
+
+  <button class="btn" id="regBtn" onclick="handleRegister()">Create Account</button>
+
+  <div class="link-row">
     <a href="login.html">Already have an account? Login</a>
+  </div>
 </div>
 
 <script>
-// Toggle secret field visibility
-function toggleAdminField() {
-    const role = document.getElementById("role").value;
-    const keyField = document.getElementById("secretKey");
-    keyField.style.display = (role === "admin" || role === "leader") ? "block" : "none";
+(function(){
+'use strict';
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function simpleHash(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h;}return h.toString(36);}
+
+function showError(m){var e=document.getElementById('errorMsg');e.textContent=m;e.style.display='block';document.getElementById('successMsg').style.display='none';}
+function showSuccess(m){var e=document.getElementById('successMsg');e.textContent=m;e.style.display='block';document.getElementById('errorMsg').style.display='none';}
+
+window.onRoleChange=function(){
+  var role=document.getElementById('role').value;
+  var isPioneer=role==='leader'||role==='admin';
+  document.getElementById('codeField').style.display    = isPioneer?'block':'none';
+  document.getElementById('requestPanel').style.display = isPioneer?'block':'none';
+  document.getElementById('errorMsg').style.display='none';
+};
+
+/* ── PIONEER REQUEST SUBMISSION ─────────────── */
+window.submitPioneerRequest=function(){
+  var name=(document.getElementById('name').value||'').trim();
+  var email=(document.getElementById('email').value||'').trim();
+  var reason=(document.getElementById('requestReason').value||'').trim();
+  if(!name||!email){showError('Please fill in your name and email first.');return;}
+  if(!reason){showError('Please provide a brief reason for requesting pioneer access.');return;}
+
+  var requests=[];try{requests=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  // Avoid duplicate requests
+  if(requests.find(function(r){return r.email===email;})){
+    showSuccess('Your request was already submitted. A Pioneer Leader will review it and provide your access code.');return;
+  }
+
+  requests.push({id:Date.now(),name:name,email:email,reason:reason,roleRequested:document.getElementById('role').value,submittedAt:new Date().toISOString(),status:'pending'});
+  localStorage.setItem('pioneerRequests',JSON.stringify(requests));
+  showSuccess('Request submitted! A Pioneer Leader will review and, if approved, will provide you with an access code to complete your registration.');
+  document.getElementById('requestBtn').disabled=true;
+  document.getElementById('requestBtn').textContent='REQUEST SENT ✓';
+};
+
+/* ── PIONEER CODE VALIDATION ─────────────── */
+function validatePioneerCode(role,email,code){
+  if(!code){showError('Please enter your Pioneer Access Code. If you don\'t have one yet, use the "Request Pioneer Access" button first.');return false;}
+  code=code.trim().toUpperCase();
+  var codes={};try{codes=JSON.parse(localStorage.getItem('approvedPioneerCodes'))||{};}catch(e){}
+  var entry=codes[code];
+  if(!entry){showError('Invalid access code. Please check the code provided by your admin.');return false;}
+  if(entry.usedAt){showError('This access code has already been used. Contact your admin for a new one.');return false;}
+  if(entry.email&&entry.email.toLowerCase()!==email.toLowerCase()){showError('This access code was issued for a different email address.');return false;}
+  return {codes:codes,code:code,entry:entry};
 }
 
-// Generate ID Function
-function generateDeclareID(fullName, role) {
-    const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
-    const year = "26";
-
-    if (role === "admin") {
-        // Checking existing admins to assign 001 or 002
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        const adminCount = users.filter(u => u.role === "admin").length;
-        const adminNum = adminCount === 0 ? "001" : "002";
-        return `DF-ADM-${adminNum}/${year}-${initials}`;
-    } 
-    
-    if (role === "leader") {
-        return `DF-PNR-001/${year}-${initials}`;
-    }
-
-    // System generated for members
-    const randomNum = Math.floor(100 + Math.random() * 899);
-    return `DF-2026-${randomNum}/${initials}`;
+/* ── ID GENERATOR ─────────────────────────── */
+function generateID(fullName,role){
+  var initials=fullName.split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,3);
+  var year='26';
+  if(role==='admin'){var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}var n=users.filter(function(u){return u.role==='admin';}).length;return 'DF-ADM-'+String(n+1).padStart(3,'0')+'/'+year+'-'+initials;}
+  if(role==='leader'){var users2=[];try{users2=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}var n2=users2.filter(function(u){return u.role==='leader';}).length;return 'DF-PNR-'+String(n2+1).padStart(3,'0')+'/'+year+'-'+initials;}
+  return 'DF-2026-'+Math.floor(100+Math.random()*899)+'/'+initials;
 }
 
-// Handle Registration
-document.getElementById("registerForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+/* ── MAIN REGISTRATION ─────────────────────── */
+window.handleRegister=function(){
+  var name=(document.getElementById('name').value||'').trim();
+  var email=(document.getElementById('email').value||'').trim();
+  var role=document.getElementById('role').value;
+  var password=document.getElementById('password').value;
+  var confirmPwd=document.getElementById('confirmPassword').value;
+  var btn=document.getElementById('regBtn');
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const role = document.getElementById("role").value;
-    const secretKey = document.getElementById("secretKey").value;
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+  document.getElementById('errorMsg').style.display='none';
 
-    // 1. Password Validation
-    if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-    }
+  if(!name||!email||!password){showError('Please fill in all required fields.');return;}
+  if(password.length<6){showError('Password must be at least 6 characters.');return;}
+  if(password!==confirmPwd){showError('Passwords do not match.');return;}
 
-    // 2. Secret Key Validation (Only for Admins/Leaders)
-    const ADMIN_SECRET = "DF-ADMIN-2026"; // Change this to your preferred secret key
-    if ((role === "admin" || role === "leader") && secretKey !== ADMIN_SECRET) {
-        alert("Invalid Access Key! You cannot register as a Leader/Admin.");
-        return;
-    }
+  // Pioneer/admin: validate code
+  var codeResult=null;
+  if(role==='leader'||role==='admin'){
+    var codeInput=(document.getElementById('pioneerCode').value||document.getElementById('pioneerCodeAlt').value||'').trim().toUpperCase();
+    codeResult=validatePioneerCode(role,email,codeInput);
+    if(!codeResult)return;
+  }
 
-    // 3. Get existing users
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  if(users.find(function(u){return u.email===email;})){showError('An account with this email already exists. Try logging in.');return;}
 
-    // Check if email exists
-    if (users.find(user => user.email === email)) {
-        alert("User already exists!");
-        return;
-    }
+  btn.disabled=true;btn.textContent='Creating Account...';
 
-    // 4. Generate Unique ID
-    const generatedID = generateDeclareID(name, role);
-
-    // 5. Create new user
-    const newUser = {
-        name,
-        email,
-        password,
-        role,
-        memberID: generatedID,
-        joinedDate: new Date().toLocaleDateString()
-    };
-
+  setTimeout(function(){
+    var memberID=generateID(name,role);
+    var newUser={name:name,email:email,role:role,memberID:memberID,passwordHash:simpleHash(password),joinedDate:new Date().toLocaleDateString('en-GB')};
     users.push(newUser);
+    localStorage.setItem('users',JSON.stringify(users));
 
-    // Save to database (localStorage)
-    localStorage.setItem("users", JSON.stringify(users));
-    
-    // Set current session
-    localStorage.setItem("loggedInUser", JSON.stringify(newUser));
-
-    alert(`Registration successful! Welcome, ${generatedID}`);
-
-   // 6. Professional Redirect Router
-    if (role === "admin" || role === "leader") {
-        console.log("Redirecting to Leadership Pane...");
-        window.location.href = "leadership.html"; // Updated to match your filename
-    } else {
-        window.location.href = "main.html"; 
+    // Mark pioneer code as used
+    if(codeResult){
+      codeResult.codes[codeResult.code].usedAt=new Date().toISOString();
+      localStorage.setItem('approvedPioneerCodes',JSON.stringify(codeResult.codes));
+      // Remove from pending requests
+      var reqs=[];try{reqs=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+      reqs=reqs.filter(function(r){return r.email!==email;});
+      localStorage.setItem('pioneerRequests',JSON.stringify(reqs));
     }
-});
-</script>
 
+    // Session (no password hash)
+    var sess={name:newUser.name,email:newUser.email,role:newUser.role,memberID:newUser.memberID,joinedDate:newUser.joinedDate};
+    localStorage.setItem('loggedInUser',JSON.stringify(sess));
+
+    if(role==='admin'||role==='leader'){window.location.href='leadership.html';}
+    else{window.location.href='main.html';}
+  },500);
+};
+
+document.addEventListener('keydown',function(e){if(e.key==='Enter')window.handleRegister();});
+})();
+</script>
 </body>
 </html>
