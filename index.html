@@ -890,7 +890,54 @@
         initTickerControls();
         startPoller();
     });
+// --- Inside your <script> tag in index.html ---
+function registerUser() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPass').value;
+    const confirmPassword = document.getElementById('regConfirm').value;
+    const role = document.getElementById('regRole').value;
+    const secretKey = document.getElementById('secretKey').value;
+    const btn = document.querySelector('.btn-primary');
 
+    // Validation
+    if (!name || !email || !password) { showError('Please fill all required fields.'); return; }
+    if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+    if (password !== confirmPassword) { showError('Passwords do not match.'); return; }
+
+    // Admin/Leader Key Check
+    if ((role === 'admin' || role === 'leader') && secretKey !== "2026") { // Replace "2026" with your actual key
+        showError('Invalid access key. Contact the executive team.');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    if (users.find(u => u.email === email)) {
+        showError('An account with this email already exists.');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Initializing Profile...';
+
+    setTimeout(() => {
+        const newUser = {
+            name,
+            email,
+            role,
+            password: password, // Store temporarily or hash if you prefer
+            joinedDate: new Date().toLocaleDateString('en-GB'),
+            memberID: `DF-2026-${Math.floor(1000 + Math.random() * 9000)}`
+        };
+
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('loggedInUser', JSON.stringify(newUser));
+
+        // Redirect to Dashboard (Private Area) instead of Main (Public Area)
+        window.location.href = (role === 'admin' || role === 'leader') ? 'leadership.html' : 'Dashboard.html';
+    }, 800);
+}
 })();
 </script>
 
