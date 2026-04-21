@@ -152,7 +152,49 @@ function handleLogin() {
         }
     }, 400);
 }
+// --- Inside your <script> tag in login.html ---
+function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPass').value;
+    const btn = document.querySelector('.btn-primary');
+    const errorEl = document.getElementById('errorMsg');
 
+    if (!email || !password) {
+        errorEl.textContent = "Please enter both email and password.";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Verifying...';
+
+    setTimeout(() => {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (user) {
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            
+            // Logic for redirecting based on role
+            if (user.role === 'admin' || user.role === 'leader') {
+                window.location.href = 'leadership.html';
+            } else {
+                window.location.href = 'Dashboard.html';
+            }
+        } else {
+            errorEl.textContent = "Invalid credentials. Please try again.";
+            btn.disabled = false;
+            btn.textContent = 'Login';
+        }
+    }, 600);
+}
+
+// Auto-redirect if already logged in
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('loggedInUser')) {
+        const user = JSON.parse(localStorage.getItem('loggedInUser'));
+        window.location.href = (user.role === 'admin' || user.role === 'leader') ? 'leadership.html' : 'Dashboard.html';
+    }
+});
 // Allow Enter key to submit
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') handleLogin();
