@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dashboard | Declare Family</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-
     :root {
         --gold: #ffd700;
         --dark-bg: #0a0a0a;
@@ -13,263 +13,244 @@
         --red: #ff4d4d;
         --green: #00ff94;
     }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-        margin: 0;
-        font-family: 'Segoe UI', Roboto, sans-serif;
-        background: var(--dark-bg);
-        color: white;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: var(--dark-bg); color: white;
+        padding-top: 64px;
     }
 
-    .container {
-        padding: 40px 5%;
-        max-width: 1200px;
-        margin: 0 auto;
+    /* --- TOP NAV --- */
+    nav {
+        background: var(--gold); padding: 0 5%;
+        position: fixed; top: 0; width: 100%; z-index: 1000;
+        display: flex; justify-content: space-between; align-items: center;
+        height: 64px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
+    nav a {
+        text-decoration: none; color: black; font-weight: 800;
+        text-transform: uppercase; font-size: 12px; letter-spacing: 1px;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .nav-brand { font-size: 13px; letter-spacing: 2px; color: rgba(0,0,0,0.7); }
 
-    /* --- BOLD/BRIGHT HOVER STRATEGY --- */
+    .container { padding: 40px 5%; max-width: 1100px; margin: 0 auto; }
+
+    /* --- CARDS --- */
     .card {
-        background: var(--card-bg);
-        padding: 25px;
-        border-radius: 15px;
-        border: 1px solid #222;
+        background: var(--card-bg); padding: 25px;
+        border-radius: 18px; border: 1px solid #222;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
     }
-
     .card:hover {
-        border-color: var(--gold);
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 30px rgba(255, 215, 0, 0.15);
-        background: rgba(255, 215, 0, 0.02);
+        border-color: var(--gold); transform: translateY(-6px);
+        box-shadow: 0 15px 30px rgba(255,215,0,0.1);
     }
+    .card h4 { font-size: 16px; margin-bottom: 10px; font-weight: 800; }
+    .card p { color: #888; font-size: 13px; line-height: 1.5; margin-bottom: 15px; }
 
     .btn {
-        width: 100%;
-        padding: 12px;
-        background: var(--gold);
-        border: none;
-        border-radius: 8px;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: 0.3s;
+        width: 100%; padding: 12px; background: var(--gold);
+        border: none; border-radius: 10px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1px; font-size: 12px;
+        cursor: pointer; font-family: inherit; transition: 0.2s;
+    }
+    .btn:hover { background: white; }
+    .btn:active { transform: scale(0.98); }
+
+    /* --- STATUS --- */
+    .status-active { color: var(--green) !important; font-weight: 800; }
+    .status-inactive { color: var(--red) !important; font-weight: 800; }
+    .status-expired { color: #ff9800 !important; font-weight: 800; }
+
+    /* --- GRID --- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+
+    /* --- SECTION LABEL --- */
+    .section-label {
+        font-size: 11px; font-weight: 800; color: #444;
+        letter-spacing: 2px; text-transform: uppercase;
+        margin: 35px 0 16px;
     }
 
-    .btn:hover {
-        background: white;
-        box-shadow: 0 0 15px var(--gold);
+    /* --- USER HEADER --- */
+    .user-header { text-align: center; padding: 40px 20px 10px; }
+    .user-header img { width: 85px; height: 85px; border-radius: 50%; border: 2.5px solid var(--gold); object-fit: cover; margin-bottom: 16px; }
+    .user-header h2 { font-size: 26px; font-weight: 800; margin-bottom: 5px; }
+    .user-header .role-badge {
+        display: inline-block; background: rgba(255,215,0,0.1);
+        border: 1px solid rgba(255,215,0,0.3); color: var(--gold);
+        font-size: 10px; font-weight: 800; letter-spacing: 2px;
+        text-transform: uppercase; padding: 5px 14px; border-radius: 20px;
     }
 
-    /* --- DYNAMIC STATUS COLORS --- */
-    .status-active { color: var(--green) !important; font-weight: bold; text-shadow: 0 0 10px rgba(0, 255, 148, 0.3); }
-    .status-inactive { color: var(--red) !important; font-weight: bold; text-shadow: 0 0 10px rgba(255, 77, 77, 0.3); }
-
-    /* --- AUTOMATIC DEVICE DETECTION --- */
-    @media (min-width: 769px) {
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-        }
+    /* --- ID CARD --- */
+    .id-card {
+        background: linear-gradient(135deg, #111 0%, #000 100%);
+        border: 1px solid var(--gold); border-radius: 18px;
+        padding: 24px; margin-bottom: 8px;
+        display: flex; justify-content: space-between; align-items: center;
     }
+    .id-label { font-size: 10px; color: #555; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .id-value { font-family: 'Courier New', monospace; font-size: 20px; color: var(--gold); font-weight: 700; }
+    .system-active { font-size: 11px; color: var(--green); font-weight: 800; margin-top: 10px; }
 
-    @media (max-width: 768px) {
-        .grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    /* --- LOGOUT --- */
+    .logout-btn {
+        background: none; border: 1px solid #2a2a2a; color: #555;
+        padding: 10px 30px; border-radius: 10px; cursor: pointer;
+        font-family: inherit; font-size: 13px; transition: 0.2s;
+    }
+    .logout-btn:hover { border-color: #444; color: #888; }
+
+    /* --- MOBILE --- */
+    @media (max-width: 600px) {
         .container { padding: 20px; }
-        .user-header h2 { font-size: 1.5rem; }
+        .user-header h2 { font-size: 20px; }
+        .id-value { font-size: 15px; }
     }
-    body {
-        margin: 0;
-        font-family: 'Segoe UI', Roboto, sans-serif;
-        background: var(--dark-bg);
-        color: white;
-        padding-top: 60px; /* Adds space so the header isn't under the nav */
-    }
-
-    /* --- TOP NAVIGATION BAR --- */
-    nav {
-        background: var(--gold);
-        padding: 12px 5%;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-
-    nav a {
-        text-decoration: none;
-        color: black;
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-</style>
+    </style>
 </head>
 <body>
 
-    <div class="user-header" style="text-align: center; margin-top: 40px; padding: 0 20px;">
-        <img src="hero-image.jpg.jpeg" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 15px; object-fit: cover;">
-        <h2 id="welcomeName" style="margin: 0; font-size: 2rem;">Shalom, Family Member</h2>
-        <p id="userRole" style="color: #888; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">DECLARE PIONEER</p>
+    <!-- TOP NAV -->
+    <nav>
+        <a href="main.html">← Main Site</a>
+        <span class="nav-brand">DECLARE DASHBOARD</span>
+    </nav>
+
+    <!-- USER HEADER -->
+    <div class="user-header">
+        <img src="hero-image.jpg.jpeg" alt="Profile" id="profilePic" onerror="this.style.background='#222'; this.src='';">
+        <h2 id="welcomeName">Shalom, Family Member</h2>
+        <span class="role-badge" id="userRoleBadge">DECLARE PIONEER</span>
     </div>
 
     <div class="container">
-        
-        <div class="section-title">Verified Identity</div>
-        <div class="card" style="border: 1px solid var(--gold); background: linear-gradient(145deg, #111 0%, #000 100%); margin-bottom: 30px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <p style="margin: 0; font-size: 0.7rem; color: #555; letter-spacing: 1px;">MEMBER SERIAL</p>
-                    <h3 id="memberID" style="margin: 5px 0; font-family: 'Courier New', monospace; font-size: 1.5rem; color: var(--gold);">DF-2026/...</h3>
-                </div>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=VERIFIED-MEMBER" style="width: 45px; height: 45px; filter: invert(1) opacity(0.6);">
+
+        <div class="section-label">Verified Identity</div>
+        <div class="id-card">
+            <div>
+                <div class="id-label">Member Serial</div>
+                <div class="id-value" id="memberID">DF-2026-...</div>
+                <div class="system-active">● SYSTEM ACTIVE</div>
             </div>
-            <p style="margin: 10px 0 0 0; font-size: 0.7rem; color: #00ff94; font-weight: bold;">● SYSTEM ACTIVE</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=VERIFIED-MEMBER" style="width:50px; height:50px; filter:invert(1) opacity(0.5);" alt="QR Code">
         </div>
 
-        <div class="section-title">Ecosystem Access</div>
+        <div class="section-label">Ecosystem Access</div>
         <div class="grid">
             <div class="card">
                 <h4>💳 Subscription</h4>
                 <p>Manage your monthly access and partner with the vision.</p>
                 <button class="btn" onclick="window.location.href='subscriptions.html'">Manage Giving</button>
             </div>
-
             <div class="card">
                 <h4>🌐 Declare Hub</h4>
-                <p>Enter the heart of the family. Classes, talents, and interaction.</p>
+                <p>Enter the heart of the family — classes, talents, and interaction.</p>
                 <button class="btn" onclick="window.location.href='hub.html'">Enter Hub</button>
             </div>
-
             <div class="card">
                 <h4>🎓 Academy</h4>
-                <p>Access your media and broadcast production units.</p>
-                <button class="btn btn-outline" onclick="window.location.href='academy.html'">Open Classroom</button>
+                <p>Access your development classes and production units.</p>
+                <button class="btn" onclick="window.location.href='academy.html'">Open Classroom</button>
             </div>
-
-            <div id="leaderPanel" class="card" style="display:none; border-color: gold;">
-                <h4>👑 Leadership</h4>
-                <p>Private tools for 2026/2027 Vision Pioneers.</p>
-                <button class="btn">Admin Access</button>
+            <div class="card" id="profileCard">
+                <h4>👤 My Profile</h4>
+                <p>View and update your pioneer profile and personal notes.</p>
+                <button class="btn" onclick="window.location.href='profile.html'">View Profile</button>
+            </div>
+            <div class="card" id="leaderPanel" style="display:none; border-color: var(--gold);">
+                <h4>👑 Leadership Panel</h4>
+                <p>Private tools for 2026/2027 Vision Pioneers and administrators.</p>
+                <button class="btn" onclick="window.location.href='leadership.html'">Admin Access</button>
             </div>
         </div>
 
-        <div class="section-title">Account Status</div>
+        <div class="section-label">Account Status</div>
         <div class="grid">
-            <div class="card" style="text-align: center; padding: 15px;">
-                <p style="margin-bottom: 5px;">Your Role</p>
-                <span class="status-value" id="displayRole" style="color: var(--gold);">Member</span>
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 12px; color: #555; margin-bottom: 8px;">Your Role</p>
+                <span id="displayRole" style="font-size: 18px; font-weight: 800; color: var(--gold);">Member</span>
             </div>
-
-            <div class="card" style="text-align: center; padding: 15px;">
-                <p style="margin-bottom: 5px;">Payment</p>
-                <span class="status-value" id="displaySub">Inactive</span>
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 12px; color: #555; margin-bottom: 8px;">Subscription</p>
+                <span class="status-inactive" id="displaySub">INACTIVE</span>
+            </div>
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 12px; color: #555; margin-bottom: 8px;">Member Since</p>
+                <span id="displayJoinDate" style="font-size: 15px; font-weight: 600; color: #ccc;">—</span>
             </div>
         </div>
 
-        <div style="text-align: center; margin-top: 40px; padding-bottom: 40px;">
-            <button id="logout" style="background: none; border: 1px solid #333; color: #555; padding: 10px 30px; border-radius: 8px; cursor: pointer;">Logout Securely</button>
+        <div style="text-align: center; margin: 40px 0 50px;">
+            <button class="logout-btn" id="logoutBtn">Logout Securely</button>
         </div>
-
     </div>
 
     <script>
-    window.onload = function() {
-    // 1. SETUP: Get user data
-    let session = JSON.parse(localStorage.getItem("loggedInUser"));
-    let allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    
-    // UI Elements
-    const nameDisplay = document.getElementById("welcomeName");
-    const memberIDElement = document.getElementById("memberID");
-    const roleDisplay = document.getElementById("displayRole");
-    const subDisplay = document.getElementById("displaySub"); // The subscription text
+    window.addEventListener('DOMContentLoaded', function() {
+        const session = JSON.parse(localStorage.getItem('loggedInUser'));
 
-    // Security Check
-    if (!session) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    // Find the specific user profile
-    let userIndex = allUsers.findIndex(u => u.email === session.email);
-    let currentUser = allUsers[userIndex];
-
-    if (currentUser) {
-        // 2. NAME & ROLE IDENTIFICATION
-        nameDisplay.innerText = "Shalom, " + (currentUser.name || "Family Member");
-        if(roleDisplay) {
-            roleDisplay.innerText = currentUser.role || "Member";
+        if (!session) {
+            window.location.href = 'login.html';
+            return;
         }
 
-        // 3. AUTOMATIC SUBSCRIPTION CHECK (Green/Red Logic)
+        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+        let userIndex = allUsers.findIndex(u => u.email === session.email);
+        let currentUser = userIndex >= 0 ? allUsers[userIndex] : session;
+
+        // Greet
+        document.getElementById('welcomeName').textContent = 'Shalom, ' + (currentUser.name || 'Family Member');
+        document.getElementById('userRoleBadge').textContent = (currentUser.role || 'Member').toUpperCase();
+        document.getElementById('displayRole').textContent = currentUser.role || 'Member';
+        document.getElementById('displayJoinDate').textContent = currentUser.joinedDate || '—';
+
+        // Subscription check
+        const subDisplay = document.getElementById('displaySub');
         if (currentUser.expiryDate) {
             const today = new Date();
             const expiry = new Date(currentUser.expiryDate);
-
             if (expiry > today) {
-                // SUCCESS: Subscription is active
-                subDisplay.innerText = "ACTIVE";
-                subDisplay.className = "status-active"; // Turns Green
+                subDisplay.textContent = 'ACTIVE';
+                subDisplay.className = 'status-active';
             } else {
-                // EXPIRED: Date has passed
-                subDisplay.innerText = "EXPIRED";
-                subDisplay.className = "status-inactive"; // Turns Red
+                subDisplay.textContent = 'EXPIRED';
+                subDisplay.className = 'status-expired';
             }
-        } else {
-            // NEVER PAID: Default state
-            subDisplay.innerText = "INACTIVE";
-            subDisplay.className = "status-inactive"; // Turns Red
         }
 
-        // 4. SECURE ID CRAFT (Short & Smart)
+        // Generate Member ID if missing
         if (!currentUser.memberID) {
-            const names = (currentUser.name || "User").split(" ");
-            let initials = names[0].charAt(0); 
-            if (names.length > 1) {
-                initials += names[names.length - 1].charAt(0);
-            }
-            initials = initials.toUpperCase();
-
+            const names = (currentUser.name || 'User').split(' ');
+            const initials = names.map(n => n[0] || '').join('').toUpperCase().slice(0, 3);
             const smartSum = currentUser.email.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
             const shortCode = (smartSum % 900) + 100;
-
             currentUser.memberID = `DF-2026-${shortCode}/${initials}`;
-            
-            // Save newly generated ID to the master list
-            allUsers[userIndex] = currentUser;
-            localStorage.setItem("users", JSON.stringify(allUsers));
+
+            if (userIndex >= 0) {
+                allUsers[userIndex] = currentUser;
+                localStorage.setItem('users', JSON.stringify(allUsers));
+                // Update session too
+                localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
+            }
+        }
+        document.getElementById('memberID').textContent = currentUser.memberID;
+
+        // Show leader panel for admins/leaders
+        const role = (currentUser.role || '').toLowerCase();
+        if (role === 'admin' || role === 'leader') {
+            document.getElementById('leaderPanel').style.display = 'block';
         }
 
-        if (memberIDElement) {
-            memberIDElement.innerText = currentUser.memberID;
-        }
-    }
-    
-    // 5. LOGOUT LOGIC
-    document.getElementById('logout').onclick = function() {
-        localStorage.removeItem("loggedInUser");
-        window.location.href = "login.html";
-    };
-};
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = 'login.html';
+        });
+    });
     </script>
 </body>
-<body>
-    <nav>
-        <a href="main.html">← Back to Main Website</a>
-        <span style="color: black; font-size: 0.7rem; letter-spacing: 2px;">DECLARE DASHBOARD</span>
-    </nav>
 </html>
