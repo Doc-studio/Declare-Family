@@ -3,54 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declare Academy | Entry Portal</title>
+    <title>Declare Academy | Class Enrollment</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #FFD700; --dark: #050505; --panel: #111; --border: rgba(255,255,255,0.1); }
-        body { 
-            margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--dark); color: white; height: 100vh;
-            display: flex; align-items: center; justify-content: center;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--dark); color: white; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
         }
         .portal-card {
             background: var(--panel); border: 1px solid var(--gold);
-            padding: 40px; border-radius: 24px; width: 100%; max-width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
+            padding: 45px 40px; border-radius: 24px; width: 100%; max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); text-align: center;
+            animation: fadeUp 0.5s ease;
         }
-        .tab-group { display: flex; gap: 10px; margin-bottom: 30px; background: #000; padding: 5px; border-radius: 12px; }
-        .tab { flex: 1; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 800; transition: 0.3s; }
+        @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+        .portal-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+        .portal-sub { color: #666; font-size: 13px; margin-bottom: 28px; }
+        .tab-group { display: flex; gap: 8px; margin-bottom: 28px; background: #000; padding: 5px; border-radius: 12px; }
+        .tab { flex: 1; padding: 11px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 1px; transition: 0.3s; color: #555; border: none; background: none; font-family: inherit; }
         .tab.active { background: var(--gold); color: black; }
-        
-        input, select { 
-            width: 100%; padding: 15px; margin-bottom: 15px; background: #000; 
-            border: 1px solid #333; color: white; border-radius: 12px; box-sizing: border-box;
+        label { display: block; text-align: left; font-size: 11px; font-weight: 800; color: #555; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+        .field { margin-bottom: 16px; text-align: left; }
+        input, select {
+            width: 100%; padding: 14px 16px;
+            border: 1px solid #222; border-radius: 12px;
+            background: #000; color: white;
+            font-family: inherit; font-size: 14px;
+            outline: none; transition: border-color 0.2s;
         }
-        .reg-btn { 
-            width: 100%; padding: 15px; border: none; border-radius: 12px; 
+        input:focus, select:focus { border-color: var(--gold); }
+        input::placeholder { color: #444; }
+        select option { background: #111; }
+        .reg-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
             background: var(--gold); color: black; font-weight: 800; cursor: pointer;
+            font-family: inherit; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;
+            transition: 0.2s; margin-top: 8px;
         }
+        .reg-btn:hover { background: white; }
+        .reg-btn:active { transform: scale(0.98); }
+        .reg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .error-msg { background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.3); color: #ff6b6b; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; text-align: left; }
+        .back-link { display: block; margin-top: 20px; color: #444; font-size: 12px; text-decoration: none; }
+        .back-link:hover { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="portal-card">
-    <h2 id="portalTitle">Class Enrollment</h2>
-    <p id="portalSub" style="color: #666; font-size: 14px; margin-bottom: 25px;">Enter your details to join the session.</p>
+    <div class="portal-title" id="portalTitle">Class Enrollment</div>
+    <p class="portal-sub" id="portalSub">Enter your details to join the session.</p>
 
     <div class="tab-group">
-        <div class="tab active" id="learnerTab" onclick="switchMode('learner')">LEARNER</div>
-        <div class="tab" id="tutorTab" onclick="switchMode('tutor')">TUTOR</div>
+        <button class="tab active" id="learnerTab" onclick="switchMode('learner')">LEARNER</button>
+        <button class="tab" id="tutorTab" onclick="switchMode('tutor')">TUTOR</button>
     </div>
 
-    <input type="text" id="regName" placeholder="Full Name">
-    <select id="regClass">
-        <option value="Financial Growth">Financial Growth Class</option>
-        <option value="Spiritual Growth">Spiritual Growth Class</option>
-        <option value="Psychology">Psychology Class</option>
-        <option value="Leadership">Leadership Class</option>
-    </select>
+    <div class="error-msg" id="errorMsg"></div>
 
-    <button class="reg-btn" onclick="processRegistration()">REGISTER NOW</button>
+    <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="regName" placeholder="Your full name">
+    </div>
+    <div class="field">
+        <label>Select Class</label>
+        <select id="regClass">
+            <option value="Financial Growth">Financial Growth Class</option>
+            <option value="Spiritual Growth">Spiritual Growth Class</option>
+            <option value="Psychology">Psychology Class</option>
+            <option value="Leadership">Leadership Class</option>
+        </select>
+    </div>
+
+    <button class="reg-btn" id="regBtn" onclick="processRegistration()">REGISTER NOW</button>
+
+    <a href="academy.html" class="back-link">← Back to Academy</a>
 </div>
 
 <script>
@@ -60,7 +90,10 @@
         currentMode = mode;
         document.getElementById('learnerTab').classList.toggle('active', mode === 'learner');
         document.getElementById('tutorTab').classList.toggle('active', mode === 'tutor');
-        document.getElementById('portalTitle').innerText = mode === 'learner' ? 'Class Enrollment' : 'Tutor Application';
+        document.getElementById('portalTitle').textContent = mode === 'learner' ? 'Class Enrollment' : 'Tutor Application';
+        document.getElementById('portalSub').textContent = mode === 'learner'
+            ? 'Enter your details to join the session.'
+            : 'Apply to teach. A Pioneer Leader will review your application.';
     }
 
     function generateTitle(className, name) {
@@ -73,11 +106,23 @@
         return `${titles[className] || "Pioneer"} ${name}`;
     }
 
+    function showError(msg) {
+        const el = document.getElementById('errorMsg');
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
     function processRegistration() {
-        const name = document.getElementById('regName').value;
+        const name = document.getElementById('regName').value.trim();
         const className = document.getElementById('regClass').value;
-        
-        if(!name) return alert("Please enter your name");
+        const btn = document.getElementById('regBtn');
+
+        document.getElementById('errorMsg').style.display = 'none';
+
+        if (!name) { showError('Please enter your full name.'); return; }
+
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
 
         const requestData = {
             id: Date.now(),
@@ -85,61 +130,31 @@
             class: className,
             mode: currentMode,
             title: generateTitle(className, name),
-            status: 'pending'
+            status: currentMode === 'learner' ? 'approved' : 'pending',
+            timestamp: new Date().toISOString()
         };
 
-        // 1. Send to Leader Notifications
-        let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
-        adminNotify.push(requestData);
-        localStorage.setItem("adminNotifications", JSON.stringify(adminNotify));
+        setTimeout(() => {
+            if (currentMode === 'learner') {
+                // Store enrollment
+                let enrolled = JSON.parse(localStorage.getItem(`enrolled_${className}`)) || [];
+                enrolled.push(requestData);
+                localStorage.setItem(`enrolled_${className}`, JSON.stringify(enrolled));
+                localStorage.setItem(`isRegistered_${className}`, 'true');
 
-        if(currentMode === 'learner') {
-            // Learners get immediate access for this version
-            localStorage.setItem(`enrolled_${className}`, JSON.stringify(requestData));
-            alert(`Welcome, ${requestData.title}! Redirecting to class...`);
-            window.location.href = "academy.html"; 
-        } else {
-            alert("Tutor application submitted! Please wait for Leader approval.");
-            window.location.href = "academy.html";
-        }
+                alert(`Welcome, ${requestData.title}! Your seat in "${className}" is confirmed.`);
+                window.location.href = 'academy.html';
+            } else {
+                // Queue tutor application for leader review
+                let adminNotify = JSON.parse(localStorage.getItem('adminNotifications')) || [];
+                adminNotify.push(requestData);
+                localStorage.setItem('adminNotifications', JSON.stringify(adminNotify));
+
+                alert('Tutor Application Received. A Pioneer Leader will review your credentials shortly.');
+                window.location.href = 'hub.html';
+            }
+        }, 400);
     }
-    function processRegistration() {
-    const name = document.getElementById('regName').value;
-    const className = document.getElementById('regClass').value;
-    
-    if(!name) return alert("Please enter your name");
-
-    const requestData = {
-        id: Date.now(),
-        name: name,
-        class: className,
-        mode: currentMode,
-        title: generateTitle(className, name),
-        status: currentMode === 'learner' ? 'approved' : 'pending',
-        timestamp: new Date().toISOString()
-    };
-
-    if(currentMode === 'learner') {
-        // --- INSTANT ACCESS FOR LEARNERS ---
-        let enrolled = JSON.parse(localStorage.getItem(`enrolled_${className}`)) || [];
-        enrolled.push(requestData);
-        localStorage.setItem(`enrolled_${className}`, JSON.stringify(enrolled));
-        
-        // Mark session as registered to prevent re-registration
-        localStorage.setItem(`isRegistered_${className}`, "true");
-        
-        alert(`Welcome, ${requestData.title}! Your seat in ${className} is reserved.`);
-        window.location.href = "academy.html"; 
-    } else {
-        // --- TUTORS GO TO LEADER QUEUE ---
-        let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
-        adminNotify.push(requestData);
-        localStorage.setItem("adminNotifications", JSON.stringify(adminNotify));
-        
-        alert("Tutor Application Received. A Pioneer Leader will review your credentials shortly.");
-        window.location.href = "hub.html";
-    }
-}
 </script>
 </body>
 </html>
