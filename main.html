@@ -1,898 +1,228 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Declare Family — A youth-driven community of emerging leaders. Called. Equipped. Sent.">
-    <meta property="og:title"       content="Declare Family | Called. Equipped. Sent.">
-    <meta property="og:description" content="A youth-driven community of emerging leaders committed to growth, impact and purpose.">
-    <meta property="og:image"       content="hero-image.jpg.jpeg">
-    <meta property="og:type"        content="website">
-    <title>Declare Family | Called. Equipped. Sent.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | Declare Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#FFD700;--dark:#0a0a0a;--panel:#111;--border:rgba(255,255,255,0.08);--green:#00FF94;--red:#ff4d4d;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px;}
+.bg-glow{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.06) 0%,transparent 70%);pointer-events:none;}
+.container{background:var(--panel);padding:40px;border-radius:24px;width:100%;max-width:420px;border:1px solid var(--border);box-shadow:0 30px 60px rgba(0,0,0,.6);position:relative;z-index:1;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.logo-area{text-align:center;margin-bottom:28px;}
+.logo-area h2{color:var(--gold);font-size:20px;font-weight:800;letter-spacing:2px;}
+.logo-area p{color:#555;font-size:13px;margin-top:6px;}
+label{display:block;font-size:10px;font-weight:800;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.field{margin-bottom:16px;}
+input,select{width:100%;padding:13px 15px;border:1px solid #222;border-radius:12px;background:#000;color:#fff;font-family:inherit;font-size:13px;transition:border-color .2s;outline:none;}
+input:focus,select:focus{border-color:var(--gold);}
+input::placeholder{color:#3a3a3a;}
+select option{background:#111;}
+.btn{width:100%;padding:14px;background:var(--gold);border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:4px;}
+.btn:hover{background:#fff;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.error-msg{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.3);color:#ff6b6b;padding:12px 15px;border-radius:10px;font-size:12px;margin-bottom:15px;display:none;}
+.success-msg{background:rgba(0,255,148,.08);border:1px solid rgba(0,255,148,.3);color:var(--green);padding:12px 15px;border-radius:10px;font-size:12px;margin-bottom:15px;display:none;}
+.link-row{text-align:center;margin-top:18px;}
+a{color:var(--gold);text-decoration:none;font-size:12px;font-weight:600;}
+a:hover{text-decoration:underline;}
+.hint{font-size:11px;color:#3a3a3a;margin-top:5px;line-height:1.5;}
+.pioneer-notice{background:rgba(255,215,0,.05);border:1px dashed rgba(255,215,0,.3);border-radius:10px;padding:12px 14px;font-size:12px;color:#888;margin-top:8px;display:none;line-height:1.6;}
 
-    <style>
-    /* ================================================================
-       DECLARE FAMILY  ·  main.html  ·  Public Landing Page
-       ================================================================ */
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-        --gold:       #FFD700;
-        --dark:       #080808;
-        --card-bg:    #111111;
-        --border:     #1e1e1e;
-        --whatsapp:   #25D366;
-        --nav-w:      240px;
-        --nav-h:      64px;
-        --ticker-h:   56px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background: var(--dark); color: #fff;
-        line-height: 1.8; overflow-x: hidden;
-        margin-top: calc(var(--nav-h) + var(--ticker-h));
-        padding-bottom: var(--ticker-h);
-    }
-
-    /* ── AMBIENT ─────────────────────────────────────────────── */
-    .bg-ambient { position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
-    .bg-ambient-layer {
-        position:absolute; width:200%; height:200%;
-        background:url('hero-image.jpg.jpeg') center/cover no-repeat;
-        opacity:0.05; filter:blur(70px);
-        animation:panBg 35s linear infinite;
-    }
-    @keyframes panBg {
-        0%  { transform:translate(-10%,-10%) rotate(0deg);  }
-        50% { transform:translate(0%,0%)     rotate(2deg);  }
-        100%{ transform:translate(-10%,-10%) rotate(0deg);  }
-    }
-
-    /* ================================================================
-       NAVIGATION — mobile top bar / desktop left sidebar
-       ================================================================ */
-    nav {
-        background: var(--gold);
-        position:fixed; top:0; left:0;
-        width:100%; height:var(--nav-h);
-        z-index:900;
-        display:flex; justify-content:center; align-items:center;
-        flex-wrap:wrap; gap:2px;
-        padding:6px 14px;
-        box-shadow:0 4px 20px rgba(0,0,0,0.55);
-    }
-
-    .nav-brand {
-        display:none;
-        font-size:12px; font-weight:800;
-        color:rgba(0,0,0,0.4); letter-spacing:2.5px; text-transform:uppercase;
-        padding:0 10px; margin-bottom:22px; width:100%;
-    }
-
-    nav a {
-        text-decoration:none; font-weight:800; color:#000;
-        font-size:11px; text-transform:uppercase; letter-spacing:0.4px;
-        padding:6px 9px; border-radius:6px;
-        transition:background .2s,color .2s; white-space:nowrap;
-    }
-    nav a:hover { background:rgba(0,0,0,0.12); }
-
-    .nav-pill {
-        background:#000 !important; color:var(--gold) !important;
-        padding:6px 14px !important; border-radius:20px !important;
-        display:inline-flex; align-items:center; gap:5px;
-    }
-
-    @media (min-width:1024px) {
-        body { margin-top:var(--ticker-h); margin-left:var(--nav-w); }
-        nav {
-            width:var(--nav-w); height:100vh; top:0; left:0;
-            flex-direction:column; justify-content:flex-start; align-items:flex-start;
-            padding:48px 20px 30px; gap:2px; overflow-y:auto;
-        }
-        .nav-brand { display:block; }
-        nav a { width:100%; text-align:left; font-size:13px; padding:10px 12px; border-radius:8px; }
-        html { scroll-padding-top:30px; }
-    }
-    @media (max-width:1023px) {
-        html { scroll-padding-top:calc(var(--nav-h) + var(--ticker-h) + 20px); }
-    }
-
-    /* ================================================================
-       LIVE TICKER BAR — fixed to bottom of screen
-       ================================================================ */
-    #live-ticker {
-        position:fixed; bottom:0; left:0;
-        width:100%; height:var(--ticker-h);
-        background:#000;
-        border-top:1px solid rgba(255,215,0,0.2);
-        z-index:950;
-        display:flex; align-items:stretch;
-        overflow:hidden;
-        box-shadow:0 -4px 24px rgba(0,0,0,0.8);
-    }
-
-    /* LIVE badge */
-    .ticker-label {
-        flex-shrink:0;
-        display:flex; align-items:center; justify-content:center;
-        gap:7px;
-        background:var(--gold); color:#000;
-        font-weight:800; font-size:10px;
-        letter-spacing:2px; text-transform:uppercase;
-        padding:0 16px; min-width:88px;
-        border-right:1px solid rgba(0,0,0,0.25);
-    }
-
-    .live-dot {
-        width:7px; height:7px; border-radius:50%; background:#000;
-        animation:liveBlink 1.3s ease-in-out infinite;
-        flex-shrink:0;
-    }
-    @keyframes liveBlink { 0%,100%{opacity:1} 50%{opacity:0.15} }
-
-    /* Slide viewport */
-    .ticker-viewport { flex:1; overflow:hidden; position:relative; }
-
-    .ticker-slide {
-        position:absolute; inset:0;
-        display:flex; align-items:center;
-        padding:0 20px; gap:14px;
-        opacity:0; transform:translateX(36px);
-        transition:opacity .55s ease, transform .55s ease;
-        pointer-events:none;
-    }
-    .ticker-slide.active  { opacity:1; transform:translateX(0); pointer-events:auto; }
-    .ticker-slide.exiting { opacity:0; transform:translateX(-36px); }
-
-    .slide-icon  { font-size:19px; flex-shrink:0; }
-    .slide-body  { flex:1; min-width:0; }
-    .slide-cat   { font-size:9px; font-weight:800; color:var(--gold); letter-spacing:2px; text-transform:uppercase; display:block; margin-bottom:1px; }
-    .slide-text  { font-size:13px; font-weight:600; color:#e8e8e8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .slide-date  { font-size:10px; color:#3a3a3a; font-weight:600; flex-shrink:0; }
-
-    /* Progress dots */
-    .ticker-dots {
-        flex-shrink:0; display:flex; align-items:center;
-        gap:5px; padding:0 12px;
-        border-left:1px solid #191919;
-    }
-    .tdot {
-        width:5px; height:5px; border-radius:50%; background:#2a2a2a;
-        transition:background .3s, transform .3s; cursor:pointer;
-    }
-    .tdot.on { background:var(--gold); transform:scale(1.35); }
-
-    /* Arrow nav */
-    .ticker-nav {
-        flex-shrink:0; display:flex; align-items:center;
-        padding:0 8px; border-left:1px solid #191919; gap:1px;
-    }
-    .t-arrow {
-        background:none; border:none; color:#3a3a3a;
-        font-size:14px; padding:6px 8px; border-radius:5px; cursor:pointer;
-        font-family:inherit; transition:color .2s, background .2s;
-    }
-    .t-arrow:hover { color:var(--gold); background:rgba(255,215,0,0.07); }
-
-    @media (max-width:600px) {
-        .ticker-label  { min-width:64px; padding:0 9px; font-size:9px; }
-        .slide-text    { font-size:12px; }
-        .slide-date    { display:none; }
-        .ticker-dots   { display:none; }
-    }
-
-    /* ================================================================
-       WELCOME REEL
-       ================================================================ */
-    #welcome-reel {
-        position:fixed; inset:0; background:#000;
-        z-index:9999;
-        display:flex; justify-content:center; align-items:center;
-        flex-direction:column; text-align:center; padding:20px;
-        transition:opacity .9s ease;
-    }
-    #welcome-reel img {
-        width:96px; height:96px; border-radius:50%;
-        border:2.5px solid var(--gold); margin-bottom:22px;
-        object-fit:cover;
-        box-shadow:0 0 32px rgba(255,215,0,0.28);
-    }
-    #greeting-text {
-        font-size:clamp(2rem,6vw,3.4rem);
-        color:var(--gold); font-weight:800; margin:0;
-    }
-    #reel-sub {
-        letter-spacing:5px; color:#333;
-        font-size:10px; margin-top:18px; text-transform:uppercase;
-    }
-
-    /* ================================================================
-       HERO HEADER
-       ================================================================ */
-    header {
-        text-align:center;
-        padding:clamp(70px,14vw,150px) 20px clamp(60px,10vw,110px);
-        position:relative;
-    }
-    .hero-logo {
-        width:clamp(130px,18vw,175px); height:clamp(130px,18vw,175px);
-        object-fit:cover; border-radius:50%;
-        border:5px solid var(--gold);
-        margin:0 auto 28px; display:block;
-        box-shadow:0 0 38px rgba(255,215,0,0.28), 0 0 100px rgba(255,215,0,0.07);
-    }
-    header h1 {
-        font-size:clamp(2.4rem,8vw,4.5rem);
-        font-weight:800; letter-spacing:4px;
-        text-transform:uppercase; margin-bottom:12px;
-    }
-    .motto-text {
-        font-size:clamp(1rem,3vw,1.5rem);
-        color:var(--gold); font-weight:600; letter-spacing:3px;
-    }
-
-    /* ================================================================
-       SECTIONS
-       ================================================================ */
-    section {
-        padding:clamp(50px,8vw,90px) clamp(20px,10%,12%);
-        border-bottom:1px solid var(--border);
-    }
-    section h2 {
-        color:var(--gold); font-size:clamp(1.5rem,4vw,2.3rem); font-weight:800;
-        margin-bottom:28px; border-left:5px solid var(--gold);
-        padding-left:18px; line-height:1.2;
-    }
-    section h3 { color:var(--gold); font-size:1rem; font-weight:800; margin-bottom:9px; }
-    section p  { color:#bbb; font-size:15px; line-height:1.85; margin-bottom:12px; }
-    section p:last-child { margin-bottom:0; }
-    section p strong { color:#fff; }
-
-    /* ================================================================
-       CARDS
-       ================================================================ */
-    .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:22px; }
-
-    .card {
-        background:var(--card-bg); padding:26px;
-        border-radius:18px; border:1px solid var(--border);
-        opacity:0; transform:translateY(26px);
-        transition:opacity .5s ease, transform .5s ease,
-                    border-color .3s, background .3s, box-shadow .3s;
-    }
-    .card.reveal { opacity:1; transform:translateY(0); }
-    .card:hover {
-        border-color:var(--gold); transform:translateY(-5px) !important;
-        background:rgba(255,215,0,0.025);
-        box-shadow:0 12px 28px rgba(255,215,0,0.07);
-    }
-
-    /* ================================================================
-       LEADERS
-       ================================================================ */
-    .leader-card { text-align:center; }
-    .leader-pic {
-        width:108px; height:108px; object-fit:cover;
-        border-radius:50%; border:3px solid var(--gold);
-        margin:0 auto 14px; display:block; background:#1e1e1e;
-    }
-    .leader-title {
-        font-size:10px; font-weight:800; color:var(--gold);
-        letter-spacing:1.5px; text-transform:uppercase;
-        margin-bottom:6px; display:block;
-    }
-    .leader-name { font-size:15px; font-weight:600; color:#ddd; }
-
-    /* ================================================================
-       IDENTITY / CTA
-       ================================================================ */
-    .centered-identity { text-align:center; max-width:680px; margin:0 auto; }
-
-    .identity-declaration {
-        font-size:clamp(1.8rem,5vw,2.6rem); font-weight:800;
-        color:var(--gold); line-height:1.3;
-        margin:32px 0 40px; letter-spacing:3px;
-    }
-
-    .cta-button {
-        display:inline-flex; align-items:center; gap:10px;
-        padding:15px 40px; background:var(--whatsapp); color:#fff;
-        text-decoration:none; font-weight:800; font-size:13px;
-        letter-spacing:1px; text-transform:uppercase; border-radius:50px;
-        transition:transform .3s, background .3s, box-shadow .3s;
-        box-shadow:0 6px 22px rgba(37,211,102,0.28);
-    }
-    .cta-button:hover {
-        transform:scale(1.06); background:#fff; color:var(--whatsapp);
-        box-shadow:0 8px 28px rgba(255,255,255,0.18);
-    }
-
-    /* ================================================================
-       SOCIAL BUTTONS
-       ================================================================ */
-    .social-container {
-        margin-top:34px;
-        display:flex; justify-content:center; gap:12px; flex-wrap:wrap;
-    }
-    .social-btn {
-        text-decoration:none; color:#fff;
-        font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px;
-        padding:11px 20px; border-radius:12px;
-        display:flex; align-items:center; gap:9px;
-        border:1px solid rgba(255,255,255,0.09);
-        transition:transform .3s, background .3s, box-shadow .3s;
-    }
-    .social-icon { width:17px; height:17px; filter:brightness(0) invert(1); flex-shrink:0; }
-    .fb-btn { background:rgba(24,119,242,0.1); }
-    .yt-btn { background:rgba(255,0,0,0.1); }
-    .ig-btn { background:rgba(225,48,108,0.1); }
-    .fb-btn:hover { background:#1877F2; box-shadow:0 0 18px rgba(24,119,242,0.4); transform:translateY(-3px); }
-    .yt-btn:hover { background:#FF0000; box-shadow:0 0 18px rgba(255,0,0,0.4); transform:translateY(-3px); }
-    .ig-btn:hover { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); box-shadow:0 0 18px rgba(225,48,108,0.4); transform:translateY(-3px); }
-
-    @media (max-width:600px) {
-        .grid-3 { grid-template-columns:1fr; }
-        .social-container { flex-direction:column; align-items:center; }
-        .social-btn { width:100%; max-width:240px; justify-content:center; }
-    }
-
-    /* ================================================================
-       FOOTER
-       ================================================================ */
-    footer {
-        background:#000; text-align:center;
-        padding:48px 20px; color:#444;
-        border-top:2px solid var(--gold); font-size:13px;
-    }
-    footer strong { color:var(--gold); }
-    </style>
+/* Pioneer code field — only visible when role is pioneer/admin */
+#codeField{display:none;}
+/* Request-to-join panel — shown when no code yet */
+#requestPanel{display:none;}
+</style>
 </head>
 <body>
+<div class="bg-glow"></div>
+<div class="container">
+  <div class="logo-area">
+    <h2>CREATE ACCOUNT</h2>
+    <p>Join the Declare Family ecosystem</p>
+  </div>
 
-<!-- AMBIENT -->
-<div class="bg-ambient"><div class="bg-ambient-layer"></div></div>
+  <div class="error-msg"   id="errorMsg"></div>
+  <div class="success-msg" id="successMsg"></div>
 
-<!-- ================================================================
-     WELCOME REEL
-     ================================================================ -->
-<div id="welcome-reel">
-    <img src="hero-image.jpg.jpeg" alt="Declare Family">
-    <h1 id="greeting-text">Welcome Home</h1>
-    <p id="reel-sub">Declare Family &nbsp;&middot;&nbsp; Called. Equipped. Sent.</p>
+  <div class="field">
+    <label>Full Name</label>
+    <input type="text" id="name" placeholder="Your full name" autocomplete="name">
+  </div>
+  <div class="field">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+  </div>
+  <div class="field">
+    <label>Account Type</label>
+    <select id="role" onchange="onRoleChange()">
+      <option value="member">General Member</option>
+      <option value="leader">Pioneer (Leader)</option>
+      <option value="admin">System Administrator</option>
+    </select>
+  </div>
+
+  <!-- PIONEER CODE FIELD (shown when pioneer/admin selected AND they have a code) -->
+  <div class="field" id="codeField">
+    <label>Pioneer Access Code</label>
+    <input type="text" id="pioneerCode" placeholder="Code provided by your admin (e.g. DF-PNR-XXXXXX-XXXX)" autocomplete="off">
+    <p class="hint">This code is issued by a Declare Family admin after verifying your pioneer registration request.</p>
+    <div class="pioneer-notice" id="pioneerNotice"></div>
+  </div>
+
+  <!-- REQUEST PANEL (shown when pioneer/admin selected but no code yet) -->
+  <div id="requestPanel">
+    <p style="font-size:12px;color:#666;margin-bottom:10px;line-height:1.6;">
+      Pioneer &amp; Admin accounts require an access code issued by an existing admin.<br>
+      Request access below and an admin will review and provide your code.
+    </p>
+    <div class="field">
+      <label>Why are you requesting Pioneer access?</label>
+      <input type="text" id="requestReason" placeholder="Brief reason (e.g. Invited by Gadner Amos)">
+    </div>
+    <button class="btn" id="requestBtn" onclick="submitPioneerRequest()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);">REQUEST PIONEER ACCESS</button>
+    <p style="font-size:11px;color:#444;margin-top:8px;text-align:center;">Or enter your code below if you already have one:</p>
+    <div class="field" style="margin-top:8px;">
+      <input type="text" id="pioneerCodeAlt" placeholder="Already have a code? Enter it here" autocomplete="off" oninput="document.getElementById('pioneerCode').value=this.value">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Min. 6 characters" autocomplete="new-password">
+  </div>
+  <div class="field">
+    <label>Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="Repeat password" autocomplete="new-password">
+  </div>
+
+  <button class="btn" id="regBtn" onclick="handleRegister()">Create Account</button>
+
+  <div class="link-row">
+    <a href="login.html">Already have an account? Login</a>
+  </div>
 </div>
 
-<!-- ================================================================
-     NAVIGATION
-     ================================================================ -->
-<nav>
-    <span class="nav-brand">Declare</span>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#vision">Vision</a>
-    <a href="#programs">Programs</a>
-    <a href="#leaders">Leadership</a>
-    <a href="Dashboard.html" id="dashboardLink" class="nav-pill" style="display:none;">&#9655; Dashboard</a>
-    <a href="login.html"     id="loginLink">Login</a>
-    <a href="#"              id="logoutBtn"  style="display:none;">Logout</a>
-    <a href="leadership.html" id="execCommandBtn" class="nav-pill" style="display:none;">&#128737; Executive</a>
-</nav>
-
-<!-- ================================================================
-     LIVE TICKER BAR (fixed bottom)
-     ================================================================ -->
-<div id="live-ticker">
-    <div class="ticker-label">
-        <span class="live-dot"></span>
-        LIVE
-    </div>
-    <div class="ticker-viewport" id="tickerViewport">
-        <!-- Slides injected by JS -->
-    </div>
-    <div class="ticker-dots"  id="tickerDots"></div>
-    <div class="ticker-nav">
-        <button class="t-arrow" id="tickerPrev" aria-label="Previous">&#8592;</button>
-        <button class="t-arrow" id="tickerNext" aria-label="Next">&#8594;</button>
-    </div>
-</div>
-
-<!-- ================================================================
-     HERO HEADER
-     ================================================================ -->
-<header id="home">
-    <img src="hero-image.jpg.jpeg" alt="Declare Family" class="hero-logo">
-    <h1>Declare Family</h1>
-    <div class="motto-text">Called &nbsp;&middot;&nbsp; Equipped &nbsp;&middot;&nbsp; Sent</div>
-</header>
-
-<!-- ================================================================
-     ABOUT
-     ================================================================ -->
-<section id="about">
-    <h2>About Declare Family</h2>
-    <p><strong>Declare Family</strong> is a vibrant, youth-driven community committed to empowering young people to grow, lead, and create meaningful impact across every dimension of life.</p>
-    <p>We bring together passionate individuals determined to pursue growth &mdash; spiritually, intellectually, socially, psychologically, and economically.</p>
-    <p>At the heart of Declare Family is the belief that young people thrive best within a supportive ecosystem where learning, collaboration, mentorship, and service intersect.</p>
-    <p>Declare Family is more than a gathering &mdash; it is a <strong>network of emerging leaders and change-makers</strong> committed to personal excellence and collective advancement.</p>
-</section>
-
-<!-- ================================================================
-     VISION & MISSION
-     ================================================================ -->
-<section id="vision">
-    <h2>Vision &amp; Mission</h2>
-    <div class="grid-3">
-        <div class="card">
-            <h3>Our Vision</h3>
-            <p>To cultivate a generation of visionary and purpose-driven young leaders empowered to positively influence society and contribute meaningfully to the advancement of their communities and the world.</p>
-        </div>
-        <div class="card">
-            <h3>Our Mission</h3>
-            <p>To <strong>identify, nurture, and empower young people</strong> by providing an environment that fosters holistic growth, critical thinking, leadership development, and genuine community engagement.</p>
-        </div>
-    </div>
-</section>
-
-<!-- ================================================================
-     CORE VALUES
-     ================================================================ -->
-<section>
-    <h2>Our Core Values</h2>
-    <div class="grid-3">
-        <div class="card"><h3>Growth</h3><p>Continuous intellectual, spiritual, and personal development as a lifelong pursuit.</p></div>
-        <div class="card"><h3>Unity</h3><p>A culture of belonging, collaboration, and mutual support among all members.</p></div>
-        <div class="card"><h3>Leadership</h3><p>Initiative, responsibility, and visionary thinking at every level of the community.</p></div>
-        <div class="card"><h3>Integrity</h3><p>Honesty, accountability, and ethical character in all our dealings and commitments.</p></div>
-        <div class="card"><h3>Impact</h3><p>Meaningful, lasting change within our communities and the world around us.</p></div>
-    </div>
-</section>
-
-<!-- ================================================================
-     PROGRAMS
-     ================================================================ -->
-<section id="programs">
-    <h2>Our Programs &amp; Activities</h2>
-    <p>Declare Family operates through carefully structured programs designed to inspire growth, dialogue, and meaningful engagement among young people.</p>
-    <div class="grid-3" style="margin-top:28px;">
-        <div class="card"><h3>Scriptural Insight</h3><p>Weekly knowledge exchange exploring biblical teachings and their application to everyday life.</p></div>
-        <div class="card"><h3>Daily Wisdom Capsules</h3><p>Short, impactful reflections offering guidance and practical life insights.</p></div>
-        <div class="card"><h3>&ldquo;Hot Seat&rdquo; Series</h3><p>Dynamic Sunday discussion platform addressing pressing issues facing today&rsquo;s youth.</p></div>
-        <div class="card"><h3>Community Compassion</h3><p>Outreach programs dedicated to uplifting and supporting vulnerable individuals.</p></div>
-        <div class="card"><h3>Strategic Prayer</h3><p>Intentional moments of collective spiritual alignment and intercession.</p></div>
-        <div class="card"><h3>Civic Support Projects</h3><p>Collaborative initiatives focused on community needs and active volunteerism.</p></div>
-        <div class="card"><h3>Personal Excellence Forums</h3><p>Interactive sessions for leadership development, confidence building, and skill sharpening.</p></div>
-        <div class="card"><h3>Faith Engagement</h3><p>Strengthening the connection between youth, faith, and purpose-driven living.</p></div>
-        <div class="card"><h3>Financial Intelligence</h3><p>Conversations on financial literacy, entrepreneurship, and sustainable wealth creation.</p></div>
-    </div>
-</section>
-
-<!-- ================================================================
-     LEADERSHIP
-     ================================================================ -->
-<section id="leaders">
-    <h2>2026 &ndash; 2027 Vision Pioneers</h2>
-    <div class="grid-3">
-        <div class="card leader-card">
-            <img src="Edana final.jpeg" alt="Mary Tracy" class="leader-pic" onerror="this.style.background='#2a2a2a'">
-            <span class="leader-title">Chief Visionary Steward</span>
-            <p class="leader-name">Mary Tracy</p>
-        </div>
-        <div class="card leader-card">
-            <img src="Gad final.png" alt="Gadner Amos" class="leader-pic" onerror="this.style.background='#2a2a2a'">
-            <span class="leader-title">Ministry Operations Architect</span>
-            <p class="leader-name">Gadner Amos</p>
-        </div>
-        <div class="card leader-card">
-            <img src="Goshen.jpg" alt="Goshen Faithful" class="leader-pic" onerror="this.style.background='#2a2a2a'">
-            <span class="leader-title">Missions Coordinator</span>
-            <p class="leader-name">Goshen Faithful</p>
-        </div>
-        <div class="card leader-card">
-            <img src="lawy final.jfif" alt="Lawrence Owino" class="leader-pic" onerror="this.style.background='#2a2a2a'">
-            <span class="leader-title">Resource Strategist</span>
-            <p class="leader-name">Lawrence Owino</p>
-        </div>
-        <div class="card leader-card">
-            <img src="Ann.jpg" alt="Ann Gloria" class="leader-pic" onerror="this.style.background='#2a2a2a'">
-            <span class="leader-title">Bible Study Facilitator</span>
-            <p class="leader-name">Ann Gloria</p>
-        </div>
-        <div class="card leader-card">
-            <img src="Marvel final.png" alt="Marvel Omondi" class="leader-pic" onerror="this.style.background='#2a2a2a'">
-            <span class="leader-title">Prayer &amp; Intercession Lead</span>
-            <p class="leader-name">Marvel Omondi</p>
-        </div>
-    </div>
-</section>
-
-<!-- ================================================================
-     WHY JOIN
-     ================================================================ -->
-<section>
-    <h2>Why Join Declare Family?</h2>
-    <div class="grid-3">
-        <div class="card"><h3>Investment in Growth</h3><p>An environment where young people discover and develop their unique strengths and potential.</p></div>
-        <div class="card"><h3>Meaningful Connections</h3><p>A supportive, high-value network of like-minded individuals with shared purpose and vision.</p></div>
-        <div class="card"><h3>Leadership Development</h3><p>Build abilities and character that translate directly into real-world opportunities.</p></div>
-        <div class="card"><h3>Holistic Empowerment</h3><p>Spiritual, mental, social, and financial dimensions addressed simultaneously.</p></div>
-        <div class="card"><h3>Real Impact</h3><p>Participate in projects that tangibly transform communities around you.</p></div>
-        <div class="card"><h3>Platform for Purpose</h3><p>Sharpen your abilities and step fully into your calling as a leader and change-maker.</p></div>
-    </div>
-</section>
-
-<!-- ================================================================
-     IDENTITY / CTA
-     ================================================================ -->
-<section class="centered-identity">
-    <h2 style="border-left:none;padding-left:0;text-align:center;">Our Identity</h2>
-    <p>At Declare Family, we believe every young person carries the capacity to shape the future.</p>
-    <p><strong>They only need the right environment to discover it.</strong></p>
-    <p>That environment is <strong>Declare Family.</strong></p>
-    <div class="identity-declaration">CALLED.<br>EQUIPPED.<br>SENT.</div>
-
-    <a href="https://chat.whatsapp.com/FX30xp5GSbB5TR1v4jnZAf"
-       target="_blank" rel="noopener noreferrer" class="cta-button">
-        &#128172;&nbsp; Join the WhatsApp Community
-    </a>
-
-    <div class="social-container">
-        <a href="https://www.facebook.com/profile.php?id=61583892440254" target="_blank" rel="noopener noreferrer" class="social-btn fb-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" class="social-icon" alt="Facebook"> Facebook
-        </a>
-        <a href="http://www.youtube.com/@declarefamily-1" target="_blank" rel="noopener noreferrer" class="social-btn yt-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" class="social-icon" alt="YouTube"> YouTube
-        </a>
-        <a href="https://www.instagram.com/declarefamily?igsh=cGl1MjIzYWlmand2" target="_blank" rel="noopener noreferrer" class="social-btn ig-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="social-icon" alt="Instagram"> Instagram
-        </a>
-    </div>
-</section>
-
-<!-- ================================================================
-     FOOTER
-     ================================================================ -->
-<footer>
-    &copy; 2026 <strong>Declare Family</strong> &nbsp;|&nbsp; Building a Generation of Leaders &nbsp;|&nbsp; Nairobi, Kenya
-</footer>
-
-<!-- ================================================================
-     JAVASCRIPT — single unified IIFE
-     ================================================================ -->
 <script>
-(function () {
-    'use strict';
+(function(){
+'use strict';
 
-    /* ============================================================
-       1. WELCOME REEL
-       ============================================================ */
-    function initReel() {
-        var reel     = document.getElementById('welcome-reel');
-        var greeting = document.getElementById('greeting-text');
-        if (!reel || !greeting) return;
-        try {
-            var s = JSON.parse(localStorage.getItem('loggedInUser'));
-            greeting.textContent = (s && s.name) ? 'Welcome, ' + s.name : 'Welcome Home';
-        } catch(e) { greeting.textContent = 'Welcome Home'; }
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function simpleHash(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h;}return h.toString(36);}
 
-        setTimeout(function() {
-            reel.style.opacity = '0';
-            setTimeout(function() { reel.style.display = 'none'; }, 900);
-        }, 3200);
+function showError(m){var e=document.getElementById('errorMsg');e.textContent=m;e.style.display='block';document.getElementById('successMsg').style.display='none';}
+function showSuccess(m){var e=document.getElementById('successMsg');e.textContent=m;e.style.display='block';document.getElementById('errorMsg').style.display='none';}
+
+window.onRoleChange=function(){
+  var role=document.getElementById('role').value;
+  var isPioneer=role==='leader'||role==='admin';
+  document.getElementById('codeField').style.display    = isPioneer?'block':'none';
+  document.getElementById('requestPanel').style.display = isPioneer?'block':'none';
+  document.getElementById('errorMsg').style.display='none';
+};
+
+/* ── PIONEER REQUEST SUBMISSION ─────────────── */
+window.submitPioneerRequest=function(){
+  var name=(document.getElementById('name').value||'').trim();
+  var email=(document.getElementById('email').value||'').trim();
+  var reason=(document.getElementById('requestReason').value||'').trim();
+  if(!name||!email){showError('Please fill in your name and email first.');return;}
+  if(!reason){showError('Please provide a brief reason for requesting pioneer access.');return;}
+
+  var requests=[];try{requests=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  // Avoid duplicate requests
+  if(requests.find(function(r){return r.email===email;})){
+    showSuccess('Your request was already submitted. A Pioneer Leader will review it and provide your access code.');return;
+  }
+
+  requests.push({id:Date.now(),name:name,email:email,reason:reason,roleRequested:document.getElementById('role').value,submittedAt:new Date().toISOString(),status:'pending'});
+  localStorage.setItem('pioneerRequests',JSON.stringify(requests));
+  showSuccess('Request submitted! A Pioneer Leader will review and, if approved, will provide you with an access code to complete your registration.');
+  document.getElementById('requestBtn').disabled=true;
+  document.getElementById('requestBtn').textContent='REQUEST SENT ✓';
+};
+
+/* ── PIONEER CODE VALIDATION ─────────────── */
+function validatePioneerCode(role,email,code){
+  if(!code){showError('Please enter your Pioneer Access Code. If you don\'t have one yet, use the "Request Pioneer Access" button first.');return false;}
+  code=code.trim().toUpperCase();
+  var codes={};try{codes=JSON.parse(localStorage.getItem('approvedPioneerCodes'))||{};}catch(e){}
+  var entry=codes[code];
+  if(!entry){showError('Invalid access code. Please check the code provided by your admin.');return false;}
+  if(entry.usedAt){showError('This access code has already been used. Contact your admin for a new one.');return false;}
+  if(entry.email&&entry.email.toLowerCase()!==email.toLowerCase()){showError('This access code was issued for a different email address.');return false;}
+  return {codes:codes,code:code,entry:entry};
+}
+
+/* ── ID GENERATOR ─────────────────────────── */
+function generateID(fullName,role){
+  var initials=fullName.split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,3);
+  var year='26';
+  if(role==='admin'){var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}var n=users.filter(function(u){return u.role==='admin';}).length;return 'DF-ADM-'+String(n+1).padStart(3,'0')+'/'+year+'-'+initials;}
+  if(role==='leader'){var users2=[];try{users2=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}var n2=users2.filter(function(u){return u.role==='leader';}).length;return 'DF-PNR-'+String(n2+1).padStart(3,'0')+'/'+year+'-'+initials;}
+  return 'DF-2026-'+Math.floor(100+Math.random()*899)+'/'+initials;
+}
+
+/* ── MAIN REGISTRATION ─────────────────────── */
+window.handleRegister=function(){
+  var name=(document.getElementById('name').value||'').trim();
+  var email=(document.getElementById('email').value||'').trim();
+  var role=document.getElementById('role').value;
+  var password=document.getElementById('password').value;
+  var confirmPwd=document.getElementById('confirmPassword').value;
+  var btn=document.getElementById('regBtn');
+
+  document.getElementById('errorMsg').style.display='none';
+
+  if(!name||!email||!password){showError('Please fill in all required fields.');return;}
+  if(password.length<6){showError('Password must be at least 6 characters.');return;}
+  if(password!==confirmPwd){showError('Passwords do not match.');return;}
+
+  // Pioneer/admin: validate code
+  var codeResult=null;
+  if(role==='leader'||role==='admin'){
+    var codeInput=(document.getElementById('pioneerCode').value||document.getElementById('pioneerCodeAlt').value||'').trim().toUpperCase();
+    codeResult=validatePioneerCode(role,email,codeInput);
+    if(!codeResult)return;
+  }
+
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  if(users.find(function(u){return u.email===email;})){showError('An account with this email already exists. Try logging in.');return;}
+
+  btn.disabled=true;btn.textContent='Creating Account...';
+
+  setTimeout(function(){
+    var memberID=generateID(name,role);
+    var newUser={name:name,email:email,role:role,memberID:memberID,passwordHash:simpleHash(password),joinedDate:new Date().toLocaleDateString('en-GB')};
+    users.push(newUser);
+    localStorage.setItem('users',JSON.stringify(users));
+
+    // Mark pioneer code as used
+    if(codeResult){
+      codeResult.codes[codeResult.code].usedAt=new Date().toISOString();
+      localStorage.setItem('approvedPioneerCodes',JSON.stringify(codeResult.codes));
+      // Remove from pending requests
+      var reqs=[];try{reqs=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+      reqs=reqs.filter(function(r){return r.email!==email;});
+      localStorage.setItem('pioneerRequests',JSON.stringify(reqs));
     }
 
-    /* ============================================================
-       2. NAV AUTH STATE
-       ============================================================ */
-    function initNav() {
-        var dashLink  = document.getElementById('dashboardLink');
-        var loginLink = document.getElementById('loginLink');
-        var logoutBtn = document.getElementById('logoutBtn');
-        var execBtn   = document.getElementById('execCommandBtn');
-        var s = null;
-        try { s = JSON.parse(localStorage.getItem('loggedInUser')); } catch(e) {}
+    // Session (no password hash)
+    var sess={name:newUser.name,email:newUser.email,role:newUser.role,memberID:newUser.memberID,joinedDate:newUser.joinedDate};
+    localStorage.setItem('loggedInUser',JSON.stringify(sess));
 
-        if (s) {
-            if (dashLink)  dashLink.style.display  = 'inline-flex';
-            if (logoutBtn) logoutBtn.style.display  = 'inline-flex';
-            if (loginLink) loginLink.style.display  = 'none';
-            var role = (s.role || '').toLowerCase();
-            if (execBtn && (role === 'leader' || role === 'admin'))
-                execBtn.style.display = 'inline-flex';
-        }
+    if(role==='admin'||role==='leader'){window.location.href='leadership.html';}
+    else{window.location.href='main.html';}
+  },500);
+};
 
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('loggedInUser');
-                window.location.reload();
-            });
-        }
-    }
-
-    /* ============================================================
-       3. SCROLL REVEAL
-       ============================================================ */
-    function initReveal() {
-        var cards = document.querySelectorAll('.card');
-        if (!cards.length) return;
-        if (!('IntersectionObserver' in window)) {
-            cards.forEach(function(c){ c.classList.add('reveal'); });
-            return;
-        }
-        var obs = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal');
-                    obs.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.08 });
-        cards.forEach(function(c){ obs.observe(c); });
-    }
-
-    /* ============================================================
-       4. LIVE TICKER BOT SYSTEM
-       ============================================================
-       
-       PURPOSE
-       ───────
-       A real-time information strip fixed to the bottom of the page.
-       It cycles through slides covering: Pioneer Spotlights, Upcoming
-       Sessions, Current Projects, Today's Momentum, Physical Events,
-       Announcements, and more. Content auto-refreshes from localStorage
-       so leaders can push new slides from the admin panel without
-       the visitor needing to reload the page.
-
-       HOW LEADERS POST NEW SLIDES
-       ────────────────────────────
-       From leadership.html (or any admin page), call:
-
-           window.DeclareBot.post({
-               category : "Upcoming Session",
-               icon     : "📅",
-               text     : "Hot Seat Series — Sunday 27 Apr, 3 PM. All members welcome.",
-               date     : "27 Apr 2026",
-               expires  : "2026-04-28",   // optional ISO date — auto-removed after this
-               pinned   : false            // optional — pinned slides always appear first
-           });
-
-       HOW LEADERS REMOVE A SLIDE
-       ────────────────────────────
-           window.DeclareBot.remove(slideId);  // id shown in DeclareBot.getAll()
-
-       HOW LEADERS VIEW ALL CURRENT SLIDES
-       ─────────────────────────────────────
-           console.table(window.DeclareBot.getAll());
-
-       STORAGE KEY: "declareUpdates"  (localStorage)
-       ============================================================ */
-
-    var STORE_KEY = 'declareUpdates';
-
-    /* ── Utility: real date string ── */
-    function realToday() {
-        var now = new Date();
-        var days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        var months = ['January','February','March','April','May','June',
-                      'July','August','September','October','November','December'];
-        return days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
-    }
-
-    /* ── Public DeclareBot API — used by leadership panel ── */
-    window.DeclareBot = {
-        post: function(update) {
-            var all = this.getAll();
-            update.id = Date.now();
-            all.unshift(update);
-            localStorage.setItem(STORE_KEY, JSON.stringify(all));
-        },
-        remove: function(id) {
-            var filtered = this.getAll().filter(function(u){ return u.id !== id; });
-            localStorage.setItem(STORE_KEY, JSON.stringify(filtered));
-        },
-        getAll: function() {
-            try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
-            catch(e) { return []; }
-        },
-        clear: function() { localStorage.removeItem(STORE_KEY); }
-    };
-
-    /* ── Seed data (auto-loads when no real updates exist yet) ── */
-    var SEED_SLIDES = [
-        {
-            id:1, category:'Pioneer Spotlight', icon:'👑', pinned:true,
-            text:'Meet the 2026 Vision Pioneers — 6 extraordinary leaders steering Declare Family into its greatest chapter yet.',
-            date:'2026'
-        },
-        {
-            id:2, category:'Upcoming Session', icon:'📅',
-            text:'"Hot Seat" Series — Every Sunday. Bold questions. Real answers. Come prepared.',
-            date:'Every Sunday'
-        },
-        {
-            id:3, category:'Current Project', icon:'🚀',
-            text:'Project Uplift: Civic Support — 85% funded. Targeting 100+ students across local schools. Target: June 2026.',
-            date:'Jun 2026'
-        },
-        {
-            id:4, category:"Today's Momentum", icon:'⚡',
-            text:'__TODAY__',   /* replaced dynamically */
-            date:'Today'
-        },
-        {
-            id:5, category:'Physical Event', icon:'📍',
-            text:'Annual Declare Family Gathering — Venue & date announcement coming soon. Watch this space.',
-            date:'2026'
-        },
-        {
-            id:6, category:'Academy', icon:'🎓',
-            text:'Declare Academy is open — enrol in Financial Growth, Spiritual Growth, Psychology & Leadership today.',
-            date:'Ongoing'
-        },
-        {
-            id:7, category:'Partnership', icon:'🤝',
-            text:'New strategic partnership with GrowthCraft Agencies — expanding media production capabilities for all members.',
-            date:'Feb 2026'
-        },
-        {
-            id:8, category:'Milestone', icon:'🏆',
-            text:'45-Hour Marathon Livestream successfully completed — Jan 2026. Reaching thousands. History made.',
-            date:'Jan 2026'
-        },
-        {
-            id:9, category:'Community', icon:'💬',
-            text:'Join our WhatsApp community for daily wisdom capsules, prayer requests, and real-time family updates.',
-            date:'Open'
-        }
-    ];
-
-    /* ── Load, filter, sort slides ── */
-    function getSlides() {
-        var stored = window.DeclareBot.getAll();
-        var today  = new Date().toISOString().slice(0,10);
-
-        // Remove expired slides
-        stored = stored.filter(function(u){
-            return !u.expires || u.expires >= today;
-        });
-
-        // Fall back to seed if nothing stored
-        if (!stored.length) stored = SEED_SLIDES.slice();
-
-        // Pinned items first
-        stored.sort(function(a,b){ return (b.pinned?1:0) - (a.pinned?1:0); });
-
-        // Inject real date into "Today's Momentum" slide
-        stored = stored.map(function(u){
-            if (u.category === "Today's Momentum" || u.text === '__TODAY__') {
-                u.text = 'Today is ' + realToday() + '. Stay sharp. Stay intentional. Keep declaring.';
-            }
-            return u;
-        });
-
-        return stored;
-    }
-
-    /* ── XSS-safe HTML escaping ── */
-    function esc(str) {
-        return String(str||'')
-            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-            .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    /* ── Ticker state ── */
-    var slides    = [];
-    var current   = 0;
-    var autoTimer = null;
-    var INTERVAL  = 5800;   /* ms each slide stays visible */
-
-    /* ── Build / rebuild ticker ── */
-    function buildTicker() {
-        slides = getSlides();
-        var viewport = document.getElementById('tickerViewport');
-        var dotsEl   = document.getElementById('tickerDots');
-        if (!viewport || !dotsEl) return;
-
-        viewport.innerHTML = '';
-        dotsEl.innerHTML   = '';
-
-        slides.forEach(function(s, i) {
-            /* Slide element */
-            var el = document.createElement('div');
-            el.className   = 'ticker-slide' + (i === 0 ? ' active' : '');
-            el.dataset.idx = i;
-            el.innerHTML   =
-                '<span class="slide-icon">'  + esc(s.icon || '📌') + '</span>' +
-                '<div class="slide-body">'   +
-                    '<span class="slide-cat">'  + esc(s.category || 'Update') + '</span>' +
-                    '<span class="slide-text">' + esc(s.text || '')  + '</span>' +
-                '</div>' +
-                '<span class="slide-date">' + esc(s.date || '') + '</span>';
-            viewport.appendChild(el);
-
-            /* Dot */
-            var dot       = document.createElement('span');
-            dot.className = 'tdot' + (i === 0 ? ' on' : '');
-            dot.dataset.idx = i;
-            dot.addEventListener('click', function(){
-                stopAuto(); goTo(parseInt(this.dataset.idx,10)); startAuto();
-            });
-            dotsEl.appendChild(dot);
-        });
-
-        current = 0;
-        stopAuto(); startAuto();
-    }
-
-    /* ── Transition to slide n ── */
-    function goTo(n) {
-        if (!slides.length) return;
-        n = ((n % slides.length) + slides.length) % slides.length;
-
-        var allSlides = document.querySelectorAll('.ticker-slide');
-        var allDots   = document.querySelectorAll('.tdot');
-
-        /* Exit current */
-        var cur = allSlides[current];
-        if (cur) {
-            cur.classList.remove('active');
-            cur.classList.add('exiting');
-            (function(el){ setTimeout(function(){ el.classList.remove('exiting'); }, 700); })(cur);
-        }
-
-        current = n;
-
-        /* Enter next */
-        if (allSlides[current]) allSlides[current].classList.add('active');
-
-        /* Sync dots */
-        allDots.forEach(function(d,i){ d.classList.toggle('on', i === current); });
-    }
-
-    function startAuto() {
-        autoTimer = setInterval(function(){ goTo(current + 1); }, INTERVAL);
-    }
-
-    function stopAuto() { clearInterval(autoTimer); }
-
-    /* ── Arrow nav ── */
-    function initTickerControls() {
-        var prev = document.getElementById('tickerPrev');
-        var next = document.getElementById('tickerNext');
-        if (prev) prev.addEventListener('click', function(){ stopAuto(); goTo(current-1); startAuto(); });
-        if (next) next.addEventListener('click', function(){ stopAuto(); goTo(current+1); startAuto(); });
-    }
-
-    /* ── Live poll — checks for new posts every 30 s ── */
-    function startPoller() {
-        setInterval(function() {
-            var fresh = getSlides();
-            var changed = fresh.length !== slides.length ||
-                (fresh[0] && slides[0] && fresh[0].text !== slides[0].text) ||
-                (fresh[0] && slides[0] && fresh[0].id   !== slides[0].id);
-            if (changed) buildTicker();
-        }, 30000);
-    }
-
-    /* ============================================================
-       INIT
-       ============================================================ */
-    document.addEventListener('DOMContentLoaded', function() {
-        initReel();
-        initNav();
-        initReveal();
-        buildTicker();
-        initTickerControls();
-        startPoller();
-    });
-
+document.addEventListener('keydown',function(e){if(e.key==='Enter')window.handleRegister();});
 })();
 </script>
-
 </body>
 </html>
