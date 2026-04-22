@@ -378,39 +378,26 @@ function hideStatus(){var card=document.getElementById('statusCard');if(card)car
    Body: { phone, amount, accountRef: memberID, description }
    Your backend calls: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
    ─────────────────────────────────────────────── */
-async function callMpesaSTK(phone,amount,memberID){
-  // Normalize phone number to 254 format
-  var normalized=phone.replace(/^0/,'254').replace(/^\+/,'');
-  if(normalized.length<12)throw new Error('Invalid phone number. Use format 07XXXXXXXX or 254XXXXXXXXX');
-
-  // In production, replace this with a real fetch to your backend
-  // Example:
-  // const res = await fetch('/api/mpesa/stk-push', {
-  //   method: 'POST',
-  //   headers: {'Content-Type':'application/json'},
-  //   body: JSON.stringify({
-  //     phone: normalized,
-  //     amount: parseInt(amount),
-  //     accountRef: memberID || 'DeclareFamily',
-  //     description: 'Declare Family Contribution',
-  //     paybill: '0116251682'
-  //   })
-  // });
-  // const data = await res.json();
-  // if(!data.success) throw new Error(data.message || 'STK push failed');
-  // return { checkoutRequestID: data.checkoutRequestID };
-
-  // SIMULATION (remove when backend is ready):
-  return new Promise(function(resolve,reject){
-    setTimeout(function(){
-      // Simulate success 95% of the time
-      if(Math.random()>0.05){
-        resolve({success:true,checkoutRequestID:'ws_CO_SIM_'+Date.now()});
-      } else {
-        reject(new Error('The STK push request was cancelled or timed out. Please try again.'));
-      }
-    },6000);
-  });
+async function callMpesaSTK(phone, amount) {
+    setStkStatus('requesting');
+    try {
+        const response = await fetch('http://localhost:3000/stkpush', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, amount })
+        });
+        const data = await response.json();
+        if (data.ResponseCode === "0") {
+            setStkStatus('processing');
+            alert("Prompt sent! Please enter your PIN on your phone.");
+        } else {
+            setStkStatus('failed');
+            alert("Error: " + data.CustomerMessage);
+        }
+    } catch (err) {
+        setStkStatus('failed');
+        alert("Server connection failed. Make sure server.js is running.");
+    }
 }
 
 async function pollMpesaConfirmation(checkoutRequestID){
