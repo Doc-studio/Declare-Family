@@ -935,7 +935,7 @@ function registerUser() {
         localStorage.setItem('loggedInUser', JSON.stringify(newUser));
 
         // Redirect to Dashboard (Private Area) instead of Main (Public Area)
-        window.location.href = (role === 'admin' || role === 'leader') ? 'leadership.html' : 'Dashboard.html';
+        window.location.href = (role === 'admin' || role === 'leader') ? 'leadership.html' : 'profile.html';
     }, 800);
 }
 })();
