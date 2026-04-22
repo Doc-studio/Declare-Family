@@ -2,161 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Login | Declare Family</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root { --gold: #FFD700; --dark: #0a0a0a; --panel: #121212; --border: rgba(255,255,255,0.08); }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--dark); color: white;
-    display: flex; justify-content: center; align-items: center;
-    min-height: 100vh; padding: 20px;
-}
-.bg-glow {
-    position: fixed; inset: 0; z-index: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 70%);
-    pointer-events: none;
-}
-.container {
-    background: var(--panel); padding: 45px 40px;
-    border-radius: 24px; width: 100%; max-width: 380px;
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    position: relative; z-index: 1;
-    animation: fadeUp 0.5s ease;
-}
-@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-.logo-area { text-align: center; margin-bottom: 35px; }
-.logo-area h2 { color: var(--gold); font-size: 22px; font-weight: 800; letter-spacing: 2px; }
-.logo-area p { color: #555; font-size: 13px; margin-top: 6px; }
-label { display: block; font-size: 11px; font-weight: 800; color: #666; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-.field { margin-bottom: 20px; }
-input {
-    width: 100%; padding: 14px 16px;
-    border: 1px solid #222; border-radius: 12px;
-    background: #000; color: white;
-    font-family: inherit; font-size: 14px;
-    transition: border-color 0.2s;
-    outline: none;
-}
-input:focus { border-color: var(--gold); }
-input::placeholder { color: #444; }
-.btn {
-    width: 100%; padding: 15px;
-    background: var(--gold); border: none; border-radius: 12px;
-    font-family: inherit; font-weight: 800; font-size: 14px;
-    letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; transition: 0.2s; margin-top: 5px;
-}
-.btn:hover { background: #fff; }
-.btn:active { transform: scale(0.98); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.error-msg { background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.3); color: #ff6b6b; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; display: none; }
-.link-row { text-align: center; margin-top: 25px; }
-a { color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; }
-a:hover { text-decoration: underline; }
+:root{--gold:#FFD700;--dark:#0a0a0a;--panel:#121212;--border:rgba(255,255,255,0.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;display:flex;justify-content:center;align-items:center;min-height:100dvh;padding:20px;}
+.bg-glow{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.06) 0%,transparent 70%);pointer-events:none;}
+.container{background:var(--panel);padding:44px 38px;border-radius:24px;width:100%;max-width:380px;border:1px solid var(--border);box-shadow:0 30px 60px rgba(0,0,0,.6);position:relative;z-index:1;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.logo-area{text-align:center;margin-bottom:32px;}
+.logo-area img{width:60px;height:60px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;margin-bottom:14px;display:block;margin-left:auto;margin-right:auto;}
+.logo-area h2{color:var(--gold);font-size:20px;font-weight:800;letter-spacing:2px;}
+.logo-area p{color:#555;font-size:13px;margin-top:6px;}
+label{display:block;font-size:10px;font-weight:800;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.field{margin-bottom:18px;}
+input{width:100%;padding:14px 16px;border:1px solid #222;border-radius:12px;background:#000;color:#fff;font-family:inherit;font-size:14px;transition:border-color .2s;outline:none;}
+input:focus{border-color:var(--gold);}
+input::placeholder{color:#3a3a3a;}
+.btn{width:100%;padding:15px;background:var(--gold);border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:4px;}
+.btn:hover{background:#fff;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.error-msg{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.3);color:#ff6b6b;padding:12px 15px;border-radius:10px;font-size:13px;margin-bottom:18px;display:none;line-height:1.5;}
+.link-row{text-align:center;margin-top:22px;}
+.link-row a{color:var(--gold);text-decoration:none;font-size:13px;font-weight:600;}
+.link-row a:hover{text-decoration:underline;}
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#333;font-size:11px;}
+.divider::before,.divider::after{content:'';flex:1;border-top:1px solid #222;}
 </style>
 </head>
 <body>
 <div class="bg-glow"></div>
 <div class="container">
-    <div class="logo-area">
-        <h2>DECLARE FAMILY</h2>
-        <p>Enter your credentials to access the platform</p>
-    </div>
+  <div class="logo-area">
+    <img src="hero-image.jpg.jpeg" alt="Declare Family" onerror="this.style.display='none'">
+    <h2>DECLARE FAMILY</h2>
+    <p>Enter your credentials to access the platform</p>
+  </div>
 
-    <div class="error-msg" id="errorMsg"></div>
+  <div class="error-msg" id="errorMsg"></div>
 
-    <div class="field">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
-    </div>
-    <div class="field">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
-    </div>
+  <div class="field">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+  </div>
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+  </div>
 
-    <button class="btn" id="loginBtn" onclick="handleLogin()">Login</button>
+  <button class="btn" id="loginBtn" onclick="handleLogin()">Login</button>
 
-    <div class="link-row">
-        <a href="index.html">Don't have an account? Register</a>
-    </div>
+  <div class="link-row">
+    <a href="index.html">Don't have an account? Register →</a>
+  </div>
 </div>
 
 <script>
-function simpleHash(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
+(function(){
+'use strict';
+
+/* ── simple hash (consistent with registration) ── */
+function simpleHash(str){
+  var hash=0;
+  for(var i=0;i<str.length;i++){hash=((hash<<5)-hash)+str.charCodeAt(i);hash=hash&hash;}
+  return hash.toString(36);
+}
+
+/* ── auto-redirect if already logged in ──────── */
+(function(){
+  var s=null;try{s=JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){}
+  if(s){
+    if(s.role==='admin'||s.role==='leader'){window.location.href='leadership.html';}
+    else{window.location.href='Dashboard.html';}
+  }
+})();
+
+function showError(msg){
+  var el=document.getElementById('errorMsg');el.textContent=msg;el.style.display='block';
+}
+
+window.handleLogin=function(){
+  var email=(document.getElementById('email').value||'').trim();
+  var password=document.getElementById('password').value;
+  var btn=document.getElementById('loginBtn');
+  document.getElementById('errorMsg').style.display='none';
+
+  if(!email||!password){showError('Please fill in both email and password.');return;}
+
+  btn.disabled=true;btn.textContent='Verifying...';
+
+  setTimeout(function(){
+    var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+    var hashedPwd=simpleHash(password);
+
+    // Support both plain text (legacy) and hashed passwords
+    var user=users.find(function(u){
+      return u.email===email&&(u.password===password||u.passwordHash===hashedPwd);
+    });
+
+    if(!user){
+      showError('Invalid email or password. Please try again.');
+      btn.disabled=false;btn.textContent='Login';return;
     }
-    return hash.toString(36);
-}
 
-function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.style.display = 'block';
-}
-
-function handleLogin() {
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    const btn = document.getElementById('loginBtn');
-
-    document.getElementById('errorMsg').style.display = 'none';
-
-    if (!email || !password) {
-        showError('Please fill in both fields.');
-        return;
+    // Migrate plain-text password to hash
+    if(user.password&&!user.passwordHash){
+      user.passwordHash=simpleHash(user.password);
+      delete user.password;
+      var idx=users.findIndex(function(u){return u.email===email;});
+      if(idx>=0){users[idx]=user;localStorage.setItem('users',JSON.stringify(users));}
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Verifying...';
+    // Store session (no password fields)
+    var sessionUser=Object.assign({},user);
+    delete sessionUser.password;delete sessionUser.passwordHash;
+    localStorage.setItem('loggedInUser',JSON.stringify(sessionUser));
 
-    setTimeout(() => {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const hashedPwd = simpleHash(password);
-        // Support both old (plain text) and new (hashed) passwords for backwards compatibility
-        const user = users.find(u => u.email === email && (u.password === password || u.passwordHash === hashedPwd));
+    // ── REDIRECT LOGIC ──────────────────────────
+    if(user.role==='admin'||user.role==='leader'){
+      window.location.href='leadership.html';
+    } else {
+      // If profile not yet set up, send to profile.html first (one-time)
+      var profileDone=localStorage.getItem('profileSetupDone_'+user.email);
+      window.location.href=profileDone?'Dashboard.html':'profile.html';
+    }
+  },400);
+};
 
-        if (!user) {
-            showError('Invalid email or password. Please try again.');
-            btn.disabled = false;
-            btn.textContent = 'Login';
-            return;
-        }
+/* ── Enter key ──────────────────────────────── */
+document.addEventListener('keydown',function(e){if(e.key==='Enter')window.handleLogin();});
 
-        // Update to hashed password if still plain text
-        if (user.password && !user.passwordHash) {
-            user.passwordHash = simpleHash(user.password);
-            delete user.password;
-            const idx = users.findIndex(u => u.email === email);
-            users[idx] = user;
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        // Store session (without password)
-        const sessionUser = { ...user };
-        delete sessionUser.password;
-        delete sessionUser.passwordHash;
-        localStorage.setItem('loggedInUser', JSON.stringify(sessionUser));
-
-        if (user.role === 'admin' || user.role === 'leader') {
-            window.location.href = 'leadership.html';
-        } else {
-            window.location.href = 'main.html';
-        }
-    }, 400);
-}
-
-// Allow Enter key to submit
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') handleLogin();
-});
+})();
 </script>
 </body>
 </html>
