@@ -1,264 +1,713 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pioneer Profile | Declare Family</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold: #FFD700; --dark: #050505; --panel: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08); --green: #00FF94;
-            --glass: blur(15px);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>My Profile | Declare Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700;--gold-soft:rgba(255,215,0,0.1);
+  --dark:#050505;--panel:rgba(255,255,255,0.03);--card:#111;
+  --border:rgba(255,255,255,0.08);--border2:#1e1e1e;
+  --green:#00FF94;--green-soft:rgba(0,255,148,0.08);
+  --blue:#4A9EFF;--purple:#A855F7;--amber:#FF9F43;--rose:#FF6B8A;
+  --glass:blur(15px);
+  --font-fancy:'Playfair Display',serif;
+}
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;margin:0;padding:0;}
+body{background:var(--dark);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden;line-height:1.65;}
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body {
-            background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0; padding: 0; overflow-x: hidden; line-height: 1.6;
-        }
+/* ── CROP OVERLAY ─────────────────────────────── */
+#cropOverlay{position:fixed;inset:0;background:#000;z-index:3000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+.crop-box{width:100%;max-width:300px;aspect-ratio:1;border:2px solid var(--gold);overflow:hidden;background:#111;}
+#cropCanvas{width:100%;height:100%;touch-action:none;cursor:move;display:block;}
+.crop-actions{margin-top:20px;display:flex;gap:12px;width:100%;max-width:300px;}
+.crop-btn{flex:1;padding:14px;border-radius:12px;font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase;border:none;cursor:pointer;font-family:inherit;}
+.crop-btn-gold{background:var(--gold);color:#000;}
+.crop-btn-dark{background:#222;color:#fff;}
 
-        /* --- 1. PRO NAVIGATION --- */
-        header {
-            padding: 18px 20px; display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: var(--glass); z-index: 1000; border-bottom: 1px solid var(--border);
-        }
-        .brand-group { display: flex; align-items: center; gap: 12px; }
-        .logo-circle { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover; }
-        .brand-name { font-weight: 800; font-size: 13px; letter-spacing: 2px; color: #fff; text-decoration: none; text-transform: uppercase; }
+/* ── TOP HEADER ───────────────────────────────── */
+.site-header{
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:rgba(5,5,5,0.92);
+  backdrop-filter:var(--glass);z-index:200;border-bottom:1px solid var(--border);
+  gap:12px;
+}
+.header-brand{display:flex;align-items:center;gap:11px;}
+.header-logo{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;flex-shrink:0;}
+.header-name{font-weight:800;font-size:13px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.header-nav{display:flex;align-items:center;gap:8px;}
+.header-nav a{text-decoration:none;color:#888;font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px;border:1px solid var(--border);transition:.2s;}
+.header-nav a:hover{color:var(--gold);border-color:rgba(255,215,0,.3);}
+.online-dot{color:var(--green);font-size:11px;font-weight:800;display:flex;align-items:center;gap:5px;}
+.online-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);display:inline-block;}
 
-        /* --- 2. CROP OVERLAY (PRO FEATURE) --- */
-        #cropOverlay {
-            position: fixed; inset: 0; background: #000; z-index: 2000;
-            display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-        }
-        .crop-box { 
-            width: 100%; max-width: 320px; aspect-ratio: 1; border: 2px solid var(--gold); 
-            position: relative; overflow: hidden; background: #111; 
-        }
-        #cropCanvas { width: 100%; height: 100%; touch-action: none; cursor: move; }
-        .crop-ui { margin-top: 30px; display: flex; gap: 15px; width: 100%; max-width: 320px; }
-        .btn { 
-            flex: 1; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 11px; 
-            letter-spacing: 1px; text-transform: uppercase; border: none; cursor: pointer; transition: 0.2s;
-        }
-        .btn-gold { background: var(--gold); color: #000; }
-        .btn-dark { background: #222; color: #fff; }
+/* ── QUOTE BANNER ─────────────────────────────── */
+.quote-banner{
+  background:linear-gradient(90deg,rgba(255,215,0,.04),rgba(255,215,0,.09),rgba(255,215,0,.04));
+  border-bottom:1px solid rgba(255,215,0,.14);padding:10px 22px;
+  display:flex;align-items:center;gap:12px;overflow:hidden;
+}
+.quote-banner .q-text{font-size:12px;font-style:italic;color:#ccc;flex:1;transition:opacity .5s;}
+.quote-banner .q-time{font-size:10px;color:#444;font-weight:700;white-space:nowrap;}
 
-        /* --- 3. DYNAMIC GREETING & ADS --- */
-        .promo-banner { background: #000; border-bottom: 1px solid var(--gold); padding: 12px; text-align: center; }
-        #motivationAd { font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 3px; }
+/* ── WELCOME SECTION ──────────────────────────── */
+.welcome-wrap{padding:28px 22px 14px;}
+.welcome-greeting{font-family:var(--font-fancy);font-size:clamp(1.5rem,4vw,2.2rem);margin-bottom:6px;background:linear-gradient(90deg,#fff,#aaa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.welcome-sub{font-size:14px;color:#777;line-height:1.6;}
+.member-id-pill{display:inline-flex;align-items:center;gap:7px;margin-top:10px;background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:800;color:var(--gold);letter-spacing:1px;}
 
-        .welcome-section { padding: 35px 25px 15px; }
-        #timeGreeting { font-size: 26px; font-weight: 800; margin: 0; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        #praiseLine { color: #777; font-size: 14px; margin-top: 8px; min-height: 40px; transition: 0.5s; }
+/* ── PROFILE IDENTITY CARD ────────────────────── */
+.identity-card{
+  margin:0 18px 20px;padding:28px;border-radius:24px;
+  background:var(--panel);backdrop-filter:var(--glass);
+  border:1px solid var(--border);text-align:center;
+}
+.photo-wrapper{
+  width:110px;height:110px;margin:0 auto 16px;border-radius:22px;
+  border:2.5px solid var(--gold);overflow:hidden;position:relative;
+  background:#18181b;box-shadow:0 10px 30px rgba(0,0,0,.6);cursor:pointer;
+}
+#profileImg{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-overlay{position:absolute;bottom:0;width:100%;background:rgba(0,0,0,.75);color:var(--gold);font-size:9px;font-weight:800;padding:7px 0;letter-spacing:1px;}
+input[type="file"]{display:none;}
+.id-tag{font-size:10px;color:var(--gold);font-weight:800;letter-spacing:2px;display:block;margin-bottom:4px;}
+.member-name{font-family:var(--font-fancy);font-size:22px;margin-bottom:6px;}
+.member-role-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;border:1px solid;margin-bottom:12px;}
+.role-member{color:var(--blue);border-color:rgba(74,158,255,.3);background:rgba(74,158,255,.08);}
+.role-leader{color:var(--green);border-color:rgba(0,255,148,.3);background:rgba(0,255,148,.08);}
+.role-admin{color:var(--gold);border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.08);}
 
-        /* --- 4. PROFILE IDENTITY CARD --- */
-        .profile-card {
-            margin: 0 20px; padding: 30px; border-radius: 28px;
-            background: var(--panel); backdrop-filter: var(--glass);
-            border: 1px solid var(--border); text-align: center;
-        }
-        .identity-hex {
-            width: 110px; height: 110px; margin: 0 auto 15px; border-radius: 22px;
-            border: 2px solid var(--gold); overflow: hidden; position: relative;
-            background: #18181b; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        #profileImg { width: 100%; height: 100%; object-fit: cover; }
-        .edit-trigger { 
-            position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); 
-            color: var(--gold); font-size: 9px; font-weight: 800; padding: 6px 0; cursor: pointer;
-        }
-        .id-label { display: block; font-size: 10px; color: var(--gold); font-weight: 800; letter-spacing: 2px; margin-top: 10px; }
-        .name-display { font-size: 20px; font-weight: 800; margin: 5px 0; }
+/* Connections */
+.connections-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;}
+.connections-count{font-size:13px;font-weight:800;color:#ccc;}
+.connections-btn{background:none;border:1px solid var(--border);color:#888;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;}
+.connections-btn:hover{border-color:var(--gold);color:var(--gold);}
 
-        /* --- 5. PERFORMANCE METRICS --- */
-        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .metric-box { 
-            background: var(--panel); padding: 20px; border-radius: 20px; border: 1px solid var(--border);
-        }
-        .m-label { font-size: 9px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .m-val { font-size: 22px; font-weight: 800; display: block; margin-top: 5px; }
+/* Connections dropdown */
+.connections-list{display:none;margin-top:12px;text-align:left;background:#000;border-radius:12px;border:1px solid var(--border);overflow:hidden;}
+.conn-item{padding:11px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);font-size:13px;}
+.conn-item:last-child{border-bottom:none;}
+.conn-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold);color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
+.conn-info{flex:1;}
+.conn-name{font-weight:700;font-size:13px;}
+.conn-id{font-size:10px;color:#555;}
 
-        /* --- 6. EXECUTIVE MEMO (NOTEPAD) --- */
-        .memo-area { padding: 0 20px 50px; }
-        .memo-label { font-size: 10px; color: var(--gold); font-weight: 800; margin-bottom: 12px; display: block; }
-        textarea {
-            width: 100%; height: 180px; background: #0a0a0a; border: 1px solid var(--border);
-            border-radius: 18px; color: #ccc; padding: 18px; font-family: inherit; font-size: 15px;
-            resize: none; transition: 0.3s;
-        }
-        textarea:focus { border-color: var(--gold); background: #111; }
+/* ── PROFILE FORM ─────────────────────────────── */
+.form-wrap{padding:0 18px 30px;}
+.form-section{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:24px;margin-bottom:18px;}
+.form-section-title{font-size:11px;font-weight:800;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-field{margin-bottom:16px;}
+.form-field:last-child{margin-bottom:0;}
+.form-field label{display:block;font-size:10px;font-weight:800;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.form-field input,.form-field select,.form-field textarea{
+  width:100%;padding:13px 15px;background:#000;border:1px solid #222;
+  border-radius:12px;color:#fff;font-family:inherit;font-size:14px;outline:none;transition:.2s;
+}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--gold);}
+.form-field input::placeholder,.form-field textarea::placeholder{color:#3a3a3a;}
+.form-field select option{background:#111;}
+.form-field textarea{resize:vertical;min-height:90px;max-height:180px;}
+.char-count{font-size:10px;color:#444;text-align:right;margin-top:4px;}
+.private-note{font-size:10px;color:#3a3a3a;margin-top:4px;display:flex;align-items:center;gap:5px;}
+.private-note::before{content:'🔒';font-size:11px;}
+.full-width{grid-column:span 2;}
 
-    </style>
+/* ── METRICS ──────────────────────────────────── */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;padding:0 18px;}
+.metric-box{background:var(--panel);padding:18px;border-radius:18px;border:1px solid var(--border);}
+.m-label{font-size:9px;color:var(--gold);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;display:block;margin-bottom:6px;}
+.m-val{font-size:20px;font-weight:800;display:block;}
+.m-sub{font-size:11px;color:#555;margin-top:4px;}
+
+/* ── SAVE BUTTON ──────────────────────────────── */
+.save-btn{
+  display:block;width:100%;padding:16px;background:var(--gold);color:#000;
+  border:none;border-radius:14px;font-family:inherit;font-weight:800;font-size:15px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.3s;margin-top:4px;
+}
+.save-btn:hover{background:#fff;}
+.save-btn:active{transform:scale(.98);}
+
+/* ── SUCCESS PANEL ────────────────────────────── */
+.success-panel{display:none;background:rgba(0,255,148,.05);border:1px solid rgba(0,255,148,.3);border-radius:16px;padding:24px;margin-bottom:16px;text-align:center;}
+.success-panel h3{color:var(--green);margin-bottom:8px;}
+.success-panel p{font-size:13px;color:#888;margin-bottom:16px;}
+.success-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.suc-btn{padding:11px 24px;border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;border:none;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;transition:.2s;}
+.suc-btn-gold{background:var(--gold);color:#000;}
+.suc-btn-gold:hover{background:#fff;}
+.suc-btn-outline{background:none;border:1px solid var(--border);color:#888;}
+.suc-btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ── CONNECT MEMBERS ──────────────────────────── */
+.members-section{padding:0 18px 28px;}
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-top:16px;}
+.member-card{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:16px;text-align:center;transition:.25s;}
+.member-card:hover{border-color:var(--gold);}
+.member-card .mc-avatar{width:50px;height:50px;border-radius:50%;background:var(--gold);color:#000;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;}
+.member-card .mc-name{font-size:13px;font-weight:700;margin-bottom:3px;}
+.member-card .mc-id{font-size:10px;color:#555;margin-bottom:10px;}
+.connect-btn{width:100%;padding:8px;background:var(--gold-soft);border:1px solid rgba(255,215,0,.3);color:var(--gold);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s;}
+.connect-btn:hover,.connect-btn.connected{background:var(--gold);color:#000;}
+.connect-btn.connected{cursor:default;}
+
+/* ── MEMO ─────────────────────────────────────── */
+.memo-wrap{padding:0 18px 50px;}
+.memo-label{font-size:10px;color:var(--gold);font-weight:800;margin-bottom:10px;display:block;letter-spacing:1.5px;text-transform:uppercase;}
+#personalNotes{width:100%;height:160px;background:#0a0a0a;border:1px solid var(--border);border-radius:16px;color:#ccc;padding:16px;font-family:inherit;font-size:14px;resize:none;transition:.3s;outline:none;}
+#personalNotes:focus{border-color:var(--gold);background:#111;}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media(max-width:600px){
+  .form-row{grid-template-columns:1fr;}
+  .full-width{grid-column:span 1;}
+  .site-header{padding:12px 14px;}
+  .form-wrap{padding:0 12px 24px;}
+  .identity-card{margin:0 12px 16px;}
+  .metrics-grid{padding:0 12px;}
+  .members-section{padding:0 12px 24px;}
+  .memo-wrap{padding:0 12px 40px;}
+}
+@media(orientation:landscape)and(max-height:500px){
+  .site-header{padding:8px 14px;}
+  .welcome-wrap{padding:16px 18px 8px;}
+}
+</style>
 </head>
 <body>
 
-    <div id="cropOverlay">
-        <div class="m-label" style="margin-bottom: 20px;">Position Identity Image</div>
-        <div class="crop-box">
-            <canvas id="cropCanvas"></canvas>
-        </div>
-        <div class="crop-ui">
-            <button class="btn btn-dark" onclick="closeCrop()">Cancel</button>
-            <button class="btn btn-gold" onclick="saveCroppedImage()">Finalize</button>
-        </div>
+<!-- CROP OVERLAY -->
+<div id="cropOverlay">
+  <div style="font-size:11px;color:var(--gold);font-weight:800;letter-spacing:1.5px;margin-bottom:18px;text-transform:uppercase;">Position Your Photo</div>
+  <div class="crop-box"><canvas id="cropCanvas"></canvas></div>
+  <div class="crop-actions">
+    <button class="crop-btn crop-btn-dark" onclick="closeCrop()">Cancel</button>
+    <button class="crop-btn crop-btn-gold" onclick="saveCroppedImage()">Save Photo</button>
+  </div>
+</div>
+
+<!-- SITE HEADER -->
+<header class="site-header">
+  <div class="header-brand">
+    <img src="hero-image.jpg.jpeg" class="header-logo" alt="Declare Family" onerror="this.style.background='#333'">
+    <span class="header-name">Declare Family</span>
+  </div>
+  <div class="header-nav">
+    <a href="Dashboard.html">Dashboard</a>
+    <a href="hub.html">Hub</a>
+    <span class="online-dot">Online</span>
+  </div>
+</header>
+
+<!-- QUOTE BANNER -->
+<div class="quote-banner">
+  <span class="q-text" id="quoteText">Loading today's inspiration...</span>
+  <span class="q-time" id="quoteTime"></span>
+</div>
+
+<!-- WELCOME -->
+<div class="welcome-wrap">
+  <h1 class="welcome-greeting" id="welcomeGreeting">Hello there, Pioneer</h1>
+  <p class="welcome-sub" id="welcomeSub">Welcome to the Declare Global Family. You are called, equipped and sent.</p>
+  <div class="member-id-pill">🎖️ <span id="headerMemberID">Loading...</span></div>
+</div>
+
+<!-- IDENTITY CARD -->
+<div class="identity-card">
+  <div class="photo-wrapper" onclick="document.getElementById('fileInput').click()">
+    <img id="profileImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='110' height='110'%3E%3Crect fill='%23222' width='110' height='110'/%3E%3Ctext fill='%23555' font-size='40' x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle'%3E👤%3C/text%3E%3C/svg%3E" alt="Profile Photo">
+    <div class="photo-overlay">TAP TO UPDATE</div>
+  </div>
+  <input type="file" id="fileInput" accept="image/*" onchange="initCrop(this)">
+
+  <span class="id-tag" id="memberIDDisplay">DF-2026-XXX</span>
+  <h2 class="member-name" id="memberNameDisplay">Your Name</h2>
+  <span class="member-role-badge role-member" id="roleBadge">MEMBER</span>
+
+  <div class="connections-row">
+    <span class="connections-count" id="connectCount">0 Connections</span>
+    <button class="connections-btn" onclick="toggleConnectionsList()">See Connections ▾</button>
+  </div>
+  <div class="connections-list" id="connectionsList"></div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-grid">
+  <div class="metric-box">
+    <span class="m-label">Daily Rhema</span>
+    <p id="dailyRhema" style="font-size:12px;font-weight:600;color:#ccc;line-height:1.5;margin:0;">"Arise, shine; for your light has come." — Isaiah 60:1</p>
+  </div>
+  <div class="metric-box">
+    <span class="m-label">Momentum</span>
+    <span class="m-val" id="momentumVal" style="color:var(--green);">0%</span>
+    <span class="m-sub">Keep pushing forward</span>
+  </div>
+</div>
+
+<!-- PROFILE FORM -->
+<div class="form-wrap">
+
+  <!-- Success panel (shown after save) -->
+  <div class="success-panel" id="successPanel">
+    <h3>✅ Profile Saved!</h3>
+    <p id="successMsg">Your profile details have been saved successfully. Welcome to the family!</p>
+    <div class="success-btns">
+      <a href="Dashboard.html" class="suc-btn suc-btn-gold">Go to My Dashboard</a>
+      <a href="hub.html" class="suc-btn suc-btn-outline">Connect with Members</a>
+    </div>
+  </div>
+
+  <!-- Personal Info -->
+  <div class="form-section">
+    <div class="form-section-title">👤 Personal Information</div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>Full Name</label>
+        <input type="text" id="pName" placeholder="Your full name" autocomplete="name">
+      </div>
+      <div class="form-field">
+        <label>Phone Number</label>
+        <input type="tel" id="pPhone" placeholder="e.g. 0712 345 678" autocomplete="tel">
+      </div>
     </div>
 
-    <header>
-        <div class="brand-group">
-            <img src="hero-image.jpg.jpeg" class="logo-circle" alt="Logo">
-            <a href="#" class="brand-name">Declare Family</a>
-        </div>
-        <div class="m-label" style="color: var(--green);">● Online</div>
-    </header>
-
-    <div class="promo-banner">
-        <div id="motivationAd">STRATEGIC VISION ACTIVATED</div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Birthday (Day &amp; Month)</label>
+        <input type="text" id="pBirthday" placeholder="e.g. 14 March">
+      </div>
+      <div class="form-field">
+        <label>Gender</label>
+        <select id="pGender">
+          <option value="">Select gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
     </div>
 
-    <section class="welcome-section">
-        <h1 id="timeGreeting">Good Morning</h1>
-        <div id="praiseLine">Preparing your executive dashboard...</div>
-    </section>
-
-    <div class="profile-card">
-        <div class="identity-hex" onclick="document.getElementById('fileInput').click()">
-            <img id="profileImg" src="https://via.placeholder.com/150" alt="Identity">
-            <div class="edit-trigger">UPDATE</div>
-        </div>
-        <input type="file" id="fileInput" hidden accept="image/*" onchange="initCrop(this)">
-        
-        <span class="id-label" id="memberID">PIONEER-2026-X</span>
-        <h2 class="name-display" id="fullName">Member Name</h2>
+    <div class="form-field">
+      <label>About You <span style="color:#444;font-weight:400;">(max 200 characters)</span></label>
+      <textarea id="pAbout" placeholder="Tell the family a little about yourself — who you are, your passion, your purpose..." maxlength="200" oninput="updateCharCount()"></textarea>
+      <div class="char-count"><span id="charCount">0</span>/200</div>
     </div>
+  </div>
 
-    <div class="metrics-grid">
-        <div class="metric-box">
-            <span class="m-label">Daily Rhema</span>
-            <p id="dailyVerse" style="font-size: 12px; margin: 8px 0 0; line-height: 1.4; font-weight: 600;">"Arise, shine; for thy light is come."</p>
-        </div>
-        <div class="metric-box">
-            <span class="m-label">Momentum</span>
-            <span class="m-val" id="momentumVal" style="color: var(--green);">0%</span>
-        </div>
+  <!-- Location -->
+  <div class="form-section">
+    <div class="form-section-title">📍 Area of Residence</div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Country</label>
+        <select id="pCountry" onchange="updateCounty()">
+          <option value="">Select Country</option>
+          <option value="Kenya">Kenya</option>
+          <option value="Uganda">Uganda</option>
+          <option value="Tanzania">Tanzania</option>
+          <option value="Rwanda">Rwanda</option>
+          <option value="Ethiopia">Ethiopia</option>
+          <option value="Nigeria">Nigeria</option>
+          <option value="South Africa">South Africa</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="United States">United States</option>
+          <option value="Canada">Canada</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>County / Region</label>
+        <select id="pCounty">
+          <option value="">Select country first</option>
+        </select>
+      </div>
     </div>
+  </div>
 
-    <div class="memo-area">
-        <span class="memo-label">EXECUTIVE NOTES</span>
-        <textarea id="personalNotes" placeholder="Log your directives here..." oninput="autoSave()"></textarea>
+  <!-- Work & Occupation -->
+  <div class="form-section">
+    <div class="form-section-title">💼 Work &amp; Occupation</div>
+    <div class="form-row">
+      <div class="form-field">
+        <label>Profession <span style="color:#444;font-weight:400;">(Optional)</span></label>
+        <input type="text" id="pProfession" placeholder="e.g. Software Engineer, Teacher...">
+      </div>
+      <div class="form-field">
+        <label>Occupation Status <span style="color:#444;font-weight:400;">(Optional)</span></label>
+        <select id="pOccupation">
+          <option value="">Select status</option>
+          <option>Student</option>
+          <option>Employed</option>
+          <option>Self-Employed / Entrepreneur</option>
+          <option>Freelancer</option>
+          <option>Job Seeker</option>
+          <option>Intern / Apprentice</option>
+          <option>Homemaker</option>
+          <option>Retired</option>
+          <option>Other</option>
+        </select>
+      </div>
     </div>
+  </div>
 
-    <script>
-        // --- DATA & CONFIG ---
-        const user = JSON.parse(localStorage.getItem("loggedInUser")) || { name: "Markfire Prince", memberID: "DF-2026-PRINCE" };
-        const praiseQuotes = [
-            "You are exceptionally brilliant and born for impact.",
-            "Boldness is your second nature; lead with courage.",
-            "Smart, sharp, and chosen for this generation.",
-            "Your vision is clear, and your hands are equipped."
-        ];
+  <!-- Private Note -->
+  <div class="form-section">
+    <div class="form-section-title">🔒 Private Note</div>
+    <div class="form-field">
+      <label>Something You Would Like to Remember</label>
+      <textarea id="pPrivateNote" placeholder="This is exclusively private — only you can see this. Write anything you want to remember..." style="min-height:100px;"></textarea>
+      <div class="private-note">This note is private and never shown to other members.</div>
+    </div>
+  </div>
 
-        let rawImg = new Image();
-        let offsetX = 0, offsetY = 0;
-        let isDragging = false, startX, startY;
+  <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
 
-        function init() {
-            // UI Basics
-            document.getElementById('fullName').innerText = user.name;
-            document.getElementById('memberID').innerText = user.memberID;
-            
-            // Greeting Logic
-            const hr = new Date().getHours();
-            const greet = hr < 12 ? "Good Morning" : (hr < 18 ? "Good Afternoon" : "Good Evening");
-            document.getElementById('timeGreeting').innerText = `${greet}, Pioneer`;
+</div>
 
-            // Data Persistence
-            const savedPhoto = localStorage.getItem(`photo_${user.memberID}`);
-            if (savedPhoto) document.getElementById('profileImg').src = savedPhoto;
-            document.getElementById('personalNotes').value = localStorage.getItem(`notes_${user.memberID}`) || "";
+<!-- CONNECT WITH MEMBERS -->
+<div class="members-section" id="membersSection">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div>
+      <div style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Connect With Members</div>
+      <div style="font-size:13px;color:#666;">Build your network within the Declare Family.</div>
+    </div>
+    <div style="font-size:12px;color:#555;" id="memberCountLabel">0 registered members</div>
+  </div>
+  <div class="members-grid" id="membersGrid"></div>
+</div>
 
-            animateMomentum(92); // Set target momentum here
-            startCycles();
-        }
+<!-- PRIVATE MEMO -->
+<div class="memo-wrap">
+  <span class="memo-label">🔒 Executive Notes (Private)</span>
+  <textarea id="personalNotes" placeholder="Log your directives, thoughts, and plans here..."></textarea>
+</div>
 
-        // --- CROP ENGINE ---
-        function initCrop(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    rawImg.onload = () => {
-                        document.getElementById('cropOverlay').style.display = 'flex';
-                        renderCanvas();
-                    };
-                    rawImg.src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+<script>
+(function(){
+'use strict';
 
-        function renderCanvas() {
-            const cvs = document.getElementById('cropCanvas');
-            const ctx = cvs.getContext('2d');
-            cvs.width = 500; cvs.height = 500;
-            ctx.clearRect(0, 0, 500, 500);
+/* ── helpers ─────────────────────────────────── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
+function getUsers(){try{return JSON.parse(localStorage.getItem('users'))||[];}catch(e){return[];}}
+function saveUsers(u){localStorage.setItem('users',JSON.stringify(u));}
+function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
 
-            const scale = Math.max(500 / rawImg.width, 500 / rawImg.height);
-            const w = rawImg.width * scale;
-            const h = rawImg.height * scale;
-            
-            ctx.drawImage(rawImg, offsetX, offsetY, w, h);
-        }
+var user=session();
+if(!user){window.location.href='login.html';}
 
-        const cvs = document.getElementById('cropCanvas');
-        cvs.addEventListener('touchstart', e => { isDragging = true; startX = e.touches[0].clientX - offsetX; startY = e.touches[0].clientY - offsetY; });
-        cvs.addEventListener('touchmove', e => {
-            if (!isDragging) return;
-            offsetX = e.touches[0].clientX - startX;
-            offsetY = e.touches[0].clientY - startY;
-            renderCanvas();
-        });
-        cvs.addEventListener('touchend', () => isDragging = false);
+/* ── quotes ─────────────────────────────────── */
+var QUOTES=[
+  'You are exceptionally brilliant and born for impact — keep going.',
+  'Boldness is your second nature; lead with courage and conviction.',
+  'Smart, sharp, and chosen for this generation — walk in it.',
+  'Your vision is clear, and your hands are equipped for the task.',
+  'Every step you take in faith moves mountains you cannot yet see.',
+  'You are not behind — you are exactly where purpose placed you.',
+  'The world has been waiting for the version of you that believes.',
+  'Iron sharpens iron — surround yourself with greatness today.',
+  'Your breakthrough is not coming. It is already here. Walk into it.',
+  'Called. Equipped. Sent. That is who you are — walk accordingly.'
+];
+var RHEMAS=[
+  '"Arise, shine; for your light has come." — Isaiah 60:1',
+  '"For I know the plans I have for you — plans to prosper you." — Jeremiah 29:11',
+  '"I can do all things through Christ who strengthens me." — Philippians 4:13',
+  '"Be strong and courageous. Do not be afraid." — Joshua 1:9',
+  '"Trust in the Lord with all your heart." — Proverbs 3:5',
+  '"The Lord will fight for you; you need only be still." — Exodus 14:14',
+  '"Greater is He that is in you than he that is in the world." — 1 John 4:4'
+];
+function setQuotes(){
+  var dayIdx=Math.floor(Date.now()/86400000);
+  var qEl=document.getElementById('quoteText'),tEl=document.getElementById('quoteTime');
+  var rEl=document.getElementById('dailyRhema');
+  if(qEl)qEl.textContent='✨ '+QUOTES[dayIdx%QUOTES.length];
+  if(rEl)rEl.textContent='"'+RHEMAS[dayIdx%RHEMAS.length]+'"';
+  if(tEl){var n=new Date();tEl.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+}
+setQuotes();setInterval(function(){var n=new Date();var tEl=document.getElementById('quoteTime');if(tEl)tEl.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});},60000);
 
-        function saveCroppedImage() {
-            const dataURL = document.getElementById('cropCanvas').toDataURL('image/jpeg', 0.8);
-            document.getElementById('profileImg').src = dataURL;
-            localStorage.setItem(`photo_${user.memberID}`, dataURL);
-            closeCrop();
-        }
+// Rotating quotes every 8s
+var qIdx=0;
+setInterval(function(){
+  qIdx=(qIdx+1)%QUOTES.length;
+  var el=document.getElementById('quoteText');
+  if(el){el.style.opacity='0';setTimeout(function(){if(el){el.textContent='✨ '+QUOTES[qIdx];el.style.opacity='1';}},500);}
+},8000);
 
-        function closeCrop() { document.getElementById('cropOverlay').style.display = 'none'; }
+/* ── momentum animation ──────────────────────── */
+function animateMomentum(target){
+  var current=0;
+  var el=document.getElementById('momentumVal');
+  var iv=setInterval(function(){
+    if(current>=target){clearInterval(iv);return;}
+    current++;if(el)el.textContent=current+'%';
+  },18);
+}
+animateMomentum(82);
 
-        // --- UI ANIMATIONS ---
-        function animateMomentum(target) {
-            let current = 0;
-            const interval = setInterval(() => {
-                if (current >= target) clearInterval(interval);
-                document.getElementById('momentumVal').innerText = `${current}%`;
-                current++;
-            }, 20);
-        }
+/* ── load profile data ───────────────────────── */
+var PROFILE_KEY='profile_'+( user.memberID||user.email||'guest');
+function getProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY))||{};}catch(e){return {};}}
+function saveProfileData(data){localStorage.setItem(PROFILE_KEY,JSON.stringify(data));}
 
-        function startCycles() {
-            let idx = 0;
-            setInterval(() => {
-                idx = (idx + 1) % praiseQuotes.length;
-                document.getElementById('motivationAd').innerText = praiseQuotes[idx].toUpperCase();
-                const praiseEl = document.getElementById('praiseLine');
-                praiseEl.style.opacity = 0;
-                setTimeout(() => {
-                    praiseEl.innerText = praiseQuotes[idx];
-                    praiseEl.style.opacity = 1;
-                }, 500);
-            }, 7000);
-        }
+function populateForm(){
+  var p=getProfile();
+  var fields={pName:'name',pPhone:'phone',pBirthday:'birthday',pGender:'gender',
+               pAbout:'about',pCountry:'country',pCounty:'county',
+               pProfession:'profession',pOccupation:'occupation',pPrivateNote:'privateNote'};
+  Object.keys(fields).forEach(function(id){
+    var el=document.getElementById(id);if(el&&p[fields[id]])el.value=p[fields[id]];
+  });
+  if(p.country)updateCounty(p.county);
+  updateCharCount();
+  // Notes
+  var notesEl=document.getElementById('personalNotes');
+  if(notesEl)notesEl.value=localStorage.getItem('notes_'+(user.memberID||user.email))||'';
+}
 
-        function autoSave() {
-            localStorage.setItem(`notes_${user.memberID}`, document.getElementById('personalNotes').value);
-        }
+/* ── county/region data ──────────────────────── */
+var COUNTIES={
+  Kenya:['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret (Uasin Gishu)','Machakos','Meru','Embu','Nyeri','Kilifi','Kakamega','Kisii','Migori','Homa Bay','Siaya','Vihiga','Bungoma','Trans Nzoia','West Pokot','Baringo','Laikipia','Nyandarua','Murang\'a','Kiambu','Kajiado','Narok','Kericho','Bomet','Nandi','Elgeyo Marakwet','Samburu','Isiolo','Marsabit','Mandera','Wajir','Garissa','Tana River','Lamu','Taita Taveta','Kwale','Makueni','Kitui','Tharaka Nithi','Kirinyaga','Nyamira','Turkana','Pokot','Other'],
+  Uganda:['Kampala','Wakiso','Mukono','Jinja','Mbale','Gulu','Mbarara','Lira','Arua','Other'],
+  Tanzania:['Dar es Salaam','Arusha','Mwanza','Dodoma','Mbeya','Zanzibar','Other'],
+  Rwanda:['Kigali','Northern Province','Southern Province','Eastern Province','Western Province'],
+  Ethiopia:['Addis Ababa','Oromia','Amhara','Tigray','SNNPR','Somali','Afar','Other'],
+  Nigeria:['Lagos','Abuja','Kano','Rivers','Oyo','Kaduna','Anambra','Enugu','Delta','Other'],
+  'South Africa':['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape','Limpopo','Mpumalanga','Free State','North West','Northern Cape'],
+  'United Kingdom':['England','Scotland','Wales','Northern Ireland'],
+  'United States':['California','New York','Texas','Florida','Illinois','Pennsylvania','Other'],
+  Canada:['Ontario','British Columbia','Quebec','Alberta','Manitoba','Other'],
+  Other:['Other']
+};
+window.updateCounty=function(preselect){
+  var country=document.getElementById('pCountry').value;
+  var countyEl=document.getElementById('pCounty');
+  countyEl.innerHTML='<option value="">Select region</option>';
+  var list=COUNTIES[country]||['Other'];
+  list.forEach(function(c){
+    var opt=document.createElement('option');opt.value=c;opt.textContent=c;
+    if(c===preselect)opt.selected=true;
+    countyEl.appendChild(opt);
+  });
+};
 
-        document.addEventListener("DOMContentLoaded", init);
-    </script>
+window.updateCharCount=function(){
+  var el=document.getElementById('pAbout'),cc=document.getElementById('charCount');
+  if(el&&cc)cc.textContent=el.value.length;
+};
+
+/* ── CROP ENGINE ─────────────────────────────── */
+var rawImg=new Image(),offsetX=0,offsetY=0,isDragging=false,startX,startY;
+
+window.initCrop=function(input){
+  if(input.files&&input.files[0]){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      rawImg.onload=function(){
+        document.getElementById('cropOverlay').style.display='flex';
+        renderCanvas();
+      };
+      rawImg.src=e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+function renderCanvas(){
+  var cvs=document.getElementById('cropCanvas'),ctx=cvs.getContext('2d');
+  cvs.width=500;cvs.height=500;ctx.clearRect(0,0,500,500);
+  var scale=Math.max(500/rawImg.width,500/rawImg.height);
+  ctx.drawImage(rawImg,offsetX,offsetY,rawImg.width*scale,rawImg.height*scale);
+}
+var cvs=document.getElementById('cropCanvas');
+cvs.addEventListener('touchstart',function(e){isDragging=true;startX=e.touches[0].clientX-offsetX;startY=e.touches[0].clientY-offsetY;e.preventDefault();},{passive:false});
+cvs.addEventListener('touchmove',function(e){if(!isDragging)return;offsetX=e.touches[0].clientX-startX;offsetY=e.touches[0].clientY-startY;renderCanvas();e.preventDefault();},{passive:false});
+cvs.addEventListener('touchend',function(){isDragging=false;});
+cvs.addEventListener('mousedown',function(e){isDragging=true;startX=e.clientX-offsetX;startY=e.clientY-offsetY;});
+cvs.addEventListener('mousemove',function(e){if(!isDragging)return;offsetX=e.clientX-startX;offsetY=e.clientY-startY;renderCanvas();});
+cvs.addEventListener('mouseup',function(){isDragging=false;});
+
+window.saveCroppedImage=function(){
+  var dataURL=document.getElementById('cropCanvas').toDataURL('image/jpeg',0.85);
+  document.getElementById('profileImg').src=dataURL;
+  // Store against memberID so it propagates everywhere
+  var key='photo_'+(user.memberID||user.email||'guest');
+  localStorage.setItem(key,dataURL);
+  closeCrop();
+};
+window.closeCrop=function(){document.getElementById('cropOverlay').style.display='none';};
+
+/* ── SAVE PROFILE ────────────────────────────── */
+window.saveProfile=function(){
+  var data={
+    name:document.getElementById('pName').value.trim()||user.name,
+    phone:document.getElementById('pPhone').value.trim(),
+    birthday:document.getElementById('pBirthday').value.trim(),
+    gender:document.getElementById('pGender').value,
+    about:document.getElementById('pAbout').value.trim(),
+    country:document.getElementById('pCountry').value,
+    county:document.getElementById('pCounty').value,
+    profession:document.getElementById('pProfession').value.trim(),
+    occupation:document.getElementById('pOccupation').value,
+    privateNote:document.getElementById('pPrivateNote').value.trim(),
+    savedAt:new Date().toISOString()
+  };
+  saveProfileData(data);
+
+  // Persist notes separately
+  localStorage.setItem('notes_'+(user.memberID||user.email),document.getElementById('personalNotes').value);
+
+  // Update user record
+  var users=getUsers();
+  var idx=users.findIndex(function(u){return u.email===user.email;});
+  if(idx>=0){
+    users[idx].name=data.name||users[idx].name;
+    users[idx].profileComplete=true;
+    saveUsers(users);
+  }
+  // Update session
+  var sess=session();if(sess){sess.profileComplete=true;sess.name=data.name||sess.name;localStorage.setItem('loggedInUser',JSON.stringify(sess));}
+
+  // Mark profile setup done — so login won't redirect here again
+  localStorage.setItem('profileSetupDone_'+user.email,'true');
+
+  // Show success
+  var panel=document.getElementById('successPanel');
+  var msg=document.getElementById('successMsg');
+  if(panel){panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'center'});}
+  if(msg){
+    var isNew=!localStorage.getItem('_profileSavedBefore_'+user.email);
+    localStorage.setItem('_profileSavedBefore_'+user.email,'1');
+    msg.textContent=isNew?
+      'Welcome to the Declare Global Family, '+data.name+'! Your profile is set up. You can now explore the family.':
+      'Your profile has been updated successfully.';
+  }
+};
+
+/* ── CONNECTIONS ─────────────────────────────── */
+var CONN_KEY='connections_'+(user.memberID||user.email||'guest');
+function getMyConns(){try{return JSON.parse(localStorage.getItem(CONN_KEY))||[];}catch(e){return[];}}
+function saveMyConns(a){localStorage.setItem(CONN_KEY,JSON.stringify(a));}
+
+function updateConnectionUI(){
+  var conns=getMyConns();
+  var countEl=document.getElementById('connectCount');
+  if(countEl)countEl.textContent=conns.length+' Connection'+(conns.length!==1?'s':'');
+  renderConnectionsList();
+}
+
+function renderConnectionsList(){
+  var conns=getMyConns();var list=document.getElementById('connectionsList');if(!list)return;
+  if(!conns.length){list.innerHTML='<div style="padding:14px 16px;font-size:12px;color:#555;">No connections yet. Connect with members below.</div>';return;}
+  list.innerHTML=conns.map(function(c){
+    return '<div class="conn-item">'+
+      '<div class="conn-avatar">'+esc((c.name||'?').charAt(0).toUpperCase())+'</div>'+
+      '<div class="conn-info"><div class="conn-name">'+esc(c.name||'Member')+'</div><div class="conn-id">'+esc(c.memberID||'')+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+
+window.toggleConnectionsList=function(){
+  var list=document.getElementById('connectionsList');
+  if(list)list.style.display=list.style.display==='block'?'none':'block';
+};
+
+window.connectMember=function(memberID,name,btn){
+  var conns=getMyConns();
+  if(conns.find(function(c){return c.memberID===memberID;})){return;}
+  conns.push({memberID:memberID,name:name,connectedAt:new Date().toISOString()});
+  saveMyConns(conns);
+
+  // Also update the other member's connection count
+  var theirKey='connections_'+memberID;
+  var theirConns=[];try{theirConns=JSON.parse(localStorage.getItem(theirKey))||[];}catch(e){}
+  if(!theirConns.find(function(c){return c.memberID===(user.memberID||user.email);})){
+    theirConns.push({memberID:user.memberID||'',name:user.name||'Member',connectedAt:new Date().toISOString()});
+    localStorage.setItem(theirKey,JSON.stringify(theirConns));
+  }
+
+  if(btn){btn.textContent='✓ Connected';btn.classList.add('connected');btn.disabled=true;}
+  updateConnectionUI();
+};
+
+function renderMembersGrid(){
+  var users=getUsers();
+  var grid=document.getElementById('membersGrid');
+  var countLabel=document.getElementById('memberCountLabel');
+  if(!grid)return;
+  // Filter out self
+  var others=users.filter(function(u){return u.email!==user.email;});
+  if(countLabel)countLabel.textContent=others.length+' registered member'+(others.length!==1?'s':'');
+  if(!others.length){grid.innerHTML='<div style="font-size:13px;color:#555;padding:20px 0;">No other members registered yet.</div>';return;}
+  var conns=getMyConns();
+  grid.innerHTML=others.map(function(m){
+    var isConn=conns.find(function(c){return c.memberID===m.memberID;});
+    var savedPhoto=m.memberID?localStorage.getItem('photo_'+m.memberID):null;
+    var avatarHTML=savedPhoto?
+      '<img src="'+savedPhoto+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 10px;">':
+      '<div class="mc-avatar">'+esc((m.name||'?').charAt(0).toUpperCase())+'</div>';
+    return '<div class="member-card">'+
+      avatarHTML+
+      '<div class="mc-name">'+esc(m.name||'Member')+'</div>'+
+      '<div class="mc-id">'+esc(m.memberID||m.role||'')+'</div>'+
+      '<button class="connect-btn'+(isConn?' connected':'')+'" '+(isConn?'disabled':'')+
+        ' onclick="connectMember(\''+esc(m.memberID||m.email)+'\',\''+esc(m.name||'Member')+'\',this)">'+
+        (isConn?'✓ Connected':'Connect')+
+      '</button>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── POPULATE HEADER ─────────────────────────── */
+function populateHeader(){
+  var h=new Date().getHours();
+  var greet=h<12?'Good Morning':'h<18'?'Good Afternoon':'Good Evening';
+  if(h>=12&&h<18)greet='Good Afternoon';
+  else if(h>=18)greet='Good Evening';
+  var nameEl=document.getElementById('welcomeGreeting');
+  if(nameEl)nameEl.textContent='Hello there, '+(user.name||'Pioneer')+'!';
+  var subEl=document.getElementById('welcomeSub');
+  if(subEl)subEl.textContent='Welcome to the Declare Global Family. Your Member ID is: '+(user.memberID||'—');
+  var idEl=document.getElementById('headerMemberID');
+  if(idEl)idEl.textContent=user.memberID||'Loading...';
+  var mIdEl=document.getElementById('memberIDDisplay');
+  if(mIdEl)mIdEl.textContent=user.memberID||'';
+  var mNameEl=document.getElementById('memberNameDisplay');
+  if(mNameEl)mNameEl.textContent=user.name||'Your Name';
+  var roleEl=document.getElementById('roleBadge');
+  if(roleEl){
+    var role=(user.role||'member').toLowerCase();
+    roleEl.textContent=(role==='admin'?'SYSTEM ADMIN':role==='leader'?'VISION PIONEER':'MEMBER');
+    roleEl.className='member-role-badge '+(role==='admin'?'role-admin':role==='leader'?'role-leader':'role-member');
+  }
+  // Load saved photo
+  var photoKey='photo_'+(user.memberID||user.email||'guest');
+  var saved=localStorage.getItem(photoKey);
+  if(saved){var img=document.getElementById('profileImg');if(img)img.src=saved;}
+}
+
+/* ── AUTO-SAVE NOTES ─────────────────────────── */
+var notesEl=document.getElementById('personalNotes');
+if(notesEl)notesEl.addEventListener('input',function(){localStorage.setItem('notes_'+(user.memberID||user.email),this.value);});
+
+/* ── INIT ────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',function(){
+  populateHeader();
+  populateForm();
+  updateConnectionUI();
+  renderMembersGrid();
+
+  // Responsive
+  var doLayout=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');document.body.setAttribute('data-orient',window.innerWidth>window.innerHeight?'landscape':'portrait');};
+  doLayout();window.addEventListener('resize',doLayout);window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
+});
+
+})();
+</script>
 </body>
 </html>
