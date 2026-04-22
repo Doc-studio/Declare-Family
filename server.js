@@ -2,7 +2,8 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 app.use(express.json());
-
+const cors = require('cors'); // Run 'npm install cors' in terminal
+app.use(cors());
 // 1. YOUR DARAJA CREDENTIALS (From Safaricom Developer Portal)
 const CONSUMER_KEY = 'your_consumer_key';
 const CONSUMER_SECRET = 'your_consumer_secret';
