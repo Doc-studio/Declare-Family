@@ -4,279 +4,356 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Declare Hub | The Living Community</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --gold:#FFD700; --gold-soft:rgba(255,215,0,0.1); --gold-glow:rgba(255,215,0,0.06);
-  --dark:#080808; --card:#111; --border:#1e1e1e;
-  --green:#00FF94; --green-soft:rgba(0,255,148,0.08);
-  --blue:#4A9EFF; --blue-soft:rgba(74,158,255,0.08);
-  --rose:#FF6B8A; --rose-soft:rgba(255,107,138,0.08);
-  --amber:#FF9F43; --amber-soft:rgba(255,159,67,0.08);
-  --purple:#A855F7; --purple-soft:rgba(168,85,247,0.08);
-  --teal:#2DD4BF; --teal-soft:rgba(45,212,191,0.08);
-  --whatsapp:#25D366;
-  --nav-w:260px; --ticker-h:54px;
+  --gold:#FFD700;--gold-soft:rgba(255,215,0,0.1);--gold-glow:rgba(255,215,0,0.06);
+  --dark:#080808;--card:#111;--border:#1e1e1e;--panel:#0d0d0d;
+  --green:#00FF94;--green-soft:rgba(0,255,148,0.08);
+  --blue:#4A9EFF;--blue-soft:rgba(74,158,255,0.08);
+  --rose:#FF6B8A;--rose-soft:rgba(255,107,138,0.08);
+  --amber:#FF9F43;--amber-soft:rgba(255,159,67,0.1);
+  --purple:#A855F7;--purple-soft:rgba(168,85,247,0.08);
+  --teal:#2DD4BF;--teal-soft:rgba(45,212,191,0.08);
+  --nav-w:260px;--ticker-h:54px;
+  --font-fancy:'Playfair Display',serif;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;display:flex;height:100dvh;overflow:hidden;padding-bottom:var(--ticker-h);}
 
-body{
-  font-family:'Plus Jakarta Sans',sans-serif;
-  background:var(--dark);color:#fff;
-  display:flex;height:100vh;overflow:hidden;
-  padding-bottom:var(--ticker-h);
+/* ── SESSION ALERT BANNER ─────────────────────── */
+#sessionBanner{
+  position:fixed;top:0;left:0;width:100%;z-index:999;
+  background:linear-gradient(90deg,#1a0a00,#0a1a00);
+  border-bottom:2px solid var(--amber);
+  padding:12px 20px;display:none;align-items:center;justify-content:space-between;gap:14px;
 }
+#sessionBanner .banner-text{font-size:13px;font-weight:700;color:var(--amber);}
+#sessionBanner .banner-btn{
+  background:var(--amber);color:#000;font-weight:800;font-size:12px;letter-spacing:1px;
+  padding:10px 22px;border-radius:30px;text-decoration:none;white-space:nowrap;
+  border:none;cursor:pointer;font-family:inherit;
+  animation:pulseGlow 1.5s infinite;
+}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,159,67,.6)}50%{box-shadow:0 0 0 8px rgba(255,159,67,0)}}
+#sessionBanner .banner-close{background:none;border:none;color:#888;cursor:pointer;font-size:18px;padding:0 4px;}
 
-/* ── SIDEBAR ───────────────────────────────────────────── */
+/* ── SIDEBAR ─────────────────────────────────── */
 .sidebar{
-  width:var(--nav-w);background:#000;
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  padding:24px 16px;overflow-y:auto;
-  transition:transform .3s;z-index:200;
-  flex-shrink:0;
+  width:var(--nav-w);background:#000;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:22px 14px;overflow-y:auto;
+  transition:transform .3s;z-index:200;flex-shrink:0;
 }
-.sidebar-brand{color:var(--gold);font-weight:800;font-size:17px;letter-spacing:2px;margin-bottom:28px;text-align:center;padding:8px;border:1px solid rgba(255,215,0,0.3);border-radius:10px;}
-.nav-section{margin-bottom:20px;}
-.nav-label{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;display:block;padding-left:8px;}
-.nav-item{padding:11px 14px;border-radius:10px;cursor:pointer;transition:.25s;margin-bottom:3px;display:flex;align-items:center;gap:11px;color:#888;text-decoration:none;font-size:13px;font-weight:600;}
-.nav-item:hover,.nav-item.active{background:var(--gold-soft);color:var(--gold);}
-.nav-item.active{font-weight:800;}
-.nav-divider{border:none;border-top:1px solid var(--border);margin:12px 0;}
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;margin-bottom:24px;
+  padding:12px;background:var(--gold-soft);border:1px solid rgba(255,215,0,.2);border-radius:14px;
+}
+.sidebar-logo img{width:36px;height:36px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;}
+.sidebar-logo span{font-size:13px;font-weight:800;letter-spacing:1.5px;color:var(--gold);}
+.nav-sec-label{font-size:10px;color:#3a3a3a;text-transform:uppercase;letter-spacing:2px;margin:18px 0 8px 8px;display:block;}
+.nav-btn{
+  padding:13px 16px;border-radius:12px;cursor:pointer;transition:.2s;margin-bottom:4px;
+  display:flex;align-items:center;gap:12px;color:#888;text-decoration:none;
+  font-size:14px;font-weight:700;letter-spacing:.3px;border:1px solid transparent;
+}
+.nav-btn:hover,.nav-btn.active{background:var(--gold-soft);color:var(--gold);border-color:rgba(255,215,0,.15);}
+.nav-btn.active{font-weight:800;}
+.nav-btn .nav-icon{font-size:18px;flex-shrink:0;}
+.nav-divider{border:none;border-top:1px solid var(--border);margin:10px 8px;}
 
 /* Mobile toggle */
-.mob-toggle{
-  display:none;position:sticky;top:0;z-index:300;
-  background:#000;color:var(--gold);border:none;border-bottom:1px solid var(--border);
-  padding:14px 20px;font-weight:800;font-size:12px;letter-spacing:1px;
-  text-align:left;cursor:pointer;width:100%;font-family:inherit;
-}
+.mob-bar{display:none;background:#000;border-bottom:1px solid var(--border);padding:0;position:sticky;top:0;z-index:300;}
+.mob-toggle{background:none;border:none;color:var(--gold);font-weight:800;font-size:13px;letter-spacing:1px;padding:14px 20px;cursor:pointer;font-family:inherit;width:100%;text-align:left;}
 
-/* ── MAIN CONTENT ──────────────────────────────────────── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+/* ── VERSE/INSPIRATION TICKER (TOP) ───────────── */
+.verse-bar{
+  background:linear-gradient(90deg,rgba(255,215,0,.04),rgba(255,215,0,.08),rgba(255,215,0,.04));
+  border-bottom:1px solid rgba(255,215,0,.15);
+  padding:9px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;overflow:hidden;
+}
+.verse-bar .vb-icon{font-size:16px;flex-shrink:0;}
+.verse-bar .vb-text{font-size:12px;font-style:italic;color:#ccc;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.verse-bar .vb-time{font-size:10px;color:#555;font-weight:700;white-space:nowrap;flex-shrink:0;}
+
+/* ── MAIN ────────────────────────────────────── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
 
 .hub-topbar{
-  padding:16px 28px;border-bottom:1px solid var(--border);
+  padding:14px 24px;border-bottom:1px solid var(--border);
   display:flex;justify-content:space-between;align-items:center;
-  background:#000;flex-shrink:0;
+  background:#000;flex-shrink:0;gap:12px;
 }
-.hub-topbar h3{margin:0;font-size:15px;font-weight:800;}
-.online-status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--green);font-weight:800;}
+.hub-title{font-family:var(--font-fancy);font-size:22px;color:#fff;margin:0;}
+.hub-sub{font-size:11px;color:#444;margin-top:2px;}
+.online-pill{
+  display:flex;align-items:center;gap:7px;font-size:11px;color:var(--green);
+  font-weight:800;background:var(--green-soft);border:1px solid rgba(0,255,148,.2);
+  padding:6px 14px;border-radius:20px;white-space:nowrap;flex-shrink:0;
+}
 .pulse-dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:pls 1.6s infinite;}
-@keyframes pls{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.25}}
+.user-badge{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;cursor:pointer;}
 
-.user-badge{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
-
-/* ── BODY GRID ─────────────────────────────────────────── */
-.hub-body{flex:1;display:grid;grid-template-columns:1fr 300px;gap:0;overflow:hidden;}
+/* ── HUB BODY ────────────────────────────────── */
+.hub-body{flex:1;display:grid;grid-template-columns:1fr 310px;gap:0;overflow:hidden;}
 
 /* Feed */
 .feed-col{display:flex;flex-direction:column;overflow:hidden;}
-.feed-scroll{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:16px;}
+.feed-scroll{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:14px;}
 
 /* Input */
-.chat-input-row{
-  padding:14px 24px;background:#000;border-top:1px solid var(--border);
-  display:flex;gap:10px;flex-shrink:0;
+.chat-bar{padding:12px 22px;background:#000;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0;align-items:flex-end;}
+.chat-input-wrap{flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:14px;padding:10px 14px;display:flex;gap:8px;align-items:flex-end;}
+.chat-input-wrap textarea{flex:1;background:none;border:none;color:#fff;font-family:inherit;font-size:13px;outline:none;resize:none;min-height:20px;max-height:80px;line-height:1.5;}
+.send-btn{
+  background:var(--gold);border:none;width:42px;height:42px;border-radius:12px;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.2s;flex-shrink:0;
 }
-.chat-input-row input{
-  flex:1;background:#1a1a1a;border:1px solid var(--border);
-  padding:12px 16px;border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;transition:.2s;
-}
-.chat-input-row input:focus{border-color:var(--gold);}
-.send-btn{background:var(--gold);border:none;padding:0 20px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;color:#000;transition:.2s;white-space:nowrap;}
 .send-btn:hover{background:#fff;}
+.chat-type-select{background:#1a1a1a;border:1px solid var(--border);color:#888;padding:0 12px;border-radius:12px;font-size:11px;font-family:inherit;cursor:pointer;height:42px;outline:none;}
 
 /* Posts */
-.post-card{background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--border);animation:fadeUp .4s ease;}
+.post-card{background:var(--card);border-radius:16px;padding:16px;border:1px solid var(--border);animation:fadeUp .4s ease;position:relative;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.post-card.bot-post{border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.03);}
+.post-card.bot-post{border-color:rgba(255,215,0,.25);background:rgba(255,215,0,.025);}
 .post-card.pioneer-post{border-left:3px solid var(--green);}
-.post-head{display:flex;gap:11px;align-items:center;margin-bottom:12px;}
-.post-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
+.post-card.prayer-post{border-left:3px solid var(--purple);background:var(--purple-soft);}
+.post-head{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.post-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
 .post-name{font-size:13px;font-weight:800;color:var(--gold);}
-.post-time{font-size:10px;color:#555;margin-top:2px;}
-.post-text{font-size:13px;color:#ccc;line-height:1.6;}
-.pioneer-tag{font-size:9px;background:var(--green);color:#000;font-weight:800;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+.post-meta{font-size:10px;color:#555;margin-top:2px;}
+.pioneer-tag{font-size:9px;background:var(--green);color:#000;font-weight:800;padding:2px 7px;border-radius:4px;margin-left:5px;vertical-align:middle;}
+.prayer-tag{font-size:9px;background:var(--purple);color:#fff;font-weight:800;padding:2px 7px;border-radius:4px;margin-left:5px;vertical-align:middle;}
+.post-text{font-size:14px;color:#ccc;line-height:1.65;word-break:break-word;}
 
-/* ── DISCOVERY PANE ────────────────────────────────────── */
+/* Emoji reactions */
+.post-footer{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.emoji-reactions{display:flex;gap:5px;flex-wrap:wrap;}
+.react-btn{background:#000;border:1px solid var(--border);color:#888;padding:4px 10px;border-radius:20px;font-size:12px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:4px;}
+.react-btn:hover,.react-btn.reacted{background:var(--gold-soft);border-color:rgba(255,215,0,.4);color:var(--gold);}
+.react-count{font-size:11px;font-weight:700;}
+.reply-btn{background:none;border:none;color:#555;font-size:11px;font-weight:700;cursor:pointer;padding:4px 8px;border-radius:8px;transition:.2s;font-family:inherit;}
+.reply-btn:hover{color:var(--gold);background:var(--gold-soft);}
+.post-status{margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;font-weight:800;}
+.status-pending{background:rgba(255,159,67,.15);color:var(--amber);}
+.status-answered{background:var(--green-soft);color:var(--green);}
+
+/* ── DISCOVERY PANE ──────────────────────────── */
 .discovery{
   border-left:1px solid var(--border);overflow-y:auto;
-  display:flex;flex-direction:column;gap:16px;padding:20px 18px;
-  background:#000;
+  display:flex;flex-direction:column;gap:0;background:#000;
 }
-.info-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:.3s;}
-.info-card:hover{border-color:var(--gold);}
-.info-card h4{margin:0 0 8px;font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;}
-.info-card p{font-size:12px;color:#aaa;line-height:1.6;margin:0;}
 
-/* Colour accent cards */
-.card-blue{border-top:2px solid var(--blue);background:var(--blue-soft);}
-.card-teal{border-top:2px solid var(--teal);background:var(--teal-soft);}
-.card-rose{border-top:2px solid var(--rose);background:var(--rose-soft);}
-.card-amber{border-top:2px solid var(--amber);background:var(--amber-soft);}
-.card-purple{border-top:2px solid var(--purple);background:var(--purple-soft);}
-
-.see-more-btn{display:inline-block;margin-top:10px;font-size:10px;font-weight:800;color:var(--gold);border:1px solid rgba(255,215,0,.3);padding:4px 12px;border-radius:20px;text-decoration:none;cursor:pointer;transition:.2s;}
-.see-more-btn:hover{background:var(--gold);color:#000;}
-
-/* ── LIVE TICKER ────────────────────────────────────────── */
-#live-ticker{
-  position:fixed;bottom:0;left:0;width:100%;height:var(--ticker-h);
-  background:#000;border-top:1px solid rgba(255,215,0,.2);z-index:950;
-  display:flex;align-items:stretch;overflow:hidden;
-  box-shadow:0 -4px 20px rgba(0,0,0,.8);
+/* LARGE SESSION BOX */
+.session-box{
+  padding:22px 18px;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(255,159,67,.08),rgba(255,159,67,.03));
 }
-.ticker-label{flex-shrink:0;display:flex;align-items:center;gap:7px;background:var(--gold);color:#000;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:0 16px;min-width:84px;border-right:1px solid rgba(0,0,0,.25);}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#000;animation:liveBlink 1.3s ease-in-out infinite;flex-shrink:0;}
+.session-box .sess-label{font-size:10px;font-weight:800;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block;}
+.session-box .sess-title{font-family:var(--font-fancy);font-size:18px;margin-bottom:6px;color:#fff;}
+.session-box .sess-desc{font-size:12px;color:#888;margin-bottom:16px;line-height:1.55;}
+.join-square-btn{
+  display:block;text-align:center;background:linear-gradient(135deg,var(--amber),#ff7b00);
+  color:#000;font-weight:800;font-size:14px;letter-spacing:1px;text-transform:uppercase;
+  padding:14px 20px;border-radius:14px;text-decoration:none;border:none;cursor:pointer;
+  font-family:inherit;width:100%;transition:.3s;
+  box-shadow:0 4px 20px rgba(255,159,67,.3);
+  animation:pulseGlow 2s infinite;
+}
+.join-square-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,159,67,.4);}
+
+/* Info cards */
+.info-card{padding:18px;border-bottom:1px solid var(--border);}
+.info-card:last-child{border-bottom:none;}
+.info-card h4{font-size:11px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;gap:7px;}
+.info-card p{font-size:12px;color:#888;line-height:1.55;margin:0;}
+.see-more{display:inline-block;margin-top:9px;font-size:11px;font-weight:800;color:var(--gold);border:1px solid rgba(255,215,0,.3);padding:4px 13px;border-radius:20px;text-decoration:none;transition:.2s;}
+.see-more:hover{background:var(--gold);color:#000;}
+.progress-mini{background:#1a1a1a;border-radius:6px;height:5px;margin-top:8px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--teal);border-radius:6px;}
+
+/* Colour dots */
+.dot-amber{width:8px;height:8px;border-radius:50%;background:var(--amber);flex-shrink:0;}
+.dot-teal{width:8px;height:8px;border-radius:50%;background:var(--teal);flex-shrink:0;}
+.dot-rose{width:8px;height:8px;border-radius:50%;background:var(--rose);flex-shrink:0;}
+.dot-purple{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+.dot-blue{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+
+/* ── LIVE TICKER (bottom) ────────────────────── */
+#live-ticker{position:fixed;bottom:0;left:0;width:100%;height:var(--ticker-h);background:#000;border-top:1px solid rgba(255,215,0,.18);z-index:950;display:flex;align-items:stretch;overflow:hidden;box-shadow:0 -4px 20px rgba(0,0,0,.8);}
+.ticker-label{flex-shrink:0;display:flex;align-items:center;gap:7px;background:var(--gold);color:#000;font-weight:800;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:0 14px;min-width:80px;border-right:1px solid rgba(0,0,0,.25);}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#000;animation:liveBlink 1.3s ease-in-out infinite;flex-shrink:0;}
 @keyframes liveBlink{0%,100%{opacity:1}50%{opacity:.15}}
 .ticker-viewport{flex:1;overflow:hidden;position:relative;}
-.ticker-slide{position:absolute;inset:0;display:flex;align-items:center;padding:0 18px;gap:12px;opacity:0;transform:translateX(32px);transition:opacity .5s,transform .5s;pointer-events:none;}
+.ticker-slide{position:absolute;inset:0;display:flex;align-items:center;padding:0 16px;gap:12px;opacity:0;transform:translateX(32px);transition:opacity .5s,transform .5s;pointer-events:none;}
 .ticker-slide.active{opacity:1;transform:translateX(0);pointer-events:auto;}
 .ticker-slide.exiting{opacity:0;transform:translateX(-32px);}
-.slide-icon{font-size:17px;flex-shrink:0;}
+.slide-icon{font-size:16px;flex-shrink:0;}
 .slide-body{flex:1;min-width:0;}
 .slide-cat{font-size:9px;font-weight:800;color:var(--gold);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:1px;}
 .slide-text{font-size:12px;font-weight:600;color:#e0e0e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.slide-date{font-size:10px;color:#333;flex-shrink:0;font-weight:600;}
-.ticker-dots{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:0 10px;border-left:1px solid #191919;}
-.tdot{width:5px;height:5px;border-radius:50%;background:#2a2a2a;transition:background .3s,transform .3s;cursor:pointer;}
-.tdot.on{background:var(--gold);transform:scale(1.3);}
 .ticker-nav{flex-shrink:0;display:flex;align-items:center;padding:0 8px;border-left:1px solid #191919;gap:1px;}
 .t-arrow{background:none;border:none;color:#3a3a3a;font-size:13px;padding:6px 7px;border-radius:5px;cursor:pointer;font-family:inherit;transition:.2s;}
-.t-arrow:hover{color:var(--gold);background:rgba(255,215,0,.07);}
+.t-arrow:hover{color:var(--gold);}
 
-/* ── RESPONSIVE ─────────────────────────────────────────── */
+/* ── RESPONSIVE ──────────────────────────────── */
 @media(max-width:900px){
-  body{flex-direction:column;height:auto;overflow:auto;}
+  body{flex-direction:column;height:auto;overflow-y:auto;overflow-x:hidden;}
+  .mob-bar{display:block;}
   .sidebar{
     width:100%;border-right:none;border-bottom:1px solid var(--border);
-    flex-direction:row;flex-wrap:wrap;padding:10px;height:auto;
-    overflow-x:auto;position:static;
-    transform:none !important;
+    padding:12px;flex-direction:row;flex-wrap:wrap;gap:6px;
+    height:auto;position:static;overflow:auto;
   }
-  .sidebar[data-collapsed="true"]{display:none;}
-  .mob-toggle{display:block;}
-  .hub-body{grid-template-columns:1fr;}
-  .discovery{border-left:none;border-top:1px solid var(--border);max-height:400px;}
-  .main{overflow:visible;}
-  .hub-body{overflow:visible;}
+  .sidebar[data-col="true"]{display:none;}
+  .sidebar-logo{margin-bottom:0;flex:0 0 auto;}
+  .hub-body{grid-template-columns:1fr;overflow:visible;}
+  .discovery{border-left:none;border-top:1px solid var(--border);max-height:500px;}
   .feed-col{overflow:visible;}
   .feed-scroll{overflow:visible;max-height:none;}
-  .sidebar-brand{margin-bottom:8px;}
-  .ticker-dots{display:none;}
-  .slide-date{display:none;}
+  .hub-topbar{padding:12px 16px;}
+  .chat-bar{padding:10px 14px;}
 }
 @media(max-width:480px){
-  .hub-topbar{padding:12px 16px;}
-  .chat-input-row{padding:10px 14px;}
-  .hub-topbar h3{font-size:13px;}
+  .session-box .sess-title{font-size:16px;}
+  .hub-title{font-size:18px;}
+  .post-text{font-size:13px;}
+}
+@media(orientation:landscape)and(max-height:500px){
+  .sidebar{padding:6px;}
+  .hub-topbar{padding:8px 14px;}
+  .verse-bar{padding:6px 14px;}
 }
 </style>
 </head>
 <body>
 
-<!-- Mobile toggle -->
-<button class="mob-toggle" id="mobToggle" onclick="toggleSidebar()">☰ NAVIGATION</button>
+<!-- SESSION ALERT BANNER -->
+<div id="sessionBanner">
+  <span class="banner-text" id="bannerText">📖 Bible Study starts in 2 hours — Thursday 8:30 PM EAT</span>
+  <a href="thread.html" class="banner-btn" id="bannerBtn">JOIN THE SQUARE →</a>
+  <button class="banner-close" onclick="document.getElementById('sessionBanner').style.display='none'">✕</button>
+</div>
+
+<!-- MOBILE BAR -->
+<div class="mob-bar"><button class="mob-toggle" id="mobToggle" onclick="toggleSidebar()">☰ DECLARE HUB</button></div>
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="hubSidebar">
-  <div class="sidebar-brand">DECLARE HUB</div>
-
-  <div class="nav-section">
-    <span class="nav-label">Family Network</span>
-    <a href="hub.html"          class="nav-item active">💬 Community Feed</a>
-    <a href="academy.html"      class="nav-item">🎓 Development Classes</a>
-    <a href="talents.html"      class="nav-item">🎨 Talent Showcase</a>
-    <a href="faith.html"        class="nav-item">🕊️ Prayer Room</a>
-    <a href="thread.html"       class="nav-item">🟦 The Square (Live)</a>
+  <div class="sidebar-logo">
+    <img src="hero-image.jpg.jpeg" alt="Declare" onerror="this.style.background='#333'">
+    <span>DECLARE HUB</span>
   </div>
-
-  <div class="nav-section">
-    <span class="nav-label">Archives</span>
-    <a href="projects.html"     class="nav-item">🚀 Active Projects</a>
-    <a href="achievements.html" class="nav-item">🏆 Past Achievements</a>
-  </div>
-
-  <!-- LEADER ONLY — hidden for regular members -->
-  <div class="nav-section" data-leader-only style="display:none;">
-    <span class="nav-label">Pioneer Access</span>
-    <a href="leadership.html"   class="nav-item" style="color:var(--green);border:1px solid rgba(0,255,148,.2);border-radius:10px;">🛡️ Command Centre</a>
-  </div>
-
+  <a href="hub.html"          class="nav-btn active"><span class="nav-icon">💬</span> Community Feed</a>
+  <a href="thread.html"       class="nav-btn"><span class="nav-icon">🟦</span> The Square (Live)</a>
+  <a href="academy.html"      class="nav-btn"><span class="nav-icon">🎓</span> Academy</a>
+  <a href="talents.html"      class="nav-btn"><span class="nav-icon">🎨</span> Talent Showcase</a>
+  <a href="faith.html"        class="nav-btn"><span class="nav-icon">🕊️</span> Prayer Room</a>
   <hr class="nav-divider">
-  <a href="Dashboard.html" class="nav-item">⬅ Back to Dashboard</a>
+  <span class="nav-sec-label">Archives</span>
+  <a href="projects.html"     class="nav-btn"><span class="nav-icon">🚀</span> Active Projects</a>
+  <a href="achievements.html" class="nav-btn"><span class="nav-icon">🏆</span> Achievements</a>
+  <!-- LEADER ONLY -->
+  <div data-leader-only style="display:none;">
+    <hr class="nav-divider">
+    <a href="leadership.html" class="nav-btn" style="color:var(--green);border:1px solid rgba(0,255,148,.2);border-radius:12px;"><span class="nav-icon">🛡️</span> Command Centre</a>
+  </div>
+  <hr class="nav-divider">
+  <a href="Dashboard.html" class="nav-btn"><span class="nav-icon">⬅</span> Back to Dashboard</a>
 </nav>
 
 <!-- MAIN -->
 <div class="main">
+
+  <!-- Daily verse / inspiration ticker -->
+  <div class="verse-bar">
+    <span class="vb-icon">✨</span>
+    <span class="vb-text" id="verseText">Loading today's inspiration...</span>
+    <span class="vb-time" id="verseTime"></span>
+  </div>
+
   <!-- Top bar -->
   <div class="hub-topbar">
     <div>
-      <h3>Global Connection</h3>
-      <div class="online-status">
-        <span class="pulse-dot"></span>
-        <span id="onlineCount">0</span> Member(s) Online
-      </div>
+      <h1 class="hub-title">Global Connection</h1>
+      <div class="hub-sub" id="dateTimeDisplay"></div>
     </div>
-    <div id="userBadge" class="user-badge">?</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="online-pill"><span class="pulse-dot"></span><span id="onlineCount">0</span> Online</div>
+      <div class="user-badge" id="userBadge" onclick="window.location.href='profile.html'">?</div>
+    </div>
   </div>
 
   <!-- Body grid -->
   <div class="hub-body">
+
     <!-- Feed -->
     <div class="feed-col">
       <div class="feed-scroll" id="chatFeed"></div>
-      <div class="chat-input-row">
-        <input type="text" id="messageInput" placeholder="Share an insight or prayer request...">
-        <button class="send-btn" id="sendBtn">SEND</button>
+      <div class="chat-bar">
+        <select class="chat-type-select" id="postType">
+          <option value="message">💬 Message</option>
+          <option value="prayer">🙏 Prayer Request</option>
+          <option value="insight">💡 Insight</option>
+        </select>
+        <div class="chat-input-wrap">
+          <textarea id="messageInput" rows="1" placeholder="Share something with the family..."></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMessage()">➤</button>
       </div>
     </div>
 
     <!-- Discovery pane -->
     <div class="discovery">
 
-      <div class="info-card card-blue">
-        <h4>About The Family</h4>
-        <p>Declare Family is a youth-driven network of emerging leaders committed to excellence, purpose, and community impact.</p>
-        <a href="#about" class="see-more-btn" onclick="window.location.href='main.html#about'">See More →</a>
+      <!-- LARGE SESSION BOX -->
+      <div class="session-box">
+        <span class="sess-label" id="sessLabel">Next Session</span>
+        <div class="sess-title" id="sessTitle">Loading schedule...</div>
+        <p class="sess-desc" id="sessDesc">Join the family for live interaction, study and community.</p>
+        <a href="thread.html" class="join-square-btn">🟦 JOIN THE SQUARE</a>
       </div>
 
-      <div class="info-card card-teal">
-        <h4>Current Project</h4>
-        <p><strong style="color:var(--teal);">Project Uplift</strong> — Civic support for local schools. 85% funded. Target: June 2026.</p>
-        <a href="projects.html" class="see-more-btn">See More →</a>
+      <!-- Projects -->
+      <div class="info-card">
+        <h4><span class="dot-teal"></span> Current Projects</h4>
+        <p><strong style="color:var(--teal)">Project Uplift</strong> — Civic support for 100+ students.</p>
+        <div class="progress-mini"><div class="progress-fill" style="width:85%"></div></div>
+        <p style="font-size:11px;color:var(--teal);margin-top:5px;">85% funded · Target: June 2026</p>
+        <a href="projects.html" class="see-more">See Projects →</a>
       </div>
 
-      <div class="info-card card-amber">
-        <h4>📅 Upcoming Session</h4>
-        <p id="sessionInfo">Loading session schedule...</p>
-        <a href="thread.html" class="see-more-btn">Join The Square →</a>
+      <!-- Academy -->
+      <div class="info-card">
+        <h4><span class="dot-rose"></span> Academy</h4>
+        <p>Financial Growth · Spiritual Growth · Psychology · Leadership classes now open.</p>
+        <a href="academy.html" class="see-more">Open Classroom →</a>
       </div>
 
-      <div class="info-card card-rose">
-        <h4>🎓 Academy</h4>
-        <p>Enrol in Financial Growth, Spiritual Growth, Psychology and Leadership classes today.</p>
-        <a href="academy.html" class="see-more-btn">Open Academy →</a>
+      <!-- Achievements -->
+      <div class="info-card">
+        <h4><span class="dot-purple"></span> Achievements</h4>
+        <p>45-Hr Marathon Livestream · GrowthCraft Partnership · Smart Elites Beauty Launch.</p>
+        <a href="achievements.html" class="see-more">View Hall →</a>
       </div>
 
-      <div class="info-card card-purple">
-        <h4>🏆 Achievements</h4>
-        <p>45-hr Marathon Livestream · GrowthCraft Partnership · Smart Elites Beauty Launch.</p>
-        <a href="achievements.html" class="see-more-btn">View Hall →</a>
+      <!-- About -->
+      <div class="info-card">
+        <h4><span class="dot-blue"></span> About The Family</h4>
+        <p>Declare Family — a youth-driven network of emerging leaders. Called. Equipped. Sent.</p>
+        <a href="main.html" class="see-more">Learn More →</a>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- LIVE TICKER -->
+<!-- LIVE TICKER (bottom) -->
 <div id="live-ticker">
   <div class="ticker-label"><span class="live-dot"></span>LIVE</div>
   <div class="ticker-viewport" id="tickerViewport"></div>
-  <div class="ticker-dots" id="tickerDots"></div>
   <div class="ticker-nav">
     <button class="t-arrow" id="tPrev">&#8592;</button>
     <button class="t-arrow" id="tNext">&#8594;</button>
@@ -287,208 +364,302 @@ body{
 (function(){
 'use strict';
 
-/* ── helpers ───────────────────────────────────────────── */
+/* ── HELPERS ─────────────────────────────────── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
 function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
+function now(){return Date.now();}
+function fmtTime(ts){return new Date(ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function fmtDate(ts){return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
 
-/* ── auth check ─────────────────────────────────────────── */
-var user = session();
-if(!user){ window.location.href='login.html'; }
+var user=session();
+if(!user){window.location.href='login.html';}
 
-/* ── sidebar toggle ─────────────────────────────────────── */
+/* ── SIDEBAR TOGGLE ──────────────────────────── */
 window.toggleSidebar=function(){
   var sb=document.getElementById('hubSidebar');
-  var col=sb.getAttribute('data-collapsed')==='true';
-  sb.setAttribute('data-collapsed', col?'false':'true');
-  if(col){sb.style.display='';}else{sb.style.display='none';}
-  document.getElementById('mobToggle').textContent=col?'✕ CLOSE':'☰ NAVIGATION';
+  var col=sb.getAttribute('data-col')==='true';
+  sb.setAttribute('data-col',col?'false':'true');
+  if(col){sb.removeAttribute('style');}else{sb.style.display='none';}
+  document.getElementById('mobToggle').textContent=col?'☰ DECLARE HUB':'✕ CLOSE';
 };
 
-/* ── leader nav ─────────────────────────────────────────── */
-function applyRoleVis(){
-  document.querySelectorAll('[data-leader-only]').forEach(function(el){
-    el.style.display=isLeader(user)?'':'none';
-  });
+/* ── ROLE VISIBILITY ─────────────────────────── */
+document.querySelectorAll('[data-leader-only]').forEach(function(el){
+  el.style.display=isLeader(user)?'':'none';
+});
+
+/* ── DATE / TIME DISPLAY ─────────────────────── */
+function updateDateTime(){
+  var el=document.getElementById('dateTimeDisplay');
+  if(!el)return;
+  var n=new Date();
+  el.textContent=n.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateDateTime();setInterval(updateDateTime,1000);
+
+/* ── DAILY VERSES ────────────────────────────── */
+var HUB_VERSES=[
+  {v:'"Where there is no vision, the people perish." — Proverbs 29:18',t:'🌟'},
+  {v:'"You are the light of the world. A city set on a hill cannot be hidden." — Matthew 5:14',t:'💡'},
+  {v:'"I can do all things through Christ who strengthens me." — Philippians 4:13',t:'💪'},
+  {v:'"Commit your work to the Lord, and your plans will succeed." — Proverbs 16:3',t:'🙏'},
+  {v:'"Be strong and courageous. Do not be afraid; do not be discouraged." — Joshua 1:9',t:'🔥'},
+  {v:'"For I know the plans I have for you, declares the Lord — plans to prosper you." — Jeremiah 29:11',t:'✨'},
+  {v:'"Trust in the Lord with all your heart and lean not on your own understanding." — Proverbs 3:5',t:'💛'},
+  {v:'"The Lord is my shepherd; I shall not want." — Psalm 23:1',t:'🌿'},
+  {v:'"Ask and it will be given to you; seek and you will find." — Matthew 7:7',t:'🚀'},
+  {v:'"Greater love has no one than this: to lay down one\'s life for one\'s friends." — John 15:13',t:'❤️'}
+];
+function setVerse(){
+  var dayIdx=Math.floor(now()/86400000)%HUB_VERSES.length;
+  var v=HUB_VERSES[dayIdx];
+  var el=document.getElementById('verseText');var te=document.getElementById('verseTime');
+  if(el)el.textContent=v.t+' '+v.v;
+  if(te){var n=new Date();te.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+}
+setVerse();setInterval(function(){var te=document.getElementById('verseTime');if(te){var n=new Date();te.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}},60000);
+
+/* ── SESSION SCHEDULE ────────────────────────── */
+// EAT = UTC+3. Sessions: Tue 20:30 prayers, Thu 20:30 bible, Sun 20:30 hot seat
+var SESSIONS=[
+  {day:2,name:'Prayers & Intercessions',label:'Tuesday Night Prayer',icon:'🙏',color:'var(--purple)'},
+  {day:4,name:'Bible Study',label:'Thursday Bible Study',icon:'📖',color:'var(--blue)'},
+  {day:0,name:'Hot Seat Talk',label:'Sunday Hot Seat',icon:'🔥',color:'var(--amber)'}
+];
+function checkSession(){
+  var now2=new Date();
+  // EAT offset: local time + (EAT_offset - local_offset) minutes
+  var eatOffset=3*60;
+  var utcMs=now2.getTime()+now2.getTimezoneOffset()*60000;
+  var eatDate=new Date(utcMs+eatOffset*60000);
+  var day=eatDate.getDay(),hour=eatDate.getHours(),min=eatDate.getMinutes();
+  var totalMin=hour*60+min;
+  var sessionStart=20*60+30;// 20:30
+  var sessionEnd=21*60+50;  // 21:50
+
+  // Find today's session
+  var todaySess=SESSIONS.find(function(s){return s.day===day;});
+  var banner=document.getElementById('sessionBanner');
+  var bannerText=document.getElementById('bannerText');
+  var sessLabel=document.getElementById('sessLabel');
+  var sessTitle=document.getElementById('sessTitle');
+  var sessDesc=document.getElementById('sessDesc');
+
+  if(todaySess){
+    if(totalMin>=sessionStart&&totalMin<=sessionEnd){
+      // LIVE NOW
+      if(banner){banner.style.display='flex';}
+      if(bannerText)bannerText.textContent=todaySess.icon+' LIVE NOW — '+todaySess.label+' is happening right now in The Square!';
+      if(sessLabel)sessLabel.textContent='🔴 LIVE NOW';
+      if(sessTitle)sessTitle.textContent=todaySess.label+' — Active';
+      if(sessDesc)sessDesc.textContent='The session is currently live. Click below to join your family.';
+    } else if(totalMin>=sessionStart-4*60&&totalMin<sessionStart){
+      // Reminder within 4 hours
+      var minsLeft=sessionStart-totalMin;
+      var hoursLeft=Math.floor(minsLeft/60);var minsRem=minsLeft%60;
+      var timeStr=hoursLeft>0?hoursLeft+'h '+minsRem+'m':minsRem+'m';
+      if(banner&&minsLeft<=30){banner.style.display='flex';}// show banner in last 30 min
+      if(bannerText)bannerText.textContent=todaySess.icon+' '+todaySess.label+' starts in '+timeStr+' — Be ready!';
+      if(sessLabel)sessLabel.textContent='⏰ Coming Up Today';
+      if(sessTitle)sessTitle.textContent=todaySess.label;
+      if(sessDesc)sessDesc.textContent='Starting at 8:30 PM EAT. Set a reminder and join the family in The Square.';
+    } else {
+      setNextSession(day,sessLabel,sessTitle,sessDesc);
+    }
+  } else {
+    setNextSession(day,sessLabel,sessTitle,sessDesc);
+  }
 }
 
-/* ── presence ───────────────────────────────────────────── */
+function setNextSession(currentDay,sessLabel,sessTitle,sessDesc){
+  // Find the next upcoming session
+  var daysOrder=SESSIONS.map(function(s){return s.day;});
+  var next=null;
+  for(var d=1;d<=7;d++){
+    var checkDay=(currentDay+d)%7;
+    var found=SESSIONS.find(function(s){return s.day===checkDay;});
+    if(found){next=found;break;}
+  }
+  if(!next)next=SESSIONS[0];
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  if(sessLabel)sessLabel.textContent='Upcoming Session';
+  if(sessTitle)sessTitle.textContent=next.icon+' '+next.name+' — '+days[next.day]+' 8:30 PM EAT';
+  if(sessDesc)sessDesc.textContent='Mark your calendar and join the family for live interaction and growth.';
+}
+
+checkSession();
+setInterval(checkSession,60000);// re-check every minute
+
+/* ── PRESENCE ────────────────────────────────── */
 var PRESENCE_TTL=25000;
 function pingPresence(){
   var map={};try{map=JSON.parse(localStorage.getItem('presenceMap'))||{};}catch(e){}
-  var now=Date.now();
-  map[user.email||user.id]=now;
-  Object.keys(map).forEach(function(k){if(now-map[k]>PRESENCE_TTL)delete map[k];});
+  var n=now();map[user.email||user.memberID||user.id]=n;
+  Object.keys(map).forEach(function(k){if(n-map[k]>PRESENCE_TTL)delete map[k];});
   localStorage.setItem('presenceMap',JSON.stringify(map));
   return Object.keys(map).length;
 }
-function updateOnlineCount(){
+function updateOnline(){
   var c=pingPresence();
-  var el=document.getElementById('onlineCount');
-  if(el) el.textContent=c;
+  var el=document.getElementById('onlineCount');if(el)el.textContent=c;
 }
+updateOnline();setInterval(updateOnline,5000);
 
-/* ── session notice ─────────────────────────────────────── */
-function setSessionInfo(){
-  var now=new Date(),d=now.getDay(),h=now.getHours();
-  var el=document.getElementById('sessionInfo');
-  if(!el) return;
-  if(d===4&&h>=20)       el.innerHTML='<strong style="color:var(--amber)">🔥 LIVE NOW</strong> — Thursday Night Bible Study. Join the Square.';
-  else if(d===0&&h>=20)  el.innerHTML='<strong style="color:var(--amber)">🔥 LIVE NOW</strong> — Sunday Hot Seat. The Square is active.';
-  else if(d===4)         el.innerHTML='Thursday Night Bible Study at 8:30 PM. See you in the Square.';
-  else if(d===0)         el.innerHTML='Sunday Hot Seat Talk at 8:30 PM. Bring bold questions.';
-  else                   el.innerHTML='Next session: Thursday & Sunday at 8:30 PM in the Square.';
-}
-
-/* ── bot post ───────────────────────────────────────────── */
+/* ── BOT POST ─────────────────────────────────── */
 var BOT_VERSES=[
-  {v:'"Where there is no vision, the people perish." — Proverbs 29:18',m:'Write your top 3 goals for this month and share one below.'},
-  {v:'"You are the light of the world." — Matthew 5:14',m:'Encourage one fellow member today — in the feed or privately.'},
-  {v:'"I can do all things through Christ who strengthens me." — Philippians 4:13',m:'Identify the biggest obstacle in your current project and tackle it first.'},
-  {v:'"Commit your work to the Lord, and your plans will succeed." — Proverbs 16:3',m:'Share one thing you are working on this week.'}
+  {v:'"Arise, shine; for your light has come." — Isaiah 60:1',m:'Share one goal you are working on this week.'},
+  {v:'"The Lord will fight for you; you need only be still." — Exodus 14:14',m:'Encourage one member in the feed today.'},
+  {v:'"Let us not become weary in doing good." — Galatians 6:9',m:'What project are you currently building? Share it below.'},
+  {v:'"Faith without works is dead." — James 2:26',m:'What action step will you take today? Declare it here.'}
 ];
-
 function injectBotPost(){
-  var feed=document.getElementById('chatFeed');
-  if(!feed) return;
-  var now=new Date();
-  var dayOfYear=Math.floor((now-new Date(now.getFullYear(),0,0))/(864e5));
-  var content=BOT_VERSES[dayOfYear%BOT_VERSES.length];
-  var el=document.createElement('div');
-  el.className='post-card bot-post';
+  var feed=document.getElementById('chatFeed');if(!feed)return;
+  var dayIdx=Math.floor(now()/86400000)%BOT_VERSES.length;
+  var content=BOT_VERSES[dayIdx];
+  var n=new Date();
+  var el=document.createElement('div');el.className='post-card bot-post';
   el.innerHTML=
     '<div class="post-head">'+
-      '<div class="post-avatar" style="background:#000;color:var(--gold);border:1px solid var(--gold)">DF</div>'+
-      '<div><div class="post-name">Declare Family Intelligence</div><div class="post-time">Daily Brief · '+now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'</div></div>'+
+      '<div class="post-avatar" style="background:#000;color:var(--gold);border:1px solid var(--gold);font-size:14px;">DF</div>'+
+      '<div><div class="post-name">Declare Family Intelligence</div><div class="post-meta">'+fmtDate(n)+'  ·  '+fmtTime(n)+'</div></div>'+
     '</div>'+
-    '<blockquote style="border-left:3px solid var(--gold);padding-left:12px;margin:0 0 10px;font-style:italic;font-size:12px;color:#aaa;">'+esc(content.v)+'</blockquote>'+
-    '<p class="post-text"><strong>Today\'s Motion:</strong> '+esc(content.m)+'</p>';
-  feed.appendChild(el);
+    '<blockquote style="border-left:3px solid var(--gold);padding-left:12px;margin:0 0 10px;font-style:italic;font-size:13px;color:#aaa;">'+esc(content.v)+'</blockquote>'+
+    '<p class="post-text"><strong>Today\'s Motion:</strong> '+esc(content.m)+'</p>'+
+    '<div class="post-footer"><div class="emoji-reactions" id="botReact"><button class="react-btn" onclick="react(this,\'bot\')">🙏 <span class="react-count">0</span></button><button class="react-btn" onclick="react(this,\'bot\')">🔥 <span class="react-count">0</span></button><button class="react-btn" onclick="react(this,\'bot\')">💛 <span class="react-count">0</span></button></div></div>';
+  feed.insertBefore(el,feed.firstChild);
 }
 
-/* ── chat ───────────────────────────────────────────────── */
-var chatMsgs=[];
-function loadChat(){
-  try{chatMsgs=JSON.parse(localStorage.getItem('hubMessages'))||[];}catch(e){chatMsgs=[];}
-}
-function saveChat(){localStorage.setItem('hubMessages',JSON.stringify(chatMsgs.slice(0,200)));}
+/* ── CHAT/POST SYSTEM ────────────────────────── */
+var KEY_MSGS='hubMessages';
+var KEY_PRAYERS='prayerRequests';
+function loadMsgs(){try{return JSON.parse(localStorage.getItem(KEY_MSGS))||[];}catch(e){return[];}}
+function saveMsgs(a){localStorage.setItem(KEY_MSGS,JSON.stringify(a.slice(0,300)));}
 
-function renderChat(){
-  var feed=document.getElementById('chatFeed');
-  if(!feed) return;
-  // Keep bot post, replace rest
+window.sendMessage=function(){
+  var inp=document.getElementById('messageInput');
+  var type=document.getElementById('postType').value;
+  var txt=(inp.value||'').trim();if(!txt)return;
+
+  var msg={
+    id:now(),name:user.name,memberID:user.memberID||'',role:user.role||'member',
+    text:txt,type:type,time:now(),
+    reactions:{},status:type==='prayer'?'pending':null
+  };
+
+  var msgs=loadMsgs();msgs.unshift(msg);saveMsgs(msgs);
+
+  // Prayer requests also go to the prayer room
+  if(type==='prayer'){
+    var prayers=[];try{prayers=JSON.parse(localStorage.getItem(KEY_PRAYERS))||[];}catch(e){}
+    prayers.unshift(msg);localStorage.setItem(KEY_PRAYERS,JSON.stringify(prayers.slice(0,200)));
+  }
+
+  inp.value='';inp.style.height='auto';renderFeed();
+};
+
+function renderFeed(){
+  var feed=document.getElementById('chatFeed');if(!feed)return;
   var botPost=feed.querySelector('.bot-post');
   feed.innerHTML='';
-  if(botPost) feed.appendChild(botPost);
-  chatMsgs.slice().reverse().forEach(function(m){
-    var el=document.createElement('div');
-    el.className='post-card'+(isLeader({role:m.role})?' pioneer-post':'');
+  if(botPost)feed.appendChild(botPost);
+  var msgs=loadMsgs();
+  msgs.forEach(function(m,idx){
+    var isLeaderPost=isLeader({role:m.role});
+    var isPrayer=m.type==='prayer';
+    var cls='post-card'+(isLeaderPost?' pioneer-post':isPrayer?' prayer-post':'');
+    var el=document.createElement('div');el.className=cls;el.dataset.id=m.id;
+    var totalReact=Object.values(m.reactions||{}).reduce(function(a,b){return a+b;},0);
     el.innerHTML=
       '<div class="post-head">'+
-        '<div class="post-avatar" style="background:'+(isLeader({role:m.role})?'var(--green)':'var(--gold)')+';color:#000">'+esc(m.name.charAt(0).toUpperCase())+'</div>'+
+        '<div class="post-avatar" style="background:'+(isLeaderPost?'var(--green)':'var(--gold)')+';color:#000">'+esc((m.name||'M').charAt(0).toUpperCase())+'</div>'+
         '<div>'+
-          '<div class="post-name">'+esc(m.name)+(isLeader({role:m.role})?'<span class="pioneer-tag">PIONEER</span>':'')+'</div>'+
-          '<div class="post-time">'+esc(m.time||'')+'</div>'+
+          '<div class="post-name">'+esc(m.name||'Member')+(isLeaderPost?'<span class="pioneer-tag">PIONEER</span>':'')+(isPrayer?'<span class="prayer-tag">PRAYER</span>':'')+'</div>'+
+          '<div class="post-meta">'+(m.memberID?esc(m.memberID)+' · ':'')+fmtDate(m.time)+' · '+fmtTime(m.time)+'</div>'+
         '</div>'+
+        (m.status?'<span class="post-status status-'+(m.status==='answered'?'answered':'pending')+'">'+esc(m.status)+'</span>':'')+''+
       '</div>'+
-      '<p class="post-text">'+esc(m.text)+'</p>';
+      '<p class="post-text">'+esc(m.text)+'</p>'+
+      '<div class="post-footer">'+
+        '<div class="emoji-reactions">'+
+          buildReactBtns(m,idx)+
+        '</div>'+
+        '<button class="reply-btn" onclick="replyTo('+idx+')">↩ Reply</button>'+
+      '</div>';
     feed.appendChild(el);
   });
 }
 
-function sendMessage(){
-  var input=document.getElementById('messageInput');
-  var txt=(input.value||'').trim();
-  if(!txt) return;
-  loadChat();
-  chatMsgs.unshift({name:user.name,text:txt,role:user.role||'member',time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})});
-  saveChat();
-  input.value='';
-  renderChat();
+function buildReactBtns(m,idx){
+  var emojis=['🙏','🔥','💛','👏','💡'];
+  return emojis.map(function(e){
+    var count=m.reactions&&m.reactions[e]?m.reactions[e]:0;
+    return '<button class="react-btn" onclick="reactMsg('+idx+',\''+e+'\')">'+e+' <span class="react-count">'+count+'</span></button>';
+  }).join('');
 }
 
-/* ── ticker ─────────────────────────────────────────────── */
+window.reactMsg=function(idx,emoji){
+  var msgs=loadMsgs();if(!msgs[idx])return;
+  if(!msgs[idx].reactions)msgs[idx].reactions={};
+  msgs[idx].reactions[emoji]=(msgs[idx].reactions[emoji]||0)+1;
+  saveMsgs(msgs);renderFeed();
+};
+
+window.react=function(btn){
+  var count=btn.querySelector('.react-count');
+  count.textContent=parseInt(count.textContent)+1;
+  btn.classList.toggle('reacted');
+};
+
+window.replyTo=function(idx){
+  var msgs=loadMsgs();if(!msgs[idx])return;
+  var inp=document.getElementById('messageInput');
+  inp.value='↩ @'+msgs[idx].name+': ';inp.focus();
+};
+
+/* ── AUTO GROW TEXTAREA ──────────────────────── */
+document.addEventListener('DOMContentLoaded',function(){
+  var ta=document.getElementById('messageInput');
+  if(ta){ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';});
+  ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendMessage();}});}
+});
+
+/* ── TICKER ──────────────────────────────────── */
 var SEED=[
   {id:1,category:'Pioneer Spotlight',icon:'👑',pinned:true,text:'Meet the 2026 Vision Pioneers — 6 leaders steering Declare Family into its next chapter.',date:'2026'},
-  {id:2,category:'Upcoming Session',icon:'📅',text:'"Hot Seat" Series — Every Sunday at 8:30 PM. Bold questions. Real answers.',date:'Sunday'},
+  {id:2,category:'Upcoming Session',icon:'📅',text:'"Hot Seat" Series — Every Sunday 8:30 PM EAT. Bold questions. Real answers.',date:'Sunday'},
   {id:3,category:'Current Project',icon:'🚀',text:'Project Uplift: Civic Support — 85% funded. Targeting 100+ students by June 2026.',date:'Jun 2026'},
   {id:4,category:"Today's Momentum",icon:'⚡',text:'__TODAY__',date:'Today'},
-  {id:5,category:'Physical Event',icon:'📍',text:'Annual Declare Family Gathering — Date TBA. Watch this space.',date:'2026'},
-  {id:6,category:'Academy',icon:'🎓',text:'Declare Academy open — Financial Growth, Spiritual Growth, Psychology & Leadership.',date:'Ongoing'},
-  {id:7,category:'Community',icon:'💬',text:'Join our WhatsApp community for daily wisdom capsules and real-time updates.',date:'Open'}
+  {id:5,category:'Academy',icon:'🎓',text:'Declare Academy open — Financial Growth, Spiritual Growth, Psychology & Leadership.',date:'Ongoing'},
+  {id:6,category:'Community',icon:'💬',text:'Join our WhatsApp community for daily wisdom capsules and real-time updates.',date:'Open'}
 ];
 function realToday(){var n=new Date();var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];var months=['January','February','March','April','May','June','July','August','September','October','November','December'];return days[n.getDay()]+', '+n.getDate()+' '+months[n.getMonth()]+' '+n.getFullYear();}
-function getSlides(){
-  var stored;try{stored=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){stored=[];}
-  var today=new Date().toISOString().slice(0,10);
-  stored=stored.filter(function(u){return!u.expires||u.expires>=today;});
-  if(!stored.length)stored=SEED.slice();
-  stored.sort(function(a,b){return(b.pinned?1:0)-(a.pinned?1:0);});
-  return stored.map(function(u){if(u.text==='__TODAY__')u.text='Today is '+realToday()+'. Stay sharp. Keep declaring.';return u;});
-}
-var slides=[],cur=0,autoT=null,INTERVAL=5600;
-function buildTicker(){
-  slides=getSlides();
-  var vp=document.getElementById('tickerViewport'),dots=document.getElementById('tickerDots');
-  if(!vp||!dots)return;
-  vp.innerHTML='';dots.innerHTML='';
-  slides.forEach(function(s,i){
-    var el=document.createElement('div');
-    el.className='ticker-slide'+(i===0?' active':'');el.dataset.i=i;
-    el.innerHTML='<span class="slide-icon">'+esc(s.icon||'📌')+'</span><div class="slide-body"><span class="slide-cat">'+esc(s.category||'Update')+'</span><span class="slide-text">'+esc(s.text||'')+'</span></div><span class="slide-date">'+esc(s.date||'')+'</span>';
-    vp.appendChild(el);
-    var d=document.createElement('span');d.className='tdot'+(i===0?' on':'');d.dataset.i=i;
-    d.onclick=function(){stopAuto();goTo(parseInt(this.dataset.i,10));startAuto();};
-    dots.appendChild(d);
-  });
-  cur=0;stopAuto();startAuto();
-}
-function goTo(n){
-  if(!slides.length)return;
-  n=((n%slides.length)+slides.length)%slides.length;
-  var all=document.querySelectorAll('.ticker-slide'),allD=document.querySelectorAll('.tdot');
-  var c=all[cur];if(c){c.classList.remove('active');c.classList.add('exiting');(function(el){setTimeout(function(){el.classList.remove('exiting');},650);})(c);}
-  cur=n;
-  if(all[cur])all[cur].classList.add('active');
-  allD.forEach(function(d,i){d.classList.toggle('on',i===cur);});
-}
+function getSlides(){var s;try{s=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){s=[];}var today=new Date().toISOString().slice(0,10);s=s.filter(function(u){return!u.expires||u.expires>=today;});if(!s.length)s=SEED.slice();s.sort(function(a,b){return(b.pinned?1:0)-(a.pinned?1:0);});return s.map(function(u){if(u.text==='__TODAY__')u.text='Today is '+realToday()+'. Stay sharp. Keep declaring.';return u;});}
+var slides=[],cur=0,autoT=null,INTERVAL=5800;
+function buildTicker(){slides=getSlides();var vp=document.getElementById('tickerViewport');if(!vp)return;vp.innerHTML='';slides.forEach(function(s,i){var el=document.createElement('div');el.className='ticker-slide'+(i===0?' active':'');el.innerHTML='<span class="slide-icon">'+esc(s.icon||'📌')+'</span><div class="slide-body"><span class="slide-cat">'+esc(s.category||'Update')+'</span><span class="slide-text">'+esc(s.text||'')+'</span></div>';vp.appendChild(el);});cur=0;stopAuto();startAuto();}
+function goTo(n){if(!slides.length)return;n=((n%slides.length)+slides.length)%slides.length;var all=document.querySelectorAll('.ticker-slide');var c=all[cur];if(c){c.classList.remove('active');c.classList.add('exiting');(function(el){setTimeout(function(){el.classList.remove('exiting');},650);})(c);}cur=n;if(all[cur])all[cur].classList.add('active');}
 function startAuto(){autoT=setInterval(function(){goTo(cur+1);},INTERVAL);}
 function stopAuto(){clearInterval(autoT);}
 
-/* ── INIT ───────────────────────────────────────────────── */
+/* ── USER BADGE ──────────────────────────────── */
+var badge=document.getElementById('userBadge');
+if(badge&&user){
+  var savedPhoto=user.memberID?localStorage.getItem('photo_'+user.memberID):null;
+  if(savedPhoto){var img=document.createElement('img');img.src=savedPhoto;img.style.cssText='width:100%;height:100%;border-radius:50%;object-fit:cover;';badge.innerHTML='';badge.appendChild(img);}
+  else badge.textContent=(user.name||'?').charAt(0).toUpperCase();
+}
+
+/* ── INIT ────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded',function(){
-  // badge
-  var badge=document.getElementById('userBadge');
-  if(badge&&user) badge.textContent=user.name.charAt(0).toUpperCase();
-
-  applyRoleVis();
-  updateOnlineCount();
-  setSessionInfo();
-  injectBotPost();
-  loadChat();
-  renderChat();
-  buildTicker();
-
+  injectBotPost();renderFeed();buildTicker();
   var prev=document.getElementById('tPrev'),next=document.getElementById('tNext');
   if(prev)prev.onclick=function(){stopAuto();goTo(cur-1);startAuto();};
   if(next)next.onclick=function(){stopAuto();goTo(cur+1);startAuto();};
-
-  setInterval(updateOnlineCount,5000);
-  setInterval(function(){var fresh=getSlides();if(fresh.length!==slides.length||(fresh[0]&&slides[0]&&fresh[0].text!==slides[0].text))buildTicker();},30000);
-
-  // send
-  var btn=document.getElementById('sendBtn'),inp=document.getElementById('messageInput');
-  if(btn)btn.onclick=sendMessage;
-  if(inp)inp.addEventListener('keypress',function(e){if(e.key==='Enter')sendMessage();});
-
-  // responsive
-  var doLayout=function(){
-    var w=window.innerWidth;
-    document.body.setAttribute('data-layout',w<768?'mobile':w<1024?'tablet':'desktop');
-  };
-  doLayout();
-  window.addEventListener('resize',doLayout);
-  window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
+  setInterval(function(){var f=getSlides();if(f.length!==slides.length)buildTicker();},30000);
+  setInterval(renderFeed,15000);// refresh feed for new messages from others
+  // Responsive
+  var doLayout=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');document.body.setAttribute('data-orient',window.innerWidth>window.innerHeight?'landscape':'portrait');};
+  doLayout();window.addEventListener('resize',doLayout);window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
 });
 
 })();
