@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pioneer Profile | Declare Family</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #FFD700; --dark: #050505; --panel: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08); --green: #00FF94;
+            --glass: blur(15px);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body {
+            background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; padding: 0; overflow-x: hidden; line-height: 1.6;
+        }
+
+        /* --- 1. PRO NAVIGATION --- */
+        header {
+            padding: 18px 20px; display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: var(--glass); z-index: 1000; border-bottom: 1px solid var(--border);
+        }
+        .brand-group { display: flex; align-items: center; gap: 12px; }
+        .logo-circle { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover; }
+        .brand-name { font-weight: 800; font-size: 13px; letter-spacing: 2px; color: #fff; text-decoration: none; text-transform: uppercase; }
+
+        /* --- 2. CROP OVERLAY (PRO FEATURE) --- */
+        #cropOverlay {
+            position: fixed; inset: 0; background: #000; z-index: 2000;
+            display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+        }
+        .crop-box { 
+            width: 100%; max-width: 320px; aspect-ratio: 1; border: 2px solid var(--gold); 
+            position: relative; overflow: hidden; background: #111; 
+        }
+        #cropCanvas { width: 100%; height: 100%; touch-action: none; cursor: move; }
+        .crop-ui { margin-top: 30px; display: flex; gap: 15px; width: 100%; max-width: 320px; }
+        .btn { 
+            flex: 1; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 11px; 
+            letter-spacing: 1px; text-transform: uppercase; border: none; cursor: pointer; transition: 0.2s;
+        }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-dark { background: #222; color: #fff; }
+
+        /* --- 3. DYNAMIC GREETING & ADS --- */
+        .promo-banner { background: #000; border-bottom: 1px solid var(--gold); padding: 12px; text-align: center; }
+        #motivationAd { font-size: 10px; font-weight: 800; color: var(--gold); letter-spacing: 3px; }
+
+        .welcome-section { padding: 35px 25px 15px; }
+        #timeGreeting { font-size: 26px; font-weight: 800; margin: 0; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #praiseLine { color: #777; font-size: 14px; margin-top: 8px; min-height: 40px; transition: 0.5s; }
+
+        /* --- 4. PROFILE IDENTITY CARD --- */
+        .profile-card {
+            margin: 0 20px; padding: 30px; border-radius: 28px;
+            background: var(--panel); backdrop-filter: var(--glass);
+            border: 1px solid var(--border); text-align: center;
+        }
+        .identity-hex {
+            width: 110px; height: 110px; margin: 0 auto 15px; border-radius: 22px;
+            border: 2px solid var(--gold); overflow: hidden; position: relative;
+            background: #18181b; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        #profileImg { width: 100%; height: 100%; object-fit: cover; }
+        .edit-trigger { 
+            position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); 
+            color: var(--gold); font-size: 9px; font-weight: 800; padding: 6px 0; cursor: pointer;
+        }
+        .id-label { display: block; font-size: 10px; color: var(--gold); font-weight: 800; letter-spacing: 2px; margin-top: 10px; }
+        .name-display { font-size: 20px; font-weight: 800; margin: 5px 0; }
+
+        /* --- 5. PERFORMANCE METRICS --- */
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .metric-box { 
+            background: var(--panel); padding: 20px; border-radius: 20px; border: 1px solid var(--border);
+        }
+        .m-label { font-size: 9px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .m-val { font-size: 22px; font-weight: 800; display: block; margin-top: 5px; }
+
+        /* --- 6. EXECUTIVE MEMO (NOTEPAD) --- */
+        .memo-area { padding: 0 20px 50px; }
+        .memo-label { font-size: 10px; color: var(--gold); font-weight: 800; margin-bottom: 12px; display: block; }
+        textarea {
+            width: 100%; height: 180px; background: #0a0a0a; border: 1px solid var(--border);
+            border-radius: 18px; color: #ccc; padding: 18px; font-family: inherit; font-size: 15px;
+            resize: none; transition: 0.3s;
+        }
+        textarea:focus { border-color: var(--gold); background: #111; }
+
+    </style>
+</head>
+<body>
+
+    <div id="cropOverlay">
+        <div class="m-label" style="margin-bottom: 20px;">Position Identity Image</div>
+        <div class="crop-box">
+            <canvas id="cropCanvas"></canvas>
+        </div>
+        <div class="crop-ui">
+            <button class="btn btn-dark" onclick="closeCrop()">Cancel</button>
+            <button class="btn btn-gold" onclick="saveCroppedImage()">Finalize</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-group">
+            <img src="hero-image.jpg.jpeg" class="logo-circle" alt="Logo">
+            <a href="#" class="brand-name">Declare Family</a>
+        </div>
+        <div class="m-label" style="color: var(--green);">● Online</div>
+    </header>
+
+    <div class="promo-banner">
+        <div id="motivationAd">STRATEGIC VISION ACTIVATED</div>
+    </div>
+
+    <section class="welcome-section">
+        <h1 id="timeGreeting">Good Morning</h1>
+        <div id="praiseLine">Preparing your executive dashboard...</div>
+    </section>
+
+    <div class="profile-card">
+        <div class="identity-hex" onclick="document.getElementById('fileInput').click()">
+            <img id="profileImg" src="https://via.placeholder.com/150" alt="Identity">
+            <div class="edit-trigger">UPDATE</div>
+        </div>
+        <input type="file" id="fileInput" hidden accept="image/*" onchange="initCrop(this)">
+        
+        <span class="id-label" id="memberID">PIONEER-2026-X</span>
+        <h2 class="name-display" id="fullName">Member Name</h2>
+    </div>
+
+    <div class="metrics-grid">
+        <div class="metric-box">
+            <span class="m-label">Daily Rhema</span>
+            <p id="dailyVerse" style="font-size: 12px; margin: 8px 0 0; line-height: 1.4; font-weight: 600;">"Arise, shine; for thy light is come."</p>
+        </div>
+        <div class="metric-box">
+            <span class="m-label">Momentum</span>
+            <span class="m-val" id="momentumVal" style="color: var(--green);">0%</span>
+        </div>
+    </div>
+
+    <div class="memo-area">
+        <span class="memo-label">EXECUTIVE NOTES</span>
+        <textarea id="personalNotes" placeholder="Log your directives here..." oninput="autoSave()"></textarea>
+    </div>
+
+    <script>
+        // --- DATA & CONFIG ---
+        const user = JSON.parse(localStorage.getItem("loggedInUser")) || { name: "Markfire Prince", memberID: "DF-2026-PRINCE" };
+        const praiseQuotes = [
+            "You are exceptionally brilliant and born for impact.",
+            "Boldness is your second nature; lead with courage.",
+            "Smart, sharp, and chosen for this generation.",
+            "Your vision is clear, and your hands are equipped."
+        ];
+
+        let rawImg = new Image();
+        let offsetX = 0, offsetY = 0;
+        let isDragging = false, startX, startY;
+
+        function init() {
+            // UI Basics
+            document.getElementById('fullName').innerText = user.name;
+            document.getElementById('memberID').innerText = user.memberID;
+            
+            // Greeting Logic
+            const hr = new Date().getHours();
+            const greet = hr < 12 ? "Good Morning" : (hr < 18 ? "Good Afternoon" : "Good Evening");
+            document.getElementById('timeGreeting').innerText = `${greet}, Pioneer`;
+
+            // Data Persistence
+            const savedPhoto = localStorage.getItem(`photo_${user.memberID}`);
+            if (savedPhoto) document.getElementById('profileImg').src = savedPhoto;
+            document.getElementById('personalNotes').value = localStorage.getItem(`notes_${user.memberID}`) || "";
+
+            animateMomentum(92); // Set target momentum here
+            startCycles();
+        }
+
+        // --- CROP ENGINE ---
+        function initCrop(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    rawImg.onload = () => {
+                        document.getElementById('cropOverlay').style.display = 'flex';
+                        renderCanvas();
+                    };
+                    rawImg.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function renderCanvas() {
+            const cvs = document.getElementById('cropCanvas');
+            const ctx = cvs.getContext('2d');
+            cvs.width = 500; cvs.height = 500;
+            ctx.clearRect(0, 0, 500, 500);
+
+            const scale = Math.max(500 / rawImg.width, 500 / rawImg.height);
+            const w = rawImg.width * scale;
+            const h = rawImg.height * scale;
+            
+            ctx.drawImage(rawImg, offsetX, offsetY, w, h);
+        }
+
+        const cvs = document.getElementById('cropCanvas');
+        cvs.addEventListener('touchstart', e => { isDragging = true; startX = e.touches[0].clientX - offsetX; startY = e.touches[0].clientY - offsetY; });
+        cvs.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            offsetX = e.touches[0].clientX - startX;
+            offsetY = e.touches[0].clientY - startY;
+            renderCanvas();
+        });
+        cvs.addEventListener('touchend', () => isDragging = false);
+
+        function saveCroppedImage() {
+            const dataURL = document.getElementById('cropCanvas').toDataURL('image/jpeg', 0.8);
+            document.getElementById('profileImg').src = dataURL;
+            localStorage.setItem(`photo_${user.memberID}`, dataURL);
+            closeCrop();
+        }
+
+        function closeCrop() { document.getElementById('cropOverlay').style.display = 'none'; }
+
+        // --- UI ANIMATIONS ---
+        function animateMomentum(target) {
+            let current = 0;
+            const interval = setInterval(() => {
+                if (current >= target) clearInterval(interval);
+                document.getElementById('momentumVal').innerText = `${current}%`;
+                current++;
+            }, 20);
+        }
+
+        function startCycles() {
+            let idx = 0;
+            setInterval(() => {
+                idx = (idx + 1) % praiseQuotes.length;
+                document.getElementById('motivationAd').innerText = praiseQuotes[idx].toUpperCase();
+                const praiseEl = document.getElementById('praiseLine');
+                praiseEl.style.opacity = 0;
+                setTimeout(() => {
+                    praiseEl.innerText = praiseQuotes[idx];
+                    praiseEl.style.opacity = 1;
+                }, 500);
+            }, 7000);
+        }
+
+        function autoSave() {
+            localStorage.setItem(`notes_${user.memberID}`, document.getElementById('personalNotes').value);
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>
