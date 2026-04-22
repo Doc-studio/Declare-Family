@@ -2,211 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Register | Declare Family</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root { --gold: #FFD700; --dark: #0a0a0a; --panel: #121212; --border: rgba(255,255,255,0.08); }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--dark); color: white;
-    display: flex; justify-content: center; align-items: center;
-    min-height: 100vh; padding: 20px;
-}
-.bg-glow {
-    position: fixed; inset: 0; z-index: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 70%);
-    pointer-events: none;
-}
-.container {
-    background: var(--panel); padding: 45px 40px;
-    border-radius: 24px; width: 100%; max-width: 400px;
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    position: relative; z-index: 1;
-    animation: fadeUp 0.5s ease;
-}
-@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-.logo-area { text-align: center; margin-bottom: 30px; }
-.logo-area h2 { color: var(--gold); font-size: 22px; font-weight: 800; letter-spacing: 2px; }
-.logo-area p { color: #555; font-size: 13px; margin-top: 6px; }
-label { display: block; font-size: 11px; font-weight: 800; color: #666; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-.field { margin-bottom: 18px; }
-input, select {
-    width: 100%; padding: 14px 16px;
-    border: 1px solid #222; border-radius: 12px;
-    background: #000; color: white;
-    font-family: inherit; font-size: 14px;
-    transition: border-color 0.2s; outline: none;
-}
-input:focus, select:focus { border-color: var(--gold); }
-input::placeholder { color: #444; }
-select option { background: #111; }
-.secret-field { display: none; border: 1px dashed rgba(255,215,0,0.4) !important; }
-.btn {
-    width: 100%; padding: 15px; background: var(--gold);
-    border: none; border-radius: 12px;
-    font-family: inherit; font-weight: 800; font-size: 14px;
-    letter-spacing: 1px; text-transform: uppercase;
-    cursor: pointer; transition: 0.2s; margin-top: 5px;
-}
-.btn:hover { background: #fff; }
-.btn:active { transform: scale(0.98); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.error-msg { background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.3); color: #ff6b6b; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 18px; display: none; }
-.link-row { text-align: center; margin-top: 20px; }
-a { color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; }
-a:hover { text-decoration: underline; }
-.hint { font-size: 11px; color: #444; margin-top: 6px; }
+:root{--gold:#FFD700;--dark:#0a0a0a;--panel:#121212;--border:rgba(255,255,255,0.08);--green:#00FF94;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;display:flex;justify-content:center;align-items:center;min-height:100dvh;padding:20px;}
+.bg-glow{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.06) 0%,transparent 70%);pointer-events:none;}
+.container{background:var(--panel);padding:40px 36px;border-radius:24px;width:100%;max-width:420px;border:1px solid var(--border);box-shadow:0 30px 60px rgba(0,0,0,.6);position:relative;z-index:1;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.logo-area{text-align:center;margin-bottom:28px;}
+.logo-area img{width:54px;height:54px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;}
+.logo-area h2{color:var(--gold);font-size:19px;font-weight:800;letter-spacing:2px;}
+.logo-area p{color:#555;font-size:12px;margin-top:5px;}
+label{display:block;font-size:10px;font-weight:800;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.field{margin-bottom:16px;}
+input,select{width:100%;padding:13px 15px;border:1px solid #222;border-radius:12px;background:#000;color:#fff;font-family:inherit;font-size:14px;transition:border-color .2s;outline:none;}
+input:focus,select:focus{border-color:var(--gold);}
+input::placeholder{color:#3a3a3a;}
+select option{background:#111;}
+.btn{width:100%;padding:15px;background:var(--gold);border:none;border-radius:12px;font-family:inherit;font-weight:800;font-size:15px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-top:4px;}
+.btn:hover{background:#fff;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.error-msg{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.3);color:#ff6b6b;padding:12px 15px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;line-height:1.5;}
+.link-row{text-align:center;margin-top:18px;}
+.link-row a{color:var(--gold);text-decoration:none;font-size:13px;font-weight:600;}
+.link-row a:hover{text-decoration:underline;}
+.hint{font-size:11px;color:#3a3a3a;margin-top:5px;line-height:1.5;}
+/* Pioneer request section */
+#pioneerRequestSection{display:none;background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:16px;margin-top:8px;}
+#pioneerRequestSection p{font-size:12px;color:#777;margin-bottom:10px;line-height:1.6;}
+.request-btn{width:100%;padding:12px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:10px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;transition:.2s;margin-bottom:10px;}
+.request-btn:hover{background:var(--gold);color:#000;}
+.request-btn:disabled{opacity:.5;cursor:default;}
+.success-note{background:rgba(0,255,148,.06);border:1px solid rgba(0,255,148,.25);color:var(--green);padding:10px 14px;border-radius:8px;font-size:12px;display:none;margin-top:8px;}
 </style>
 </head>
 <body>
 <div class="bg-glow"></div>
 <div class="container">
-    <div class="logo-area">
-        <h2>CREATE ACCOUNT</h2>
-        <p>Join the Declare Family ecosystem</p>
-    </div>
+  <div class="logo-area">
+    <img src="hero-image.jpg.jpeg" alt="Declare Family" onerror="this.style.display='none'">
+    <h2>CREATE ACCOUNT</h2>
+    <p>Join the Declare Global Family ecosystem</p>
+  </div>
 
-    <div class="error-msg" id="errorMsg"></div>
+  <div class="error-msg" id="errorMsg"></div>
 
-    <div class="field">
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="Your full name" autocomplete="name">
-    </div>
-    <div class="field">
-        <label>Email Address</label>
-        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
-    </div>
-    <div class="field">
-        <label>Account Type</label>
-        <select id="role" onchange="toggleAccessKey()">
-            <option value="member">General Member</option>
-            <option value="leader">Pioneer (Leader)</option>
-            <option value="admin">System Administrator</option>
-        </select>
-    </div>
-    <div class="field" id="keyField" style="display:none;">
-        <label>Access Key</label>
-        <input type="password" id="secretKey" class="secret-field" placeholder="Enter your access key">
-        <p class="hint">Contact the executive team for an access key.</p>
-    </div>
-    <div class="field">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Min. 6 characters" autocomplete="new-password">
-    </div>
-    <div class="field">
-        <label>Confirm Password</label>
-        <input type="password" id="confirmPassword" placeholder="Repeat password" autocomplete="new-password">
-    </div>
+  <div class="field">
+    <label>Full Name</label>
+    <input type="text" id="name" placeholder="Your full name" autocomplete="name">
+  </div>
+  <div class="field">
+    <label>Email Address</label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+  </div>
+  <div class="field">
+    <label>Account Type</label>
+    <select id="role" onchange="onRoleChange()">
+      <option value="member">General Member</option>
+      <option value="leader">Pioneer (Leader)</option>
+      <option value="admin">System Administrator</option>
+    </select>
+  </div>
 
-    <button class="btn" id="regBtn" onclick="handleRegister()">Create Account</button>
-
-    <div class="link-row">
-        <a href="login.html">Already have an account? Login</a>
+  <!-- Pioneer code field — only shown for leader/admin -->
+  <div class="field" id="codeField" style="display:none;">
+    <label>Pioneer Access Code</label>
+    <input type="text" id="pioneerCode" placeholder="Code provided by your admin (e.g. DF-PNR-XXXXXX-XXXX)" autocomplete="off">
+    <p class="hint">This code is issued by an existing admin after verifying your pioneer registration request.</p>
+    <!-- Request section for those who don't have a code yet -->
+    <div id="pioneerRequestSection">
+      <p>Don't have a code yet? Request Pioneer access below. An admin will verify and provide your code.</p>
+      <div class="field" style="margin-bottom:10px;">
+        <label>Reason for Requesting Pioneer Access</label>
+        <input type="text" id="requestReason" placeholder="e.g. Invited by Gadner Amos, Vision Pioneer">
+      </div>
+      <button class="request-btn" id="reqBtn" onclick="submitPioneerRequest()">📩 Request Pioneer Access</button>
+      <div class="success-note" id="requestSuccess">✅ Request submitted! An admin will review and provide your access code shortly.</div>
     </div>
+    <div style="margin-top:8px;">
+      <button style="background:none;border:none;color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;padding:0;font-family:inherit;" onclick="toggleRequestSection()">↕ I don't have a code yet — show request form</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Min. 6 characters" autocomplete="new-password">
+  </div>
+  <div class="field">
+    <label>Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="Repeat password" autocomplete="new-password">
+  </div>
+
+  <button class="btn" id="regBtn" onclick="handleRegister()">Create Account</button>
+
+  <div class="link-row">
+    <a href="login.html">Already have an account? Login →</a>
+  </div>
 </div>
 
 <script>
-function simpleHash(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return hash.toString(36);
+(function(){
+'use strict';
+
+function simpleHash(str){
+  var hash=0;
+  for(var i=0;i<str.length;i++){hash=((hash<<5)-hash)+str.charCodeAt(i);hash=hash&hash;}
+  return hash.toString(36);
 }
 
-// Access keys are hashed — do not store plain-text keys in source
-// The hash below corresponds to the key set by the admin
-const VALID_KEY_HASH = simpleHash('DF-ADMIN-2026');
+function showError(msg){var el=document.getElementById('errorMsg');el.textContent=msg;el.style.display='block';}
 
-function toggleAccessKey() {
-    const role = document.getElementById('role').value;
-    const keyField = document.getElementById('keyField');
-    keyField.style.display = (role === 'admin' || role === 'leader') ? 'block' : 'none';
-    document.getElementById('secretKey').className = 'secret-field';
+/* ── Role change ────────────────────────────── */
+window.onRoleChange=function(){
+  var role=document.getElementById('role').value;
+  var isPioneer=role==='leader'||role==='admin';
+  document.getElementById('codeField').style.display=isPioneer?'block':'none';
+  document.getElementById('errorMsg').style.display='none';
+};
+
+window.toggleRequestSection=function(){
+  var sec=document.getElementById('pioneerRequestSection');
+  sec.style.display=sec.style.display==='none'?'block':'none';
+};
+
+window.submitPioneerRequest=function(){
+  var name=(document.getElementById('name').value||'').trim();
+  var email=(document.getElementById('email').value||'').trim();
+  var reason=(document.getElementById('requestReason').value||'').trim();
+  if(!name||!email){showError('Please enter your name and email first.');return;}
+  if(!reason){showError('Please provide a brief reason for requesting pioneer access.');return;}
+  var reqs=[];try{reqs=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  if(reqs.find(function(r){return r.email===email;})){
+    document.getElementById('requestSuccess').style.display='block';
+    document.getElementById('requestSuccess').textContent='✅ Your request was already submitted. Please wait for an admin to provide your code.';
+    return;
+  }
+  reqs.push({id:Date.now(),name:name,email:email,reason:reason,roleRequested:document.getElementById('role').value,submittedAt:new Date().toISOString(),status:'pending'});
+  localStorage.setItem('pioneerRequests',JSON.stringify(reqs));
+  document.getElementById('requestSuccess').style.display='block';
+  document.getElementById('reqBtn').disabled=true;document.getElementById('reqBtn').textContent='✓ REQUEST SENT';
+};
+
+/* ── Pioneer code validation ─────────────────── */
+function validatePioneerCode(role,email,code){
+  if(!code){showError('Please enter your Pioneer Access Code. Use the request form below if you don\'t have one yet.');return false;}
+  code=code.trim().toUpperCase();
+  var codes={};try{codes=JSON.parse(localStorage.getItem('approvedPioneerCodes'))||{};}catch(e){}
+  var entry=codes[code];
+  if(!entry){showError('Invalid access code. Please double-check the code your admin provided.');return false;}
+  if(entry.usedAt){showError('This access code has already been used. Contact your admin for a new one.');return false;}
+  if(entry.email&&entry.email.toLowerCase()!==email.toLowerCase()){showError('This code was issued for a different email address.');return false;}
+  return {codes:codes,code:code,entry:entry};
 }
 
-function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.style.display = 'block';
+/* ── ID generator ────────────────────────────── */
+function generateID(fullName,role){
+  var initials=fullName.split(' ').map(function(n){return n[0]||'';}).join('').toUpperCase().slice(0,3);
+  var year='26';
+  if(role==='admin'){var u=[];try{u=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}var n=u.filter(function(x){return x.role==='admin';}).length;return 'DF-ADM-'+String(n+1).padStart(3,'0')+'/'+year+'-'+initials;}
+  if(role==='leader'){var u2=[];try{u2=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}var n2=u2.filter(function(x){return x.role==='leader';}).length;return 'DF-PNR-'+String(n2+1).padStart(3,'0')+'/'+year+'-'+initials;}
+  return 'DF-'+year+'-'+Math.floor(100+Math.random()*899)+'/'+initials;
 }
 
-function generateDeclareID(fullName, role) {
-    const initials = fullName.split(' ').map(n => n[0] || '').join('').toUpperCase().slice(0, 3);
-    const year = '26';
-    if (role === 'admin') {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const adminCount = users.filter(u => u.role === 'admin').length;
-        return `DF-ADM-${String(adminCount + 1).padStart(3,'0')}/${year}-${initials}`;
-    }
-    if (role === 'leader') {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const leaderCount = users.filter(u => u.role === 'leader').length;
-        return `DF-PNR-${String(leaderCount + 1).padStart(3,'0')}/${year}-${initials}`;
-    }
-    const randomNum = Math.floor(100 + Math.random() * 899);
-    return `DF-2026-${randomNum}/${initials}`;
-}
+/* ── Registration ────────────────────────────── */
+window.handleRegister=function(){
+  var name=(document.getElementById('name').value||'').trim();
+  var email=(document.getElementById('email').value||'').trim();
+  var role=document.getElementById('role').value;
+  var password=document.getElementById('password').value;
+  var confirmPwd=document.getElementById('confirmPassword').value;
+  var btn=document.getElementById('regBtn');
+  document.getElementById('errorMsg').style.display='none';
 
-function handleRegister() {
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const role = document.getElementById('role').value;
-    const secretKey = document.getElementById('secretKey').value;
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const btn = document.getElementById('regBtn');
+  if(!name||!email||!password){showError('Please fill in all required fields.');return;}
+  if(password.length<6){showError('Password must be at least 6 characters.');return;}
+  if(password!==confirmPwd){showError('Passwords do not match.');return;}
 
-    document.getElementById('errorMsg').style.display = 'none';
+  var codeResult=null;
+  if(role==='leader'||role==='admin'){
+    var codeInput=(document.getElementById('pioneerCode').value||'').trim().toUpperCase();
+    codeResult=validatePioneerCode(role,email,codeInput);
+    if(!codeResult)return;
+  }
 
-    if (!name || !email || !password) { showError('Please fill in all required fields.'); return; }
-    if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
-    if (password !== confirmPassword) { showError('Passwords do not match.'); return; }
+  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  if(users.find(function(u){return u.email===email;})){showError('An account with this email already exists. Try logging in instead.');return;}
 
-    if ((role === 'admin' || role === 'leader') && simpleHash(secretKey) !== VALID_KEY_HASH) {
-        showError('Invalid access key. Contact the executive team.');
-        return;
-    }
+  btn.disabled=true;btn.textContent='Creating Account...';
 
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    if (users.find(u => u.email === email)) {
-        showError('An account with this email already exists.');
-        return;
+  setTimeout(function(){
+    var memberID=generateID(name,role);
+    var newUser={name:name,email:email,role:role,memberID:memberID,passwordHash:simpleHash(password),joinedDate:new Date().toLocaleDateString('en-GB')};
+    users.push(newUser);
+    localStorage.setItem('users',JSON.stringify(users));
+
+    // Mark pioneer code as used
+    if(codeResult){
+      codeResult.codes[codeResult.code].usedAt=new Date().toISOString();
+      localStorage.setItem('approvedPioneerCodes',JSON.stringify(codeResult.codes));
+      var reqs=[];try{reqs=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+      reqs=reqs.filter(function(r){return r.email!==email;});
+      localStorage.setItem('pioneerRequests',JSON.stringify(reqs));
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Creating Account...';
+    // Store session
+    var sess={name:newUser.name,email:newUser.email,role:newUser.role,memberID:newUser.memberID,joinedDate:newUser.joinedDate};
+    localStorage.setItem('loggedInUser',JSON.stringify(sess));
 
-    setTimeout(() => {
-        const memberID = generateDeclareID(name, role);
-        const newUser = {
-            name, email, role, memberID,
-            passwordHash: simpleHash(password),
-            joinedDate: new Date().toLocaleDateString('en-GB')
-        };
+    // ── REDIRECT: leaders → leadership, new members → profile.html ──
+    if(role==='admin'||role==='leader'){
+      window.location.href='leadership.html';
+    } else {
+      // New member: always go to profile.html first to set up their profile
+      window.location.href='profile.html';
+    }
+  },500);
+};
 
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
+document.addEventListener('keydown',function(e){if(e.key==='Enter')window.handleRegister();});
 
-        // Session (no password stored)
-        localStorage.setItem('loggedInUser', JSON.stringify(newUser));
-
-        if (role === 'admin' || role === 'leader') {
-            window.location.href = 'leadership.html';
-        } else {
-            window.location.href = 'main.html';
-        }
-    }, 500);
-}
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') handleRegister();
-});
+})();
 </script>
 </body>
 </html>
