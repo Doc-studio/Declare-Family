@@ -1,33 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Faith & Insight | Declare Family</title>
-    <style>
-        body { background: #050505; color: #ddd; font-family: 'Georgia', serif; padding: 50px 10%; line-height: 1.8; }
-        h1, h2 { color: #ffd700; font-family: 'Segoe UI', sans-serif; }
-        .prayer-wall { background: #111; padding: 30px; border-radius: 15px; margin-top: 40px; border-left: 5px solid #ffd700; }
-        .study-block { margin-bottom: 50px; }
-        .input-prayer { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; margin-top: 10px; }
-        .btn-post { background: #ffd700; color: black; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Prayer Room | Declare Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700;--gold-soft:rgba(255,215,0,0.08);
+  --dark:#050505;--card:#111;--border:#1e1e1e;
+  --purple:#A855F7;--purple-soft:rgba(168,85,247,0.08);
+  --green:#00FF94;--amber:#FF9F43;
+  --font-fancy:'Playfair Display',serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;min-height:100vh;line-height:1.7;}
+
+/* ── TOP NAV ─────────────────────────────────── */
+.top-nav{
+  background:var(--gold);padding:0 5%;height:58px;
+  display:flex;justify-content:space-between;align-items:center;
+  position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.5);
+}
+.top-nav a{text-decoration:none;color:#000;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:1px;padding:8px 14px;border-radius:8px;transition:.2s;}
+.top-nav a:hover{background:rgba(0,0,0,.12);}
+.nav-brand{font-size:14px;letter-spacing:2px;color:rgba(0,0,0,.6);font-weight:800;}
+
+/* ── VERSE TICKER ────────────────────────────── */
+.verse-bar{background:linear-gradient(90deg,rgba(168,85,247,.04),rgba(168,85,247,.08),rgba(168,85,247,.04));border-bottom:1px solid rgba(168,85,247,.15);padding:9px 5%;display:flex;align-items:center;gap:12px;}
+.verse-bar .vb-text{font-size:12px;font-style:italic;color:#ccc;flex:1;}
+.verse-bar .vb-time{font-size:11px;color:#555;font-weight:700;}
+
+/* ── HERO ────────────────────────────────────── */
+.hero{text-align:center;padding:50px 5% 30px;border-bottom:1px solid var(--border);}
+.hero h1{font-family:var(--font-fancy);font-size:clamp(2rem,5vw,3rem);color:var(--gold);margin-bottom:10px;}
+.hero p{font-size:15px;color:#888;max-width:560px;margin:0 auto;}
+
+/* ── CONTAINER ────────────────────────────────── */
+.container{max-width:900px;margin:0 auto;padding:36px 5%;}
+
+/* ── SCRIPTURAL BLOCK ────────────────────────── */
+.scripture-block{background:var(--card);border-radius:20px;border:1px solid var(--border);border-left:5px solid var(--gold);padding:30px;margin-bottom:36px;}
+.scripture-block h2{font-family:var(--font-fancy);font-size:22px;color:var(--gold);margin-bottom:6px;}
+.scripture-block h3{font-size:16px;color:#ccc;margin-bottom:16px;font-weight:600;}
+.scripture-block p{font-size:15px;color:#aaa;line-height:1.8;}
+
+/* ── POST FORM ────────────────────────────────── */
+.post-form{background:var(--card);border-radius:20px;border:1px solid var(--border);border-left:5px solid var(--purple);padding:28px;margin-bottom:36px;}
+.post-form h2{font-family:var(--font-fancy);font-size:20px;color:var(--purple);margin-bottom:8px;}
+.post-form p{font-size:13px;color:#666;margin-bottom:20px;}
+.type-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.type-btn{background:#000;border:1px solid var(--border);color:#888;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:800;cursor:pointer;transition:.2s;font-family:inherit;}
+.type-btn.active,.type-btn:hover{background:var(--purple-soft);border-color:rgba(168,85,247,.5);color:var(--purple);}
+textarea.prayer-input{
+  width:100%;padding:14px 16px;background:#000;border:1px solid var(--border);
+  border-radius:14px;color:#fff;font-family:inherit;font-size:14px;
+  resize:vertical;min-height:100px;outline:none;transition:.2s;line-height:1.6;
+}
+textarea.prayer-input:focus{border-color:var(--purple);}
+.post-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+  background:var(--purple);border:none;color:#fff;padding:12px 28px;
+  border-radius:12px;font-weight:800;font-size:13px;cursor:pointer;
+  font-family:inherit;transition:.2s;
+}
+.post-btn:hover{background:#9333ea;}
+
+/* ── PRAYER WALL ──────────────────────────────── */
+.wall-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.wall-header h2{font-family:var(--font-fancy);font-size:22px;color:var(--gold);}
+.wall-count{font-size:12px;color:#555;background:var(--card);padding:5px 14px;border-radius:20px;border:1px solid var(--border);}
+
+/* Prayer cards */
+.prayer-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:20px;margin-bottom:16px;animation:fadeUp .4s ease;position:relative;}
+.prayer-card.prayer-type{border-left:3px solid var(--purple);}
+.prayer-card.insight-type{border-left:3px solid var(--gold);}
+.prayer-card.motivation-type{border-left:3px solid var(--green);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.prayer-head{display:flex;gap:10px;align-items:center;margin-bottom:12px;}
+.prayer-avatar{width:36px;height:36px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
+.prayer-name{font-size:14px;font-weight:800;color:var(--gold);}
+.prayer-meta{font-size:11px;color:#555;margin-top:2px;}
+.prayer-body{font-size:14px;color:#ccc;line-height:1.65;word-break:break-word;margin-bottom:14px;}
+.type-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:8px;display:inline-block;margin-bottom:10px;}
+.badge-prayer{background:var(--purple-soft);color:var(--purple);}
+.badge-insight{background:var(--gold-soft);color:var(--gold);}
+.badge-motivation{background:rgba(0,255,148,.08);color:var(--green);}
+
+/* Reactions */
+.reaction-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.react-btn{background:#000;border:1px solid var(--border);color:#888;padding:4px 10px;border-radius:20px;font-size:12px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:4px;}
+.react-btn:hover,.react-btn.active{background:var(--purple-soft);border-color:rgba(168,85,247,.4);color:var(--purple);}
+.agree-btn{background:rgba(0,255,148,.08);border:1px solid rgba(0,255,148,.3);color:var(--green);padding:5px 14px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;transition:.2s;}
+.agree-btn:hover{background:var(--green);color:#000;}
+.status-tag{margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;font-weight:800;}
+.status-open{background:rgba(255,159,67,.12);color:var(--amber);}
+.status-answered{background:rgba(0,255,148,.1);color:var(--green);}
+
+/* Expiry indicator */
+.expiry-bar{height:3px;border-radius:2px;margin-top:14px;background:var(--border);overflow:hidden;}
+.expiry-fill{height:100%;background:var(--purple);transition:.3s;}
+
+/* Empty state */
+.empty-wall{text-align:center;padding:60px 20px;color:#444;}
+.empty-wall .empty-icon{font-size:48px;margin-bottom:16px;}
+.empty-wall p{font-size:14px;line-height:1.6;}
+
+/* ── BACK ─────────────────────────────────────── */
+.back-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:var(--gold-soft);border:1px solid rgba(255,215,0,.3);color:var(--gold);padding:11px 22px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px;transition:.2s;}
+.back-btn:hover{background:var(--gold);color:#000;}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media(max-width:600px){
+  .top-nav{padding:0 4%;}
+  .container{padding:24px 4%;}
+  .prayer-card{padding:16px;}
+  .post-form{padding:20px;}
+}
+</style>
 </head>
 <body>
-    <div class="study-block">
-        <h1>Scriptural Insight</h1>
-        <h2>This Week: "The Nehemiah Principle"</h2>
-        <p>Exploring how to build great things in the face of opposition. We look at Nehemiah Chapter 4 and how it applies to modern community building.</p>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <a href="hub.html">⬅ Hub</a>
+  <span class="nav-brand">PRAYER ROOM</span>
+  <a href="Dashboard.html">Dashboard →</a>
+</nav>
+
+<!-- VERSE BAR -->
+<div class="verse-bar">
+  <span class="vb-text" id="verseText">Loading today's inspiration...</span>
+  <span class="vb-time" id="verseTime"></span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🕊️ The Prayer Room</h1>
+  <p>A sacred space where the family stands together in faith, intercession, and shared insight.</p>
+</div>
+
+<div class="container">
+
+  <!-- Scripture Block -->
+  <div class="scripture-block">
+    <h2>This Week's Scriptural Insight</h2>
+    <h3 id="studyTitle">"The Nehemiah Principle"</h3>
+    <p id="studyText">Exploring how to build great things in the face of opposition. We look at Nehemiah Chapter 4 and how it applies to modern community building — how to stay the course when circumstances press against the vision.</p>
+  </div>
+
+  <!-- Post Form -->
+  <div class="post-form">
+    <h2>Post to the Prayer Wall</h2>
+    <p>Share a prayer request, stand in agreement, or post an insight. All posts are visible for 48 hours or until marked answered.</p>
+
+    <div class="type-row">
+      <button class="type-btn active" id="typePrayer"   onclick="setType('prayer')">🙏 Prayer Request</button>
+      <button class="type-btn"        id="typeInsight"  onclick="setType('insight')">💡 Insight</button>
+      <button class="type-btn"        id="typeMotiv"    onclick="setType('motivation')">🔥 Motivation</button>
     </div>
 
-    <div class="prayer-wall">
-        <h2>Strategic Prayer Wall</h2>
-        <p>Post your prayer requests or stand in agreement with others.</p>
-        <div id="requests">
-            <p><em>"Praying for the upcoming Civic Support project in Nairobi..." - Marvel</em></p>
-        </div>
-        <textarea class="input-prayer" placeholder="Share a prayer request..."></textarea>
-        <button class="btn-post">Post to Wall</button>
+    <textarea class="prayer-input" id="prayerInput" placeholder="Share your prayer request or insight..."></textarea>
+    <button class="post-btn" onclick="postPrayer()">🙏 Post to Wall</button>
+  </div>
+
+  <!-- Prayer Wall -->
+  <div>
+    <div class="wall-header">
+      <h2>Strategic Prayer Wall</h2>
+      <span class="wall-count" id="wallCount">0 active posts</span>
     </div>
-    <br><a href="hub.html" style="color: gold; text-decoration: none;">← Back to Hub</a>
+    <div id="prayerWall"></div>
+  </div>
+
+  <a href="hub.html" class="back-btn">⬅ Back to Hub</a>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var PRAYER_KEY='prayerRequests';
+var PRAYER_TTL=48*60*60*1000; // 48 hours
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
+function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
+var user=session();
+
+/* ── VERSE ────────────────────────────────────── */
+var VERSES=[
+  '"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you." — Matthew 7:7',
+  '"Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God." — Philippians 4:6',
+  '"The prayer of a righteous person is powerful and effective." — James 5:16',
+  '"Cast your cares on the Lord and He will sustain you." — Psalm 55:22',
+  '"Call to me and I will answer you and tell you great and unsearchable things." — Jeremiah 33:3',
+  '"If my people, who are called by my name, will humble themselves and pray and seek my face... I will hear from heaven." — 2 Chr 7:14',
+  '"The Lord is near to all who call on him, to all who call on him in truth." — Psalm 145:18'
+];
+function setVerse(){
+  var dayIdx=Math.floor(Date.now()/86400000)%VERSES.length;
+  var el=document.getElementById('verseText'),te=document.getElementById('verseTime');
+  if(el)el.textContent='🙏 '+VERSES[dayIdx];
+  if(te){var n=new Date();te.textContent=n.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+}
+setVerse();
+
+/* ── POST TYPE ────────────────────────────────── */
+var currentType='prayer';
+window.setType=function(t){
+  currentType=t;
+  ['Prayer','Insight','Motiv'].forEach(function(id){
+    document.getElementById('type'+id).classList.remove('active');
+  });
+  var map={prayer:'Prayer',insight:'Insight',motivation:'Motiv'};
+  var btn=document.getElementById('type'+map[t]);if(btn)btn.classList.add('active');
+  var ta=document.getElementById('prayerInput');
+  var placeholders={prayer:'Share your prayer request...',insight:'Share a scriptural insight or revelation...',motivation:'Post a word of encouragement for the family...'};
+  if(ta)ta.placeholder=placeholders[t]||'Share with the family...';
+};
+
+/* ── LOAD / SAVE ──────────────────────────────── */
+function loadPrayers(){
+  var data=[];try{data=JSON.parse(localStorage.getItem(PRAYER_KEY))||[];}catch(e){}
+  // Filter out posts older than 48 hours
+  var now=Date.now();
+  data=data.filter(function(p){return now-p.time<PRAYER_TTL;});
+  localStorage.setItem(PRAYER_KEY,JSON.stringify(data));
+  return data;
+}
+function savePrayers(data){localStorage.setItem(PRAYER_KEY,JSON.stringify(data));}
+
+/* ── POST PRAYER ──────────────────────────────── */
+window.postPrayer=function(){
+  if(!user){alert('Please log in to post to the prayer wall.');return;}
+  var ta=document.getElementById('prayerInput');
+  var txt=(ta.value||'').trim();if(!txt)return;
+
+  var post={
+    id:Date.now(),
+    name:user.name||'Member',
+    memberID:user.memberID||'',
+    role:user.role||'member',
+    text:txt,
+    type:currentType,
+    time:Date.now(),
+    reactions:{},
+    agreements:0,
+    status:'open'
+  };
+
+  var prayers=loadPrayers();
+  prayers.unshift(post);
+  savePrayers(prayers);
+
+  // Also save to hub messages so it appears in the main feed
+  var msgs=[];try{msgs=JSON.parse(localStorage.getItem('hubMessages'))||[];}catch(e){}
+  msgs.unshift({id:post.id,name:post.name,memberID:post.memberID,role:post.role,text:post.text,type:'prayer',time:post.time,reactions:{},status:'open'});
+  localStorage.setItem('hubMessages',JSON.stringify(msgs.slice(0,300)));
+
+  ta.value='';renderWall();
+};
+
+/* ── REACTIONS ────────────────────────────────── */
+window.reactPrayer=function(id,emoji){
+  var prayers=loadPrayers();
+  var p=prayers.find(function(x){return x.id===id;});
+  if(!p)return;
+  if(!p.reactions)p.reactions={};
+  p.reactions[emoji]=(p.reactions[emoji]||0)+1;
+  savePrayers(prayers);renderWall();
+};
+
+window.agreePrayer=function(id){
+  var prayers=loadPrayers();
+  var p=prayers.find(function(x){return x.id===id;});
+  if(!p)return;
+  p.agreements=(p.agreements||0)+1;
+  savePrayers(prayers);renderWall();
+};
+
+window.markAnswered=function(id){
+  if(!isLeader(user)){alert('Only Pioneers can mark posts as answered.');return;}
+  var prayers=loadPrayers();
+  var p=prayers.find(function(x){return x.id===id;});
+  if(!p)return;
+  p.status='answered';
+  savePrayers(prayers);renderWall();
+};
+
+window.deletePost=function(id){
+  if(!isLeader(user)){alert('Only Pioneers can delete posts.');return;}
+  if(!confirm('Remove this post?'))return;
+  var prayers=loadPrayers();
+  savePrayers(prayers.filter(function(p){return p.id!==id;}));
+  renderWall();
+};
+
+/* ── RENDER WALL ──────────────────────────────── */
+function renderWall(){
+  var prayers=loadPrayers();
+  var el=document.getElementById('prayerWall');if(!el)return;
+  var countEl=document.getElementById('wallCount');
+  if(countEl)countEl.textContent=prayers.length+' active post'+(prayers.length!==1?'s':'');
+
+  if(!prayers.length){
+    el.innerHTML='<div class="empty-wall"><div class="empty-icon">🕊️</div><p>The prayer wall is quiet.<br>Be the first to post a prayer or insight.</p></div>';
+    return;
+  }
+
+  var EMOJIS=['🙏','🔥','❤️','💛','👏'];
+  el.innerHTML=prayers.map(function(p){
+    var isLeaderPost=isLeader({role:p.role});
+    var cls='prayer-card '+p.type+'-type';
+    var badgeCls='type-badge badge-'+(p.type==='prayer'?'prayer':p.type==='insight'?'insight':'motivation');
+    var badgeLabel=p.type==='prayer'?'🙏 Prayer Request':p.type==='insight'?'💡 Insight':'🔥 Motivation';
+    var now2=Date.now();
+    var age=now2-p.time;
+    var pctLeft=Math.max(0,100-(age/PRAYER_TTL*100));
+    var timeStr=new Date(p.time).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    var reactHTML=EMOJIS.map(function(e){var c=p.reactions&&p.reactions[e]?p.reactions[e]:0;return '<button class="react-btn" onclick="reactPrayer('+p.id+',\''+e+'\')">'+e+' <span>'+c+'</span></button>';}).join('');
+    var totalAgree=p.agreements||0;
+    var adminButtons=isLeader(user)?
+      '<button onclick="markAnswered('+p.id+')" style="background:rgba(0,255,148,.08);border:1px solid rgba(0,255,148,.3);color:var(--green);padding:4px 12px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;margin-left:6px;">✓ Mark Answered</button>'+
+      '<button onclick="deletePost('+p.id+')" style="background:none;border:1px solid #333;color:#555;padding:4px 10px;border-radius:8px;font-size:10px;cursor:pointer;margin-left:4px;">✕ Remove</button>':'';
+    return '<div class="'+cls+'">'+
+      '<span class="'+badgeCls+'">'+badgeLabel+'</span>'+
+      '<div class="prayer-head">'+
+        '<div class="prayer-avatar" style="background:'+(isLeaderPost?'var(--green)':'var(--purple)')+'">'+esc((p.name||'M').charAt(0).toUpperCase())+'</div>'+
+        '<div>'+
+          '<div class="prayer-name">'+esc(p.name||'Member')+'</div>'+
+          '<div class="prayer-meta">'+(p.memberID?esc(p.memberID)+' · ':'')+timeStr+'</div>'+
+        '</div>'+
+        '<span class="status-tag '+(p.status==='answered'?'status-answered':'status-open')+'">'+esc(p.status)+'</span>'+
+      '</div>'+
+      '<p class="prayer-body">'+esc(p.text)+'</p>'+
+      '<div class="reaction-row">'+reactHTML+
+        '<button class="agree-btn" onclick="agreePrayer('+p.id+')">🤝 Agree ('+totalAgree+')</button>'+
+        adminButtons+
+      '</div>'+
+      '<div class="expiry-bar"><div class="expiry-fill" style="width:'+pctLeft+'%"></div></div>'+
+    '</div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderWall();setInterval(renderWall,30000);
+  var doLayout=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');};
+  doLayout();window.addEventListener('resize',doLayout);window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
+});
+
+})();
+</script>
 </body>
 </html>
