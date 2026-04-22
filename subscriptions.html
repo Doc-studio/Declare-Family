@@ -386,18 +386,22 @@ async function callMpesaSTK(phone, amount) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone, amount })
         });
+        
+        if (!response.ok) throw new Error("Server error");
+        
         const data = await response.json();
+        
         if (data.ResponseCode === "0") {
-            setStkStatus('processing');
-            alert("Prompt sent! Please enter your PIN on your phone.");
+            // Return the data so the form knows the CheckoutRequestID
+            return data; 
         } else {
-            setStkStatus('failed');
-            alert("Error: " + data.CustomerMessage);
+            throw new Error(data.CustomerMessage || "Safaricom rejected the request");
         }
     } catch (err) {
         setStkStatus('failed');
-        alert("Server connection failed. Make sure server.js is running.");
+        throw err; // Pass the error to the form handler
     }
+
 }
 
 async function pollMpesaConfirmation(checkoutRequestID){
@@ -527,7 +531,19 @@ document.addEventListener('DOMContentLoaded',function(){
   var doLayout=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');};
   doLayout();window.addEventListener('resize',doLayout);window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
 });
+function setStkStatus(state) {
+    const statusMap = {
+        'requesting': { icon: '⏳', title: 'Initiating Request...', msg: 'Talking to Safaricom...' },
+        'processing': { icon: '📱', title: 'Check Your Phone', msg: 'Please enter your M-Pesa PIN now.' },
+        'failed': { icon: '❌', title: 'Transaction Failed', msg: 'Something went wrong. Please try again.' },
+        'success': { icon: '✅', title: 'Success!', msg: 'Payment received. Thank you!' }
+    };
 
+    const config = statusMap[state];
+    if (config) {
+        showStatus(state, config.icon, config.title, config.msg);
+    }
+}
 })();
 </script>
 </body>
