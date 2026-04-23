@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Declare Academy | Classroom</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700;--gold2:#FFA500;--dark:#050505;--panel:#0E0E10;
+  --border:rgba(255,255,255,0.09);--green:#00FF94;--red:#FF3B30;
+  --blue:#4A9EFF;--dim:#888;--text:#f0f0f0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;display:flex;flex-direction:column;}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:#000;border-bottom:1px solid var(--border);
+  padding:0 20px;height:62px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;flex-shrink:0;position:sticky;top:0;z-index:100;
+}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.back-btn{
+  width:36px;height:36px;background:#111;border:1px solid var(--border);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:16px;text-decoration:none;color:var(--dim);transition:.2s;flex-shrink:0;
+}
+.back-btn:hover{border-color:var(--gold);color:var(--gold);}
+.topbar-brand{font-weight:800;font-size:13px;color:var(--gold);letter-spacing:.5px;white-space:nowrap;}
+.topbar-class{font-size:11px;color:#444;margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.student-chip{
+  display:flex;align-items:center;gap:8px;background:#0a0a0a;
+  border:1px solid var(--border);border-radius:20px;padding:6px 14px 6px 8px;
+}
+.student-avatar{width:30px;height:30px;background:rgba(255,215,0,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.student-name{font-size:12px;font-weight:700;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.student-adm{font-size:10px;color:#555;}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:pls 1.5s infinite;flex-shrink:0;}
+@keyframes pls{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+/* ── LAYOUT ── */
+.classroom-body{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.class-sidebar{
+  width:260px;background:#000;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;
+}
+.sidebar-section{padding:16px;border-bottom:1px solid var(--border);}
+.sidebar-label{font-size:9px;font-weight:800;color:#333;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+
+/* Progress */
+.progress-ring-wrap{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.progress-ring{position:relative;width:50px;height:50px;}
+.progress-ring svg{transform:rotate(-90deg);}
+.progress-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--gold);}
+
+.topic-list{list-style:none;}
+.topic-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;
+  cursor:pointer;transition:.2s;font-size:12px;color:var(--dim);margin-bottom:3px;
+}
+.topic-item:hover{background:#0a0a0a;color:#fff;}
+.topic-item.active{background:rgba(255,215,0,.08);color:var(--gold);border-left:3px solid var(--gold);}
+.topic-item.done{color:#555;}
+.topic-dot{width:8px;height:8px;border-radius:50%;background:#222;flex-shrink:0;}
+.topic-item.active .topic-dot{background:var(--gold);}
+.topic-item.done .topic-dot{background:#333;}
+
+/* Members list */
+.member-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
+.member-row:last-child{border-bottom:none;}
+.member-avatar{width:28px;height:28px;background:#111;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.member-name{font-size:11px;font-weight:600;}
+.member-adm{font-size:10px;color:#444;}
+
+/* ── MAIN CONTENT ── */
+.class-main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.class-inner{padding:28px 32px;max-width:860px;margin:0 auto;}
+
+/* Continue banner */
+.continue-banner{
+  background:linear-gradient(135deg,#0a0a00,#111100);border:1px solid var(--gold);
+  border-radius:14px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:24px;gap:12px;
+}
+.continue-banner span{font-size:13px;color:#bbb;}
+.continue-btn{
+  background:var(--gold);color:#000;border:none;padding:8px 18px;border-radius:8px;
+  font-weight:800;font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+  white-space:nowrap;
+}
+
+/* Topic header */
+.topic-header{margin-bottom:28px;}
+.topic-badge{font-size:9px;font-weight:800;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.topic-title{font-family:'DM Serif Display',serif;font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:12px;background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.topic-intro{color:#999;line-height:1.7;font-size:14px;border-left:3px solid var(--gold);padding-left:16px;}
+
+/* Content blocks */
+.content-block{margin-bottom:28px;}
+.content-block .block-label{font-size:10px;font-weight:800;color:#444;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+
+.notes-text{
+  background:#0a0a0a;border:1px solid var(--border);border-radius:16px;
+  padding:24px;font-size:14px;line-height:1.8;color:#ccc;white-space:pre-wrap;
+}
+
+.video-player{
+  width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;border:1px solid #1a1a1a;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;color:#333;font-size:14px;
+}
+.video-player iframe{width:100%;height:100%;border:none;}
+.video-player video{width:100%;height:100%;object-fit:contain;}
+
+.link-card{
+  display:flex;align-items:center;gap:14px;padding:16px 20px;
+  background:#0a0a0a;border:1px solid var(--border);border-radius:14px;
+  text-decoration:none;color:var(--text);transition:.25s;margin-bottom:10px;
+}
+.link-card:hover{border-color:var(--gold);background:#111;}
+.link-card-icon{font-size:22px;flex-shrink:0;}
+.link-card-text{font-size:13px;font-weight:600;color:var(--gold);}
+.link-card-url{font-size:11px;color:#444;margin-top:2px;word-break:break-all;}
+
+/* Comments */
+.comments-section{margin-top:32px;}
+.comment-list{margin-bottom:20px;max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+.comment-item{background:#0a0a0a;border:1px solid var(--border);border-radius:14px;padding:14px 16px;}
+.comment-item.tutor-post{background:rgba(0,255,148,.04);border-color:rgba(0,255,148,.2);}
+.comment-item.bot-post{background:rgba(255,215,0,.04);border-color:rgba(255,215,0,.2);}
+.comment-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.comment-avatar{font-size:16px;}
+.comment-author{font-size:12px;font-weight:800;}
+.comment-time{font-size:10px;color:#444;margin-left:auto;}
+.comment-body{font-size:13px;color:#bbb;line-height:1.6;}
+.tutor-badge{background:rgba(0,255,148,.15);color:var(--green);padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;}
+.bot-badge{background:rgba(255,215,0,.15);color:var(--gold);padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;}
+
+.comment-input-wrap{display:flex;gap:10px;align-items:flex-end;}
+.comment-input-wrap textarea{
+  flex:1;background:#0a0a0a;border:1px solid var(--border);border-radius:12px;
+  color:#fff;padding:12px 16px;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;resize:none;outline:none;transition:border-color .2s;
+  height:48px;min-height:48px;
+}
+.comment-input-wrap textarea:focus{border-color:var(--gold);height:100px;}
+.send-btn{
+  background:var(--gold);color:#000;border:none;width:44px;height:44px;border-radius:12px;
+  cursor:pointer;font-size:18px;flex-shrink:0;transition:.2s;
+}
+.send-btn:hover{background:#fff;}
+
+/* Tutor panel */
+.tutor-panel{
+  background:rgba(0,255,148,.04);border:1px solid rgba(0,255,148,.2);
+  border-radius:16px;padding:24px;margin-top:28px;
+}
+.tutor-panel h4{color:var(--green);margin-bottom:4px;font-size:14px;}
+.tutor-panel p{color:#666;font-size:12px;margin-bottom:14px;}
+.post-type-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.post-type-btn{
+  padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:none;
+  color:#666;cursor:pointer;font-size:11px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;
+}
+.post-type-btn:hover,.post-type-btn.active{background:rgba(0,255,148,.1);border-color:var(--green);color:var(--green);}
+.tutor-input-area{margin-bottom:12px;}
+.tutor-input-area textarea,.tutor-input-area input{
+  width:100%;background:#000;border:1px solid #222;border-radius:10px;
+  color:#fff;padding:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;
+  transition:.2s;resize:vertical;
+}
+.tutor-input-area textarea:focus,.tutor-input-area input:focus{border-color:var(--green);}
+.push-btn{
+  background:var(--green);color:#000;border:none;padding:12px 24px;border-radius:10px;
+  font-weight:800;font-size:12px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+  letter-spacing:.5px;text-transform:uppercase;transition:.2s;
+}
+.push-btn:hover{background:#00cc75;}
+
+/* Notification toast */
+.toast{
+  position:fixed;bottom:28px;right:28px;background:var(--green);color:#000;
+  padding:12px 20px;border-radius:12px;font-weight:700;font-size:13px;
+  transform:translateY(20px);opacity:0;transition:.3s;z-index:500;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  html,body{overflow:auto;}
+  .classroom-body{flex-direction:column;}
+  .class-sidebar{width:100%;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
+  .class-inner{padding:20px 16px;}
+  .student-name{display:none;}
+}
+@media(max-width:600px){
+  .topbar{height:56px;padding:0 14px;}
+  .topbar-brand{font-size:12px;}
+  .student-adm{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="academy.html" class="back-btn" title="Back to Academy">←</a>
+    <div>
+      <div class="topbar-brand">DECLARE FAMILY · <span id="classLabel" style="color:#fff;font-weight:600;"></span></div>
+      <div class="topbar-class" id="topicLabel">Loading session...</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="live-dot"></div>
+    <div class="student-chip">
+      <div class="student-avatar" id="studentAvatar">🎓</div>
+      <div>
+        <div class="student-name" id="studentNameDisplay">—</div>
+        <div class="student-adm" id="studentAdmDisplay">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="classroom-body">
+
+  <!-- SIDEBAR -->
+  <div class="class-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Your Progress</div>
+      <div class="progress-ring-wrap">
+        <div class="progress-ring">
+          <svg width="50" height="50" viewBox="0 0 50 50">
+            <circle cx="25" cy="25" r="20" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+            <circle id="progressCircle" cx="25" cy="25" r="20" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+          </svg>
+          <div class="progress-num" id="progressNum">0%</div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;">Session Progress</div>
+          <div style="font-size:11px;color:#555;">Keep going!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Units / Topics</div>
+      <ul class="topic-list" id="topicList">
+        <li style="color:#333;font-size:12px;text-align:center;padding:10px;">Loading units...</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Classmates</div>
+      <div id="membersList">
+        <div style="font-size:11px;color:#333;text-align:center;padding:10px;">No other members yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="class-main" id="classMain">
+    <div class="class-inner">
+
+      <!-- Continue Banner -->
+      <div class="continue-banner" id="continueBanner" style="display:none;">
+        <span>📌 Welcome back! You left off mid-session.</span>
+        <button class="continue-btn" onclick="continueSession()">CONTINUE →</button>
+      </div>
+
+      <!-- Topic Header -->
+      <div class="topic-header" id="topicHeader">
+        <div class="topic-badge" id="topicBadge">Today's Session</div>
+        <h1 class="topic-title" id="topicTitle">Loading Session...</h1>
+        <p class="topic-intro" id="topicIntro">Please wait while we load your class content.</p>
+      </div>
+
+      <!-- Video -->
+      <div class="content-block" id="videoBlock" style="display:none;">
+        <div class="block-label">📹 Session Video</div>
+        <div class="video-player" id="videoPlayer"></div>
+      </div>
+
+      <!-- Notes -->
+      <div class="content-block" id="notesBlock" style="display:none;">
+        <div class="block-label">📄 Session Notes</div>
+        <div class="notes-text" id="notesText"></div>
+      </div>
+
+      <!-- Links -->
+      <div class="content-block" id="linksBlock" style="display:none;">
+        <div class="block-label">🔗 Resources & Links</div>
+        <div id="linksList"></div>
+      </div>
+
+      <!-- Comments -->
+      <div class="comments-section">
+        <div style="font-size:10px;font-weight:800;color:#444;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;">💬 Class Interaction</div>
+        <div class="comment-list" id="commentList"></div>
+        <div class="comment-input-wrap">
+          <textarea id="commentInput" placeholder="Ask a question or share an insight..."></textarea>
+          <button class="send-btn" onclick="postComment()">↑</button>
+        </div>
+      </div>
+
+      <!-- Tutor Panel (hidden by default) -->
+      <div class="tutor-panel" id="tutorPanel" style="display:none;">
+        <h4>🌿 Instructor Dashboard</h4>
+        <p>Post content to this class. All students will see your posts immediately.</p>
+
+        <div class="post-type-tabs">
+          <button class="post-type-btn active" onclick="setPostType('topic',this)">📌 Topic/Notes</button>
+          <button class="post-type-btn" onclick="setPostType('video',this)">🎥 Video URL</button>
+          <button class="post-type-btn" onclick="setPostType('link',this)">🔗 External Link</button>
+          <button class="post-type-btn" onclick="setPostType('announcement',this)">📢 Announcement</button>
+        </div>
+
+        <div class="tutor-input-area" id="postTopicArea">
+          <input type="text" id="postTitle" placeholder="Session title / unit name" style="margin-bottom:8px;">
+          <textarea id="postNotes" rows="5" placeholder="Write detailed session notes, teachings, or content here..."></textarea>
+        </div>
+
+        <div class="tutor-input-area" id="postVideoArea" style="display:none;">
+          <input type="text" id="postVideoUrl" placeholder="YouTube URL or direct video URL (https://...)">
+        </div>
+
+        <div class="tutor-input-area" id="postLinkArea" style="display:none;">
+          <input type="text" id="postLinkUrl" placeholder="https://link.com" style="margin-bottom:8px;">
+          <input type="text" id="postLinkLabel" placeholder="Link label / description">
+        </div>
+
+        <div class="tutor-input-area" id="postAnnouncementArea" style="display:none;">
+          <textarea id="postAnnouncement" rows="3" placeholder="Type your announcement to the class..."></textarea>
+        </div>
+
+        <button class="push-btn" onclick="pushToClass()">PUSH TO CLASS ↑</button>
+      </div>
+
+    </div><!-- .class-inner -->
+  </div><!-- .class-main -->
+
+</div><!-- .classroom-body -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+const params = new URLSearchParams(window.location.search);
+const className = params.get('class') || 'Vertical Growth';
+let student = null;
+let currentPostType = 'topic';
+let scrollInterval = null;
+
+/* ═══════════════════════════════════
+   LOAD STUDENT PROFILE
+═══════════════════════════════════ */
+function loadStudent(){
+  student = JSON.parse(localStorage.getItem(`student_${className}`)||'null');
+  const user = JSON.parse(localStorage.getItem('loggedInUser')||'null');
+
+  if(!student && !user){
+    window.location.href=`academy-gateway.html?class=${encodeURIComponent(className)}`;
+    return;
+  }
+
+  const displayStudent = student || user;
+
+  document.getElementById('classLabel').textContent = className;
+  document.getElementById('studentAvatar').textContent = displayStudent.avatar || (user&&user.avatar) || '🎓';
+  document.getElementById('studentNameDisplay').textContent = displayStudent.name || user?.name || 'Member';
+  document.getElementById('studentAdmDisplay').textContent = displayStudent.adm ? `Adm: ${displayStudent.adm}` : 'Leader';
+
+  // Check if tutor or admin
+  const approvedTutors = JSON.parse(localStorage.getItem('approvedTutors')||'[]');
+  const isTutor = (user&&(user.role==='admin'||user.role==='leader')) ||
+                  approvedTutors.some(t=>t.name===displayStudent.name&&t.class===className);
+  if(isTutor){
+    document.getElementById('tutorPanel').style.display='block';
+  }
+}
+
+/* ═══════════════════════════════════
+   LOAD CLASS CONTENT
+═══════════════════════════════════ */
+function loadContent(){
+  const posts = JSON.parse(localStorage.getItem(`classPosts_${className}`)||'[]');
+
+  if(posts.length===0){
+    document.getElementById('topicTitle').textContent='Awaiting Session Content';
+    document.getElementById('topicIntro').textContent='Your instructor will post the session topic and materials shortly. Stay tuned!';
+    document.getElementById('topicLabel').textContent='Waiting for instructor...';
+    return;
+  }
+
+  // Latest topic post
+  const latestTopic = [...posts].reverse().find(p=>p.type==='topic'||p.type==='announcement');
+
+  if(latestTopic){
+    document.getElementById('topicBadge').textContent = latestTopic.type==='announcement'?'📢 Announcement':'Today\'s Session';
+    document.getElementById('topicTitle').textContent = latestTopic.title||'Session Notes';
+    document.getElementById('topicIntro').textContent = latestTopic.content ? latestTopic.content.substring(0,200)+'...' : '';
+    document.getElementById('topicLabel').textContent = latestTopic.title||className;
+    if(latestTopic.content){
+      document.getElementById('notesText').textContent = latestTopic.content;
+      document.getElementById('notesBlock').style.display='block';
+    }
+  }
+
+  // Video
+  const videos = posts.filter(p=>p.type==='video');
+  if(videos.length>0){
+    const v = videos[videos.length-1];
+    const url = v.url;
+    let embed = '';
+    if(url.includes('youtube.com')||url.includes('youtu.be')){
+      const vid = url.match(/(?:v=|youtu\.be\/|embed\/)([^&?/]+)/);
+      if(vid) embed=`<iframe src="https://www.youtube.com/embed/${vid[1]}" allowfullscreen></iframe>`;
+    } else if(url.match(/\.(mp4|webm|ogg)$/i)){
+      embed=`<video controls src="${url}"></video>`;
+    } else {
+      embed=`<iframe src="${url}" allowfullscreen></iframe>`;
+    }
+    document.getElementById('videoPlayer').innerHTML=embed;
+    document.getElementById('videoBlock').style.display='block';
+  }
+
+  // Links
+  const links = posts.filter(p=>p.type==='link');
+  if(links.length>0){
+    document.getElementById('linksList').innerHTML = links.map(l=>`
+      <a href="${l.url}" target="_blank" rel="noopener" class="link-card">
+        <div class="link-card-icon">🔗</div>
+        <div>
+          <div class="link-card-text">${l.label||'Open Resource'}</div>
+          <div class="link-card-url">${l.url}</div>
+        </div>
+        <span style="margin-left:auto;font-size:18px;color:#333;">↗</span>
+      </a>
+    `).join('');
+    document.getElementById('linksBlock').style.display='block';
+  }
+
+  // Build topic list in sidebar
+  const topicPosts = posts.filter(p=>p.type==='topic');
+  const ul = document.getElementById('topicList');
+  if(topicPosts.length>0){
+    ul.innerHTML = topicPosts.map((p,i)=>`
+      <li class="topic-item ${i===topicPosts.length-1?'active':''}" onclick="scrollToTop()">
+        <div class="topic-dot"></div>
+        <span>${p.title||'Unit '+(i+1)}</span>
+      </li>
+    `).join('');
+  } else {
+    ul.innerHTML='<li style="color:#333;font-size:12px;padding:10px;">No units posted yet.</li>';
+  }
+}
+
+/* ═══════════════════════════════════
+   LOAD COMMENTS
+═══════════════════════════════════ */
+function loadComments(){
+  const comments = JSON.parse(localStorage.getItem(`comments_${className}`)||'[]');
+  const list = document.getElementById('commentList');
+  if(comments.length===0){
+    list.innerHTML='<div style="color:#333;font-size:12px;text-align:center;padding:16px;">Be the first to ask a question or share a thought.</div>';
+    return;
+  }
+  list.innerHTML = comments.map(c=>`
+    <div class="comment-item ${c.role==='tutor'?'tutor-post':c.role==='bot'?'bot-post':''}">
+      <div class="comment-header">
+        <span class="comment-avatar">${c.avatar||'💬'}</span>
+        <span class="comment-author">${c.user}</span>
+        ${c.role==='tutor'?'<span class="tutor-badge">INSTRUCTOR</span>':c.role==='bot'?'<span class="bot-badge">SYSTEM BOT</span>':''}
+        <span class="comment-time">${formatTime(c.time)}</span>
+      </div>
+      <div class="comment-body">${c.msg}</div>
+    </div>
+  `).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+function formatTime(ts){
+  if(!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+/* ═══════════════════════════════════
+   POST COMMENT
+═══════════════════════════════════ */
+function postComment(){
+  const input = document.getElementById('commentInput');
+  const txt = input.value.trim();
+  if(!txt||!student) return;
+
+  let comments = JSON.parse(localStorage.getItem(`comments_${className}`)||'[]');
+  const comment = {
+    user:student.name, avatar:student.avatar||'💬',
+    msg:txt, time:new Date().toISOString(), role:'student'
+  };
+  comments.push(comment);
+  localStorage.setItem(`comments_${className}`, JSON.stringify(comments));
+  input.value='';
+  loadComments();
+  updateProgress(5);
+
+  // Bot response (simulated)
+  setTimeout(()=>{
+    botRespond(txt);
+  }, 2500);
+}
+
+/* ═══════════════════════════════════
+   BOT MONITOR
+═══════════════════════════════════ */
+function botRespond(question){
+  const responses = [
+    'Great question! Encourage yourself to dig deeper into today\'s notes for more context.',
+    'This is an important area. Your instructor will address it in the next session.',
+    'Excellent engagement! Your participation is noted and adds value to the class.',
+    'Keep asking! Curiosity is the engine of growth.',
+    'Well said. Reflect on how this applies to your daily life for maximum impact.',
+    'Your interaction has been recorded. Keep engaging with the material!'
+  ];
+  const r = responses[Math.floor(Math.random()*responses.length)];
+  let comments = JSON.parse(localStorage.getItem(`comments_${className}`)||'[]');
+  comments.push({
+    user:'Academy Bot', avatar:'🤖',
+    msg:r, time:new Date().toISOString(), role:'bot'
+  });
+  localStorage.setItem(`comments_${className}`, JSON.stringify(comments));
+  loadComments();
+  updateProgress(3);
+}
+
+/* ═══════════════════════════════════
+   PROGRESS TRACKER
+═══════════════════════════════════ */
+function updateProgress(inc){
+  if(!student) return;
+  student.progress = Math.min(100, (student.progress||0)+inc);
+  localStorage.setItem(`student_${className}`, JSON.stringify(student));
+  renderProgress(student.progress);
+}
+
+function renderProgress(pct){
+  const circle = document.getElementById('progressCircle');
+  const num = document.getElementById('progressNum');
+  const circumference = 125.6;
+  const offset = circumference - (pct/100)*circumference;
+  circle.style.strokeDashoffset = offset;
+  num.textContent = pct+'%';
+}
+
+/* ═══════════════════════════════════
+   CONTINUE WHERE LEFT OFF
+═══════════════════════════════════ */
+function checkContinue(){
+  if(!student) return;
+  const lastPos = student.lastScroll||0;
+  if(lastPos > 200){
+    document.getElementById('continueBanner').style.display='flex';
+  }
+}
+
+function continueSession(){
+  if(!student) return;
+  const main = document.getElementById('classMain');
+  main.scrollTo(0, student.lastScroll||0);
+  document.getElementById('continueBanner').style.display='none';
+  updateProgress(2);
+}
+
+function scrollToTop(){
+  document.getElementById('classMain').scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════
+   LOAD MEMBERS
+═══════════════════════════════════ */
+function loadMembers(){
+  const members = JSON.parse(localStorage.getItem(`classMembers_${className}`)||'[]');
+  const el = document.getElementById('membersList');
+  if(members.length===0){
+    el.innerHTML='<div style="font-size:11px;color:#333;text-align:center;padding:10px;">No enrolled members.</div>';
+    return;
+  }
+  el.innerHTML = members.slice(0,6).map(m=>`
+    <div class="member-row">
+      <div class="member-avatar">${m.avatar||'👤'}</div>
+      <div>
+        <div class="member-name">${m.name}</div>
+        <div class="member-adm">${m.adm}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════
+   TUTOR: POST TYPE SWITCH
+═══════════════════════════════════ */
+function setPostType(type, btn){
+  currentPostType = type;
+  document.querySelectorAll('.post-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('postTopicArea').style.display = type==='topic'?'block':'none';
+  document.getElementById('postVideoArea').style.display = type==='video'?'block':'none';
+  document.getElementById('postLinkArea').style.display = type==='link'?'block':'none';
+  document.getElementById('postAnnouncementArea').style.display = type==='announcement'?'block':'none';
+}
+
+/* ═══════════════════════════════════
+   TUTOR: PUSH TO CLASS
+═══════════════════════════════════ */
+function pushToClass(){
+  const user = JSON.parse(localStorage.getItem('loggedInUser')||'null');
+  const name = (student&&student.name)||(user&&user.name)||'Instructor';
+
+  let post = { type:currentPostType, postedBy:name, time:new Date().toISOString() };
+
+  if(currentPostType==='topic'){
+    const title = document.getElementById('postTitle').value.trim();
+    const notes = document.getElementById('postNotes').value.trim();
+    if(!title&&!notes){showToast('Please add a title or notes.');return;}
+    post.title = title;
+    post.content = notes;
+    document.getElementById('postTitle').value='';
+    document.getElementById('postNotes').value='';
+  } else if(currentPostType==='video'){
+    const url = document.getElementById('postVideoUrl').value.trim();
+    if(!url){showToast('Please enter a video URL.');return;}
+    post.url = url;
+    document.getElementById('postVideoUrl').value='';
+  } else if(currentPostType==='link'){
+    const url = document.getElementById('postLinkUrl').value.trim();
+    const label = document.getElementById('postLinkLabel').value.trim();
+    if(!url){showToast('Please enter a URL.');return;}
+    post.url = url; post.label = label||url;
+    document.getElementById('postLinkUrl').value='';
+    document.getElementById('postLinkLabel').value='';
+  } else if(currentPostType==='announcement'){
+    const txt = document.getElementById('postAnnouncement').value.trim();
+    if(!txt){showToast('Please enter an announcement.');return;}
+    post.title='Announcement';
+    post.content = txt;
+    document.getElementById('postAnnouncement').value='';
+    // Also save to bot notices
+    let botNotices = JSON.parse(localStorage.getItem('botNotices')||'[]');
+    botNotices.unshift({msg:`📢 ${className}: ${txt}`,time:post.time});
+    localStorage.setItem('botNotices',JSON.stringify(botNotices));
+  }
+
+  let posts = JSON.parse(localStorage.getItem(`classPosts_${className}`)||'[]');
+  posts.push(post);
+  localStorage.setItem(`classPosts_${className}`, JSON.stringify(posts));
+
+  // Add to comment stream as tutor post
+  let comments = JSON.parse(localStorage.getItem(`comments_${className}`)||'[]');
+  comments.push({
+    user:name, avatar:'🌿',
+    msg:`[${currentPostType.toUpperCase()}] ${post.title||post.url||post.content?.substring(0,100)}`,
+    time:post.time, role:'tutor'
+  });
+  localStorage.setItem(`comments_${className}`, JSON.stringify(comments));
+
+  loadContent();
+  loadComments();
+  showToast('Content pushed to class successfully!');
+}
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ═══════════════════════════════════
+   SAVE SCROLL POSITION
+═══════════════════════════════════ */
+function setupScrollSave(){
+  const main = document.getElementById('classMain');
+  main.addEventListener('scroll',()=>{
+    if(!student) return;
+    student.lastScroll = main.scrollTop;
+    // Scroll progress
+    const maxScroll = main.scrollHeight - main.clientHeight;
+    if(maxScroll>0){
+      const pct = Math.floor((main.scrollTop/maxScroll)*100);
+      if(pct>50) updateProgress(1);
+    }
+    localStorage.setItem(`student_${className}`, JSON.stringify(student));
+  });
+}
+
+/* ═══════════════════════════════════
+   AUTO-RELOAD (real-time simulation)
+═══════════════════════════════════ */
+function startAutoReload(){
+  setInterval(()=>{
+    loadContent();
+    loadComments();
+    loadMembers();
+  }, 5000);
+}
+
+/* ═══════════════════════════════════
+   INIT
+═══════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  loadStudent();
+  loadContent();
+  loadComments();
+  loadMembers();
+  checkContinue();
+  setupScrollSave();
+  startAutoReload();
+
+  if(student) renderProgress(student.progress||0);
+});
+</script>
+</body>
+</html>
