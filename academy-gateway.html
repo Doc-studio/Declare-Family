@@ -1,160 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declare Academy | Class Enrollment</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root { --gold: #FFD700; --dark: #050505; --panel: #111; --border: rgba(255,255,255,0.1); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--dark); color: white; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-        }
-        .portal-card {
-            background: var(--panel); border: 1px solid var(--gold);
-            padding: 45px 40px; border-radius: 24px; width: 100%; max-width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); text-align: center;
-            animation: fadeUp 0.5s ease;
-        }
-        @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-        .portal-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
-        .portal-sub { color: #666; font-size: 13px; margin-bottom: 28px; }
-        .tab-group { display: flex; gap: 8px; margin-bottom: 28px; background: #000; padding: 5px; border-radius: 12px; }
-        .tab { flex: 1; padding: 11px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 800; letter-spacing: 1px; transition: 0.3s; color: #555; border: none; background: none; font-family: inherit; }
-        .tab.active { background: var(--gold); color: black; }
-        label { display: block; text-align: left; font-size: 11px; font-weight: 800; color: #555; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-        .field { margin-bottom: 16px; text-align: left; }
-        input, select {
-            width: 100%; padding: 14px 16px;
-            border: 1px solid #222; border-radius: 12px;
-            background: #000; color: white;
-            font-family: inherit; font-size: 14px;
-            outline: none; transition: border-color 0.2s;
-        }
-        input:focus, select:focus { border-color: var(--gold); }
-        input::placeholder { color: #444; }
-        select option { background: #111; }
-        .reg-btn {
-            width: 100%; padding: 15px; border: none; border-radius: 12px;
-            background: var(--gold); color: black; font-weight: 800; cursor: pointer;
-            font-family: inherit; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;
-            transition: 0.2s; margin-top: 8px;
-        }
-        .reg-btn:hover { background: white; }
-        .reg-btn:active { transform: scale(0.98); }
-        .reg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .error-msg { background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.3); color: #ff6b6b; padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; display: none; text-align: left; }
-        .back-link { display: block; margin-top: 20px; color: #444; font-size: 12px; text-decoration: none; }
-        .back-link:hover { color: var(--gold); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Declare Academy | Class Enrollment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#FFD700;--dark:#050505;--panel:#0E0E10;--border:rgba(255,255,255,0.1);--green:#00FF94;--red:#FF3B30;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;background:var(--dark);color:#fff;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+}
+
+/* Animated BG */
+body::before{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse 80% 80% at 20% 20%,rgba(255,215,0,.04) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 60% at 80% 80%,rgba(255,215,0,.03) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+.portal-wrap{width:100%;max-width:460px;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.portal-logo{text-align:center;margin-bottom:28px;}
+.portal-logo span{font-family:'DM Serif Display',serif;font-size:28px;background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.portal-logo p{color:#444;font-size:12px;margin-top:4px;}
+
+.card{background:var(--panel);border:1px solid rgba(255,215,0,.2);padding:36px 32px;border-radius:24px;box-shadow:0 30px 60px rgba(0,0,0,.7);}
+
+/* Tabs */
+.tab-group{display:flex;gap:6px;margin-bottom:28px;background:#000;padding:5px;border-radius:12px;}
+.tab{
+  flex:1;padding:11px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:800;
+  letter-spacing:1px;transition:.25s;color:#444;border:none;background:none;
+  font-family:'Plus Jakarta Sans',sans-serif;text-transform:uppercase;
+}
+.tab.active{background:var(--gold);color:#000;}
+
+/* Steps */
+.step{display:none;}
+.step.active{display:block;}
+.step-indicator{display:flex;gap:8px;margin-bottom:24px;justify-content:center;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:#222;transition:.3s;}
+.step-dot.done{background:var(--gold);}
+
+/* Form fields */
+.field{margin-bottom:16px;}
+label{display:block;font-size:10px;font-weight:800;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+input,select,textarea{
+  width:100%;padding:13px 16px;border:1px solid #222;border-radius:12px;
+  background:#000;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s;resize:vertical;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+input::placeholder,textarea::placeholder{color:#333;}
+select option{background:#111;}
+
+/* Avatar picker */
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px;}
+.avatar-opt{
+  width:100%;aspect-ratio:1;background:#111;border:2px solid #222;border-radius:10px;
+  font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;
+}
+.avatar-opt:hover{border-color:var(--gold);}
+.avatar-opt.selected{border-color:var(--gold);background:rgba(255,215,0,.1);}
+
+/* Buttons */
+.btn{
+  width:100%;padding:15px;border:none;border-radius:12px;background:var(--gold);
+  color:#000;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;letter-spacing:1px;text-transform:uppercase;transition:.2s;margin-top:8px;
+}
+.btn:hover{background:#fff;}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-outline{background:transparent;border:1px solid #333;color:#888;margin-top:8px;}
+.btn-outline:hover{background:#111;color:#fff;}
+
+.msg{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;}
+.msg.error{background:rgba(255,59,48,.1);border:1px solid rgba(255,59,48,.3);color:#FF6B6B;}
+.msg.success{background:rgba(0,255,148,.1);border:1px solid rgba(0,255,148,.3);color:var(--green);}
+
+/* Admission display */
+.adm-display{
+  background:linear-gradient(135deg,#111,#0a0a00);border:1px solid var(--gold);
+  border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;
+}
+.adm-number{font-family:monospace;font-size:24px;font-weight:800;color:var(--gold);letter-spacing:4px;}
+.adm-class{font-size:12px;color:#666;margin-top:6px;}
+
+.back-link{display:block;text-align:center;margin-top:20px;color:#333;font-size:12px;text-decoration:none;}
+.back-link:hover{color:var(--gold);}
+
+@media(max-width:480px){
+  .card{padding:24px 18px;}
+  .portal-wrap{max-width:100%;}
+}
+</style>
 </head>
 <body>
 
-<div class="portal-card">
-    <div class="portal-title" id="portalTitle">Class Enrollment</div>
-    <p class="portal-sub" id="portalSub">Enter your details to join the session.</p>
+<div class="portal-wrap">
+  <div class="portal-logo">
+    <span>Declare Academy</span>
+    <p>THE TRAINING GROUND · CLASS ENROLLMENT</p>
+  </div>
 
+  <div class="card">
     <div class="tab-group">
-        <button class="tab active" id="learnerTab" onclick="switchMode('learner')">LEARNER</button>
-        <button class="tab" id="tutorTab" onclick="switchMode('tutor')">TUTOR</button>
+      <button class="tab active" id="learnerTab" onclick="setMode('learner')">LEARNER</button>
+      <button class="tab" id="tutorTab" onclick="setMode('tutor')">TUTOR APPLICATION</button>
     </div>
 
-    <div class="error-msg" id="errorMsg"></div>
+    <div class="step-indicator">
+      <div class="step-dot done" id="dot0"></div>
+      <div class="step-dot" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+    </div>
 
-    <div class="field">
+    <div class="msg error" id="errorMsg"></div>
+    <div class="msg success" id="successMsg"></div>
+
+    <!-- STEP 1: Basic Info -->
+    <div class="step active" id="step0">
+      <div class="field">
         <label>Full Name</label>
         <input type="text" id="regName" placeholder="Your full name">
-    </div>
-    <div class="field">
+      </div>
+      <div class="field">
         <label>Select Class</label>
         <select id="regClass">
-            <option value="Financial Growth">Financial Growth Class</option>
-            <option value="Spiritual Growth">Spiritual Growth Class</option>
-            <option value="Psychology">Psychology Class</option>
-            <option value="Leadership">Leadership Class</option>
+          <option value="Vertical Growth">Vertical Growth & Alignment</option>
+          <option value="Fiscal Kingdom">Fiscal Kingdom Stewardship</option>
+          <option value="Inner Psychology">Psychology 101: The Inner Man</option>
+          <option value="Sovereign Leadership">Sovereign Leadership Training</option>
+          <option value="Social Advancement">Social Life Advancement</option>
+          <option value="Creative Expression">Creative Expression & Identity</option>
         </select>
+      </div>
+      <button class="btn" onclick="goStep1()">CONTINUE →</button>
+      <a href="academy.html" class="back-link">← Back to Academy</a>
     </div>
 
-    <button class="reg-btn" id="regBtn" onclick="processRegistration()">REGISTER NOW</button>
+    <!-- STEP 2: Profile Setup -->
+    <div class="step" id="step1">
+      <p style="font-size:12px;color:#555;margin-bottom:18px;">Set up your class profile. This helps your instructor and classmates know you.</p>
 
-    <a href="academy.html" class="back-link">← Back to Academy</a>
-</div>
+      <div class="field">
+        <label>Choose Avatar</label>
+        <div class="avatar-grid" id="avatarGrid">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div class="field">
+        <label>What describes you best?</label>
+        <select id="regRole">
+          <option value="">— Select —</option>
+          <option value="Student">Student</option>
+          <option value="Young Professional">Young Professional</option>
+          <option value="Entrepreneur">Entrepreneur</option>
+          <option value="Minister / Faith Worker">Minister / Faith Worker</option>
+          <option value="Artist / Creative">Artist / Creative</option>
+          <option value="Parent / Family Head">Parent / Family Head</option>
+          <option value="Researcher / Academic">Researcher / Academic</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Learning Goal (optional)</label>
+        <textarea id="regGoal" rows="2" placeholder="What do you hope to gain from this class?"></textarea>
+      </div>
+
+      <div class="field">
+        <label>City / Country</label>
+        <input type="text" id="regLocation" placeholder="e.g. Nairobi, Kenya">
+      </div>
+
+      <button class="btn" onclick="completeRegistration()">COMPLETE REGISTRATION</button>
+      <button class="btn btn-outline" onclick="goBack()">← BACK</button>
+    </div>
+
+    <!-- STEP 3: Success -->
+    <div class="step" id="step2">
+      <div class="adm-display">
+        <div style="font-size:10px;font-weight:800;color:#555;letter-spacing:2px;margin-bottom:10px;">ADMISSION NUMBER</div>
+        <div class="adm-number" id="admDisplay">—</div>
+        <div class="adm-class" id="admClassDisplay">—</div>
+      </div>
+      <p style="font-size:13px;color:#888;text-align:center;margin-bottom:20px;line-height:1.6;">Your admission number has been recorded. Welcome to the class. Keep this number safe.</p>
+      <button class="btn" onclick="enterClassroom()">ENTER CLASSROOM →</button>
+    </div>
+
+  </div><!-- .card -->
+</div><!-- .portal-wrap -->
 
 <script>
-    let currentMode = 'learner';
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let currentMode = 'learner';
+let currentStep = 0;
+let selectedAvatar = '🎓';
+const AVATARS = ['🎓','💡','🔥','⚡','🌟','👑','🚀','🏆','💎','🌍','🙏','🎯'];
 
-    function switchMode(mode) {
-        currentMode = mode;
-        document.getElementById('learnerTab').classList.toggle('active', mode === 'learner');
-        document.getElementById('tutorTab').classList.toggle('active', mode === 'tutor');
-        document.getElementById('portalTitle').textContent = mode === 'learner' ? 'Class Enrollment' : 'Tutor Application';
-        document.getElementById('portalSub').textContent = mode === 'learner'
-            ? 'Enter your details to join the session.'
-            : 'Apply to teach. A Pioneer Leader will review your application.';
-    }
+/* ═══════════════════════════════════
+   URL PARAMS
+═══════════════════════════════════ */
+const params = new URLSearchParams(window.location.search);
+const preClass = params.get('class');
+if(preClass){
+  const sel = document.getElementById('regClass');
+  // match by value
+  for(let i=0;i<sel.options.length;i++){
+    if(sel.options[i].value===preClass){sel.selectedIndex=i;break;}
+  }
+  // Check if already registered — skip directly to classroom
+  if(localStorage.getItem(`isRegistered_${preClass}`)==='true'){
+    window.location.href=`classroom.html?class=${encodeURIComponent(preClass)}`;
+  }
+}
 
-    function generateTitle(className, name) {
-        const titles = {
-            "Financial Growth": "Economist",
-            "Spiritual Growth": "Steward",
-            "Psychology": "Architect",
-            "Leadership": "Sovereign"
-        };
-        return `${titles[className] || "Pioneer"} ${name}`;
-    }
+/* ═══════════════════════════════════
+   RENDER AVATARS
+═══════════════════════════════════ */
+function renderAvatars(){
+  const grid = document.getElementById('avatarGrid');
+  grid.innerHTML = AVATARS.map((a,i)=>`
+    <div class="avatar-opt ${i===0?'selected':''}" onclick="selectAvatar('${a}',this)">${a}</div>
+  `).join('');
+}
+function selectAvatar(a, el){
+  selectedAvatar = a;
+  document.querySelectorAll('.avatar-opt').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected');
+}
 
-    function showError(msg) {
-        const el = document.getElementById('errorMsg');
-        el.textContent = msg;
-        el.style.display = 'block';
-    }
+/* ═══════════════════════════════════
+   MODE SWITCH
+═══════════════════════════════════ */
+function setMode(mode){
+  currentMode = mode;
+  document.getElementById('learnerTab').classList.toggle('active', mode==='learner');
+  document.getElementById('tutorTab').classList.toggle('active', mode==='tutor');
+}
 
-    function processRegistration() {
-        const name = document.getElementById('regName').value.trim();
-        const className = document.getElementById('regClass').value;
-        const btn = document.getElementById('regBtn');
+/* ═══════════════════════════════════
+   STEP NAVIGATION
+═══════════════════════════════════ */
+function showStep(n){
+  document.querySelectorAll('.step').forEach((el,i)=>{
+    el.classList.toggle('active',i===n);
+  });
+  document.querySelectorAll('.step-dot').forEach((el,i)=>{
+    el.classList.toggle('done',i<=n);
+  });
+  currentStep=n;
+}
 
-        document.getElementById('errorMsg').style.display = 'none';
+function showError(msg){
+  const el=document.getElementById('errorMsg');
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',4000);
+}
 
-        if (!name) { showError('Please enter your full name.'); return; }
+function goStep1(){
+  const name=document.getElementById('regName').value.trim();
+  const cls=document.getElementById('regClass').value;
+  if(!name){showError('Please enter your full name.');return;}
 
-        btn.disabled = true;
-        btn.textContent = 'Processing...';
+  // If already registered for this class, go directly
+  if(localStorage.getItem(`isRegistered_${cls}`)==='true'){
+    window.location.href=`classroom.html?class=${encodeURIComponent(cls)}`;
+    return;
+  }
 
-        const requestData = {
-            id: Date.now(),
-            name: name,
-            class: className,
-            mode: currentMode,
-            title: generateTitle(className, name),
-            status: currentMode === 'learner' ? 'approved' : 'pending',
-            timestamp: new Date().toISOString()
-        };
+  renderAvatars();
+  showStep(1);
+}
 
-        setTimeout(() => {
-            if (currentMode === 'learner') {
-                // Store enrollment
-                let enrolled = JSON.parse(localStorage.getItem(`enrolled_${className}`)) || [];
-                enrolled.push(requestData);
-                localStorage.setItem(`enrolled_${className}`, JSON.stringify(enrolled));
-                localStorage.setItem(`isRegistered_${className}`, 'true');
+function goBack(){showStep(0);}
 
-                alert(`Welcome, ${requestData.title}! Your seat in "${className}" is confirmed.`);
-                window.location.href = 'academy.html';
-            } else {
-                // Queue tutor application for leader review
-                let adminNotify = JSON.parse(localStorage.getItem('adminNotifications')) || [];
-                adminNotify.push(requestData);
-                localStorage.setItem('adminNotifications', JSON.stringify(adminNotify));
+/* ═══════════════════════════════════
+   GENERATE ADMISSION NUMBER
+═══════════════════════════════════ */
+function generateAdmission(cls){
+  const prefix = cls.replace(/\s/g,'').substring(0,3).toUpperCase();
+  const ts = Date.now().toString().slice(-6);
+  const rand = Math.floor(100+Math.random()*900);
+  return `${prefix}-${ts}-${rand}`;
+}
 
-                alert('Tutor Application Received. A Pioneer Leader will review your credentials shortly.');
-                window.location.href = 'hub.html';
-            }
-        }, 400);
-    }
+/* ═══════════════════════════════════
+   COMPLETE REGISTRATION
+═══════════════════════════════════ */
+function completeRegistration(){
+  const name = document.getElementById('regName').value.trim();
+  const cls = document.getElementById('regClass').value;
+  const role = document.getElementById('regRole').value;
+  const goal = document.getElementById('regGoal').value.trim();
+  const location = document.getElementById('regLocation').value.trim();
+
+  const admission = generateAdmission(cls);
+
+  const profile = {
+    name, class:cls, adm:admission,
+    avatar:selectedAvatar,
+    role:role||'Student',
+    goal, location,
+    progress:0, lastScroll:0,
+    joinedAt: new Date().toISOString()
+  };
+
+  if(currentMode==='learner'){
+    // Save student profile
+    localStorage.setItem(`student_${cls}`, JSON.stringify(profile));
+    localStorage.setItem(`isRegistered_${cls}`, 'true');
+
+    // Update enrolled list
+    let enrolled = JSON.parse(localStorage.getItem('enrolledClasses')||'[]');
+    if(!enrolled.includes(cls)){enrolled.push(cls);}
+    localStorage.setItem('enrolledClasses', JSON.stringify(enrolled));
+
+    // Add to enrolled list for this class (for leader monitoring)
+    let classMembers = JSON.parse(localStorage.getItem(`classMembers_${cls}`)||'[]');
+    classMembers.push({name,adm:admission,avatar:selectedAvatar,role:role||'Student',joinedAt:profile.joinedAt});
+    localStorage.setItem(`classMembers_${cls}`, JSON.stringify(classMembers));
+
+    document.getElementById('admDisplay').textContent = admission;
+    document.getElementById('admClassDisplay').textContent = cls;
+    showStep(2);
+
+  } else {
+    // Tutor application
+    let apps = JSON.parse(localStorage.getItem('adminNotifications')||'[]');
+    const app = {
+      id:Date.now(), name, class:cls, adm:admission,
+      avatar:selectedAvatar, role:'Tutor Applicant',
+      goal, location, mode:'tutor',
+      title:name, status:'pending',
+      appliedAt: new Date().toISOString()
+    };
+    apps.unshift(app);
+    localStorage.setItem('adminNotifications', JSON.stringify(apps));
+
+    // Notify tutor their application is pending
+    localStorage.setItem(`tutorApp_${name}_${cls}`, JSON.stringify({...app,status:'pending'}));
+
+    document.getElementById('successMsg').textContent = 'Tutor application submitted. You will be notified upon approval.';
+    document.getElementById('successMsg').style.display='block';
+    setTimeout(()=>{window.location.href='academy.html';},3000);
+  }
+}
+
+/* ═══════════════════════════════════
+   ENTER CLASSROOM
+═══════════════════════════════════ */
+function enterClassroom(){
+  const cls = document.getElementById('regClass').value;
+  window.location.href = `classroom.html?class=${encodeURIComponent(cls)}`;
+}
 </script>
 </body>
 </html>
