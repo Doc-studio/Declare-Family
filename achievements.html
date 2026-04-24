@@ -1,63 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Past Achievements | Declare Family</title>
-    <style>
-        body { background: #0a0a0a; color: white; font-family: 'Segoe UI', sans-serif; padding: 40px; }
-        .timeline { max-width: 800px; margin: 0 auto; position: relative; padding-left: 30px; border-left: 2px solid #222; }
-        .milestone { position: relative; margin-bottom: 50px; padding-left: 20px; }
-        .milestone::before {
-            content: "🏆"; position: absolute; left: -45px; top: 0; 
-            background: #0a0a0a; padding: 5px; font-size: 20px;
-        }
-        .year { color: gold; font-weight: bold; font-size: 1.2rem; }
-        .achievement-box { 
-            background: #111; padding: 25px; border-radius: 10px; border: 1px solid #1a1a1a; margin-top: 10px;
-            transition: 0.3s;
-        }
-        .achievement-box:hover { border-color: gold; background: #161616; }
-        h3 { margin-top: 0; color: #fff; }
-        .stats { display: inline-block; background: gold; color: black; padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hall of Achievements | Declare Family</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="declare-db.js"></script>
+<style>
+:root{
+  --gold:#FFD700;--dark:#050505;--panel:#0E0E10;
+  --border:rgba(255,255,255,0.09);--green:#00FF94;--red:#FF3B30;
+  --blue:#4A9EFF;--purple:#A855F7;--dim:#888;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+body{background:var(--dark);color:#f0f0f0;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;}
+
+.topbar{background:#000;border-bottom:1px solid var(--border);padding:0 5%;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-brand{font-weight:800;font-size:13px;color:var(--gold);letter-spacing:1px;}
+.topbar-nav a{padding:8px 14px;border-radius:8px;text-decoration:none;color:#666;font-size:12px;font-weight:700;transition:.2s;margin-left:4px;}
+.topbar-nav a:hover{color:var(--gold);background:rgba(255,215,0,.06);}
+
+.hero{
+  text-align:center;padding:60px 5% 40px;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(255,215,0,.06) 0%,transparent 70%);
+}
+.hero::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:var(--border);}
+.hero-label{font-size:9px;font-weight:800;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.2rem,6vw,3.6rem);margin-bottom:12px;background:linear-gradient(135deg,#fff 30%,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{color:var(--dim);font-size:14px;max-width:500px;margin:0 auto 20px;}
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;}
+.hero-stat span{font-size:28px;font-weight:800;color:var(--gold);display:block;}
+.hero-stat p{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:1.5px;}
+
+.container{max-width:860px;margin:0 auto;padding:48px 5%;}
+
+/* LEADER PANEL */
+.leader-panel{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:26px;margin-bottom:40px;display:none;}
+.leader-panel h3{color:var(--gold);font-size:14px;font-weight:800;margin-bottom:4px;}
+.leader-panel p{color:#555;font-size:12px;margin-bottom:16px;}
+.ldr-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.ldr-input{flex:1;min-width:160px;background:#000;border:1px solid #222;border-radius:10px;color:#fff;padding:11px 14px;font-family:inherit;font-size:13px;outline:none;transition:.2s;}
+.ldr-input:focus{border-color:var(--gold);}
+textarea.ldr-input{resize:vertical;min-height:80px;width:100%;flex:none;}
+select.ldr-input{cursor:pointer;}
+.push-btn{background:var(--gold);color:#000;border:none;padding:11px 22px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;}
+.push-btn:hover{background:#fff;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:36px;}
+.timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--gold),var(--purple),var(--blue));border-radius:2px;}
+
+.milestone{position:relative;margin-bottom:44px;animation:fadeUp .5s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.milestone-marker{
+  position:absolute;left:-45px;top:4px;width:20px;height:20px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;background:var(--dark);border:2px solid var(--gold);
+  box-shadow:0 0 12px rgba(255,215,0,.3);
+}
+.milestone-year{
+  font-size:10px;font-weight:800;color:var(--gold);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+
+.achievement-box{
+  background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:24px;
+  transition:.3s;position:relative;overflow:hidden;
+}
+.achievement-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
+.achievement-box:hover{border-color:rgba(255,215,0,.3);background:#121215;transform:translateX(4px);}
+
+.ach-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;}
+.ach-emoji{font-size:28px;flex-shrink:0;width:48px;height:48px;background:rgba(255,215,0,.06);border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.ach-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.2);display:inline-block;margin-bottom:6px;}
+.ach-title{font-family:'DM Serif Display',serif;font-size:19px;color:#fff;margin-bottom:0;}
+.ach-body{color:#888;font-size:13px;line-height:1.65;margin-bottom:12px;}
+.ach-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.ach-date{font-size:11px;color:#444;}
+.del-btn{background:none;border:1px solid #222;color:#444;padding:5px 12px;border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;display:none;}
+.del-btn:hover{border-color:var(--red);color:var(--red);}
+.leader-item .del-btn{display:inline-block;}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:#333;}
+.empty .empty-icon{font-size:56px;margin-bottom:16px;}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;padding:12px 20px;border-radius:12px;font-weight:700;font-size:13px;transform:translateY(20px);opacity:0;transition:.3s;z-index:600;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:600px){
+  .timeline{padding-left:26px;}
+  .milestone-marker{left:-34px;width:16px;height:16px;font-size:10px;}
+  .container{padding:32px 14px;}
+  .hero-stats{gap:18px;}
+}
+</style>
 </head>
 <body>
-    <div style="text-align: center; margin-bottom: 60px;">
-        <h1 style="color: gold; font-size: 2.5rem;">🏆 Hall of Achievements</h1>
-        <p>A record of our faithfulness and growth.</p>
+
+<nav class="topbar">
+  <span class="topbar-brand">🏆 HALL OF ACHIEVEMENTS</span>
+  <div class="topbar-nav">
+    <a href="hub.html">🌐 Hub</a>
+    <a href="projects.html">🚀 Projects</a>
+    <a href="leadership.html" id="leaderLink" style="display:none;">🛡️ Command</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">Declare Family</div>
+  <h1>Hall of Achievements</h1>
+  <p>A living record of our faithfulness, growth, and the ground we have taken for the Kingdom.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span id="statTotal">0</span><p>Milestones</p></div>
+    <div class="hero-stat"><span id="statYear">2026</span><p>Current Year</p></div>
+    <div class="hero-stat"><span>∞</span><p>Legacy</p></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- LEADER PANEL -->
+  <div class="leader-panel" id="leaderPanel">
+    <h3>🛡️ Leadership: Add Achievement</h3>
+    <p>Record a new family milestone or breakthrough. It will appear in the timeline immediately.</p>
+    <div class="ldr-row">
+      <input type="text" class="ldr-input" id="achTitle" placeholder="Achievement title *">
+      <input type="text" class="ldr-input" id="achEmoji" placeholder="Emoji" style="max-width:80px;">
+      <input type="text" class="ldr-input" id="achBadge" placeholder="Badge label (e.g. MILESTONE)">
     </div>
-
-    <div class="timeline">
-        <div class="milestone">
-            <div class="year">Jan 2026</div>
-            <div class="achievement-box">
-                <span class="stats">BROADCAST MILESTONE</span>
-                <h3>45-Hour Marathon Livestream</h3>
-                <p>Successfully completed a record-breaking digital broadcast session, reaching thousands and archiving critical wisdom for the family.</p>
-            </div>
-        </div>
-
-        <div class="milestone">
-            <div class="year">Feb 2026</div>
-            <div class="achievement-box">
-                <span class="stats">STRATEGIC PARTNERSHIP</span>
-                <h3>GrowthCraft Agencies Merger</h3>
-                <p>Formalized a business partnership with GrowthCraft to expand media production capabilities for all members.</p>
-            </div>
-        </div>
-
-        <div class="milestone">
-            <div class="year">2025</div>
-            <div class="achievement-box">
-                <span class="stats">FOUNDATION</span>
-                <h3>Smart Elites Beauty Launch</h3>
-                <p>Successfully established the first economic pillar of the family, creating a model for youth-led entrepreneurship.</p>
-            </div>
-        </div>
+    <textarea class="ldr-input" id="achBody" placeholder="Describe this achievement in detail..."></textarea>
+    <div class="ldr-row" style="margin-top:10px;">
+      <input type="text" class="ldr-input" id="achDate" placeholder="Date (e.g. Jan 2026)">
+      <select class="ldr-input" id="achType">
+        <option value="milestone">Milestone</option>
+        <option value="partnership">Strategic Partnership</option>
+        <option value="launch">Product / Project Launch</option>
+        <option value="foundation">Foundation</option>
+        <option value="broadcast">Broadcast Achievement</option>
+        <option value="community">Community Impact</option>
+      </select>
+      <button class="push-btn" onclick="addAchievement()">ADD TO HALL ↑</button>
     </div>
+  </div>
 
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="hub.html" style="color: gold; text-decoration: none;">← Return to Hub</a>
-    </div>
+  <div class="timeline" id="timeline"></div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var u = DB.currentUser();
+var isLeader = DB.isLeader(u);
+
+/* DEFAULTS */
+var DEFAULTS = [
+  {id:1,emoji:'📡',badge:'BROADCAST MILESTONE',title:'45-Hour Marathon Livestream',body:'Successfully completed a record-breaking digital broadcast session, reaching thousands and archiving critical wisdom for the family.',date:'Jan 2026',type:'broadcast',time:1738368000000},
+  {id:2,emoji:'🤝',badge:'STRATEGIC PARTNERSHIP',title:'GrowthCraft Agencies Merger',body:'Formalized a business partnership with GrowthCraft to expand media production capabilities for all members.',date:'Feb 2026',type:'partnership',time:1741046400000},
+  {id:3,emoji:'💄',badge:'FOUNDATION',title:'Smart Elites Beauty Launch',body:'Successfully established the first economic pillar of the family, creating a model for youth-led entrepreneurship within the Declare ecosystem.',date:'2025',type:'launch',time:1704067200000},
+];
+
+function seedDefaults(){
+  if(!DB.getAchievements().length){ DB.set(DB.KEYS.achievements,DEFAULTS); }
+}
+
+function initUI(){
+  if(isLeader){
+    document.getElementById('leaderPanel').style.display='block';
+    document.getElementById('leaderLink').style.display='inline';
+  }
+}
+
+function renderTimeline(){
+  var achievements = DB.getAchievements();
+  var el = document.getElementById('timeline');
+  document.getElementById('statTotal').textContent = achievements.length;
+
+  if(!achievements.length){
+    el.innerHTML='<div class="empty"><div class="empty-icon">🏆</div><p>No achievements recorded yet.<br>Leadership can add milestones above.</p></div>';
+    return;
+  }
+
+  var COLORS = {milestone:'var(--gold)',partnership:'var(--green)',launch:'var(--blue)',foundation:'var(--purple)',broadcast:'var(--amber)',community:'var(--green)'};
+
+  el.innerHTML = achievements.map(function(a){
+    var color = COLORS[a.type] || 'var(--gold)';
+    return '<div class="milestone" id="ach-'+a.id+'">'+
+      '<div class="milestone-marker" style="border-color:'+color+';box-shadow:0 0 10px '+color+'33;">🏆</div>'+
+      '<div class="milestone-year">'+DB.esc(a.date||'')+'<span style="width:40px;height:1px;background:'+color+';display:inline-block;opacity:.4;"></span></div>'+
+      '<div class="achievement-box'+(isLeader?' leader-item':'')+'">'+
+        '<div class="ach-header">'+
+          '<div class="ach-emoji">'+(a.emoji||'🏆')+'</div>'+
+          '<div>'+
+            '<span class="ach-badge" style="background:'+color+'22;color:'+color+';border-color:'+color+'44;">'+DB.esc(a.badge||a.type||'ACHIEVEMENT')+'</span>'+
+            '<div class="ach-title">'+DB.esc(a.title)+'</div>'+
+          '</div>'+
+        '</div>'+
+        '<p class="ach-body">'+DB.esc(a.body||a.desc||'')+'</p>'+
+        '<div class="ach-footer">'+
+          '<span class="ach-date">'+(a.time?DB.fmtTime(a.time):(a.date||''))+'</span>'+
+          (isLeader?'<button class="del-btn" onclick="removeAchievement('+a.id+')">✕ Remove</button>':'')+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+window.addAchievement = function(){
+  var title = (document.getElementById('achTitle').value||'').trim();
+  var body  = (document.getElementById('achBody').value||'').trim();
+  if(!title||!body){showToast('Title and description are required.','#FF3B30');return;}
+  DB.pushAchievement({
+    emoji: document.getElementById('achEmoji').value||'🏆',
+    badge: (document.getElementById('achBadge').value||'Achievement').toUpperCase(),
+    title: title, body: body,
+    date:  document.getElementById('achDate').value||new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'}),
+    type:  document.getElementById('achType').value||'milestone',
+  });
+  ['achTitle','achEmoji','achBadge','achBody','achDate'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('achType').selectedIndex=0;
+  renderTimeline();
+  showToast('Achievement added to the Hall!');
+};
+
+window.removeAchievement = function(id){
+  if(!confirm('Remove this achievement from the Hall?'))return;
+  DB.deleteAchievement(id);
+  renderTimeline();
+  showToast('Achievement removed.');
+};
+
+function showToast(msg,color){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color||'var(--green)';t.style.color=color?'#fff':'#000';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+seedDefaults();
+initUI();
+renderTimeline();
+setInterval(renderTimeline,10000);
+</script>
 </body>
 </html>
