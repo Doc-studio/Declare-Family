@@ -1,72 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Active Projects | Declare Family</title>
-    <style>
-        :root { --gold: #ffd700; --dark: #0a0a0a; --card: #121212; }
-        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; padding: 40px; }
-        .project-container { max-width: 900px; margin: 0 auto; }
-        .project-card { 
-            background: var(--card); 
-            border: 1px solid #222; 
-            border-radius: 15px; 
-            padding: 30px; 
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        .project-card::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold);
-        }
-        h2 { color: var(--gold); margin-top: 0; }
-        .progress-bar { 
-            background: #222; 
-            height: 12px; 
-            border-radius: 10px; 
-            margin: 20px 0; 
-            overflow: hidden; 
-        }
-        .progress-fill { background: var(--gold); height: 100%; transition: 1s ease-in-out; }
-        .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; font-size: 13px; color: #888; }
-        .btn-involved { 
-            background: transparent; border: 1px solid var(--gold); color: var(--gold); 
-            padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px;
-        }
-        .btn-involved:hover { background: var(--gold); color: black; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Active Projects | Declare Family</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="declare-db.js"></script>
+<style>
+:root{
+  --gold:#FFD700;--gold2:#FFA500;--dark:#050505;--panel:#0E0E10;
+  --border:rgba(255,255,255,0.09);--green:#00FF94;--red:#FF3B30;
+  --blue:#4A9EFF;--amber:#FF9F43;--dim:#888;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+body{background:var(--dark);color:#f0f0f0;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;}
+
+.topbar{background:#000;border-bottom:1px solid var(--border);padding:0 5%;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-brand{font-weight:800;font-size:13px;color:var(--gold);letter-spacing:1px;}
+.topbar-nav{display:flex;gap:6px;}
+.topbar-nav a{padding:8px 14px;border-radius:8px;text-decoration:none;color:#666;font-size:12px;font-weight:700;transition:.2s;}
+.topbar-nav a:hover{color:var(--gold);background:rgba(255,215,0,.06);}
+
+.hero{text-align:center;padding:50px 5% 36px;border-bottom:1px solid var(--border);}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3rem);background:linear-gradient(90deg,#fff,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;}
+.hero p{color:var(--dim);font-size:14px;max-width:520px;margin:0 auto;}
+
+.container{max-width:960px;margin:0 auto;padding:40px 5%;}
+
+/* LEADER PANEL */
+.leader-panel{background:linear-gradient(135deg,#0a0a0a,#0d0d00);border:1px solid rgba(255,215,0,.25);border-radius:20px;padding:28px;margin-bottom:36px;display:none;}
+.leader-panel h3{color:var(--gold);font-size:15px;font-weight:800;margin-bottom:4px;}
+.leader-panel p{color:#555;font-size:12px;margin-bottom:18px;}
+.ldr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){.ldr-grid{grid-template-columns:1fr;}}
+.ldr-input{width:100%;background:#000;border:1px solid #222;border-radius:10px;color:#fff;padding:11px 14px;font-family:inherit;font-size:13px;outline:none;transition:.2s;margin-bottom:10px;}
+.ldr-input:focus{border-color:var(--gold);}
+.ldr-input.full{grid-column:1/-1;}
+textarea.ldr-input{resize:vertical;min-height:80px;}
+.ldr-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px;}
+.push-btn{background:var(--gold);color:#000;border:none;padding:11px 22px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;text-transform:uppercase;letter-spacing:.5px;}
+.push-btn:hover{background:#fff;}
+.push-btn.danger{background:transparent;border:1px solid var(--red);color:var(--red);}
+.push-btn.danger:hover{background:var(--red);color:#fff;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.filter-pill{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:none;color:#666;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;transition:.2s;}
+.filter-pill:hover,.filter-pill.active{background:rgba(255,215,0,.08);border-color:var(--gold);color:var(--gold);}
+
+/* PROJECT CARDS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
+.project-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:26px;position:relative;overflow:hidden;transition:.3s;}
+.project-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold);}
+.project-card:hover{border-color:rgba(255,215,0,.3);transform:translateY(-4px);}
+.project-card.planning::before{background:var(--blue);}
+.project-card.active::before{background:var(--green);}
+.project-card.completed::before{background:#888;}
+
+.proj-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:10px;}
+.proj-emoji{font-size:28px;flex-shrink:0;}
+.proj-status{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px;}
+.status-active{background:rgba(0,255,148,.1);color:var(--green);border:1px solid rgba(0,255,148,.25);}
+.status-planning{background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.25);}
+.status-completed{background:rgba(255,255,255,.05);color:#666;border:1px solid #222;}
+.status-paused{background:rgba(255,159,67,.1);color:var(--amber);border:1px solid rgba(255,159,67,.25);}
+
+.proj-title{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:8px;color:#fff;}
+.proj-desc{color:#777;font-size:13px;line-height:1.6;margin-bottom:18px;}
+.progress-bar{background:#111;height:8px;border-radius:8px;overflow:hidden;margin-bottom:10px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:8px;transition:width .8s ease;}
+.proj-pct{font-size:11px;color:var(--gold);font-weight:800;text-align:right;margin-bottom:14px;}
+.meta-row{display:flex;gap:16px;font-size:11px;color:#555;margin-bottom:18px;flex-wrap:wrap;}
+.meta-row span strong{color:#888;}
+.proj-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.proj-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--gold);color:var(--gold);background:none;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s;}
+.proj-btn:hover{background:var(--gold);color:#000;}
+.proj-btn.del{border-color:var(--red);color:var(--red);display:none;}
+.proj-btn.del:hover{background:var(--red);color:#fff;}
+.leader-card .proj-btn.del{display:inline-block;}
+
+.empty{text-align:center;padding:60px 20px;color:#333;}
+.empty .empty-icon{font-size:48px;margin-bottom:16px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;padding:12px 20px;border-radius:12px;font-weight:700;font-size:13px;transform:translateY(20px);opacity:0;transition:.3s;z-index:600;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+@media(max-width:600px){
+  .projects-grid{grid-template-columns:1fr;}
+  .topbar-nav a:not(.keep){display:none;}
+  .container{padding:28px 14px;}
+}
+</style>
 </head>
 <body>
-    <div class="project-container">
-        <h1 style="border-left: 5px solid gold; padding-left: 15px;">🚀 Active Projects</h1>
-        <p style="color: #888; margin-bottom: 40px;">Current initiatives driving the Declare Family vision forward.</p>
 
-        <div class="project-card">
-            <h2>Project Uplift: Civic Support</h2>
-            <p>Providing stationery and mentorship to 100+ students in local community schools.</p>
-            <div class="progress-bar"><div class="progress-fill" style="width: 85%;"></div></div>
-            <div class="meta-grid">
-                <div><strong>Status:</strong> Execution Phase</div>
-                <div><strong>Lead:</strong> Goshen Faithful</div>
-                <div><strong>Target:</strong> June 2026</div>
-            </div>
-            <button class="btn-involved">Get Involved</button>
-        </div>
+<nav class="topbar">
+  <span class="topbar-brand">🚀 DECLARE PROJECTS</span>
+  <div class="topbar-nav">
+    <a href="hub.html">🌐 Hub</a>
+    <a href="academy.html">🎓 Academy</a>
+    <a href="achievements.html">🏆 Achievements</a>
+    <a href="leadership.html" class="keep" id="leaderLink" style="display:none;">🛡️ Command</a>
+  </div>
+</nav>
 
-        <div class="project-card">
-            <h2>Digital Literacy Drive</h2>
-            <p>Training members on media strategy, SEO, and content creation for modern leadership.</p>
-            <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
-            <div class="meta-grid">
-                <div><strong>Status:</strong> Curriculum Dev</div>
-                <div><strong>Lead:</strong> Media Team</div>
-                <div><strong>Target:</strong> August 2026</div>
-            </div>
-            <button class="btn-involved">Register as Tutor</button>
-        </div>
+<div class="hero">
+  <h1>Active Projects</h1>
+  <p>Current initiatives driving the Declare Family vision forward. Every project is a declaration in motion.</p>
+</div>
+
+<div class="container">
+
+  <!-- LEADER PANEL -->
+  <div class="leader-panel" id="leaderPanel">
+    <h3>🛡️ Leadership: Manage Projects</h3>
+    <p>Post new projects or update existing ones. Changes appear immediately for all members.</p>
+    <div class="ldr-grid">
+      <input type="text" class="ldr-input" id="newTitle" placeholder="Project title *">
+      <input type="text" class="ldr-input" id="newEmoji" placeholder="Emoji (e.g. 🌍)" style="max-width:100px;">
+      <textarea class="ldr-input full" id="newDesc" placeholder="Project description *"></textarea>
+      <input type="text" class="ldr-input" id="newLead" placeholder="Project lead name">
+      <input type="text" class="ldr-input" id="newTarget" placeholder="Target date (e.g. June 2026)">
+      <input type="number" class="ldr-input" id="newProgress" placeholder="Progress % (0-100)" min="0" max="100">
+      <select class="ldr-input" id="newStatus">
+        <option value="active">Active / In Execution</option>
+        <option value="planning">Planning Phase</option>
+        <option value="paused">Paused</option>
+        <option value="completed">Completed</option>
+      </select>
+      <input type="text" class="ldr-input" id="newCategory" placeholder="Category (e.g. Community, Media)">
     </div>
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="hub.html" style="color: gold; text-decoration: none;">← Return to Hub</a>
+    <div class="ldr-row">
+      <button class="push-btn" onclick="addProject()">ADD PROJECT ↑</button>
     </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-bar">
+    <button class="filter-pill active" onclick="filterProjects('all',this)">All</button>
+    <button class="filter-pill" onclick="filterProjects('active',this)">🟢 Active</button>
+    <button class="filter-pill" onclick="filterProjects('planning',this)">🔵 Planning</button>
+    <button class="filter-pill" onclick="filterProjects('completed',this)">✅ Completed</button>
+    <button class="filter-pill" onclick="filterProjects('paused',this)">⏸ Paused</button>
+  </div>
+
+  <div class="projects-grid" id="projectsGrid"></div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var u = DB.currentUser();
+var isLeader = DB.isLeader(u);
+var activeFilter = 'all';
+
+/* DEFAULT PROJECTS (seeded if none exist) */
+var DEFAULTS = [
+  {id:1,emoji:'📚',title:'Project Uplift: Civic Support',desc:'Providing stationery and mentorship to 100+ students in local community schools.',lead:'Goshen Faithful',target:'June 2026',progress:85,status:'active',category:'Community',time:Date.now()},
+  {id:2,emoji:'💻',title:'Digital Literacy Drive',desc:'Training members on media strategy, SEO, and content creation for modern leadership.',lead:'Media Team',target:'August 2026',progress:40,status:'planning',category:'Education',time:Date.now()},
+  {id:3,emoji:'🎙️',title:'Declare Podcast Launch',desc:'A bi-weekly audio broadcast featuring leadership conversations and family testimonies.',lead:'Creative Team',target:'May 2026',progress:65,status:'active',category:'Media',time:Date.now()},
+];
+
+function seedDefaults(){
+  if(!DB.getProjects().length){
+    DB.set(DB.KEYS.projects, DEFAULTS);
+  }
+}
+
+/* SHOW LEADER UI */
+function initUI(){
+  if(isLeader){
+    document.getElementById('leaderPanel').style.display='block';
+    document.getElementById('leaderLink').style.display='inline';
+  }
+}
+
+/* FILTER */
+function filterProjects(f, btn){
+  activeFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  renderProjects();
+}
+
+/* RENDER */
+function renderProjects(){
+  var projects = DB.getProjects();
+  if(activeFilter !== 'all') projects = projects.filter(function(p){return p.status===activeFilter;});
+  var grid = document.getElementById('projectsGrid');
+  if(!projects.length){
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">🚧</div><p>No projects in this category yet.</p></div>';
+    return;
+  }
+  grid.innerHTML = projects.map(function(p){
+    var statusClass = 'status-'+(p.status||'active');
+    var statusLabel = {active:'Active',planning:'Planning',completed:'Completed',paused:'Paused'}[p.status]||p.status;
+    var cardClass = 'project-card '+(p.status||'active')+(isLeader?' leader-card':'');
+    return '<div class="'+cardClass+'" id="proj-'+p.id+'">'+
+      '<div class="proj-top">'+
+        '<span class="proj-emoji">'+(p.emoji||'🚀')+'</span>'+
+        '<span class="proj-status '+statusClass+'">'+statusLabel+'</span>'+
+      '</div>'+
+      '<div class="proj-title">'+DB.esc(p.title)+'</div>'+
+      '<p class="proj-desc">'+DB.esc(p.desc)+'</p>'+
+      '<div class="progress-bar"><div class="progress-fill" style="width:'+(p.progress||0)+'%"></div></div>'+
+      '<div class="proj-pct">'+(p.progress||0)+'% Complete</div>'+
+      '<div class="meta-row">'+
+        (p.lead?'<span><strong>Lead:</strong> '+DB.esc(p.lead)+'</span>':'')+
+        (p.target?'<span><strong>Target:</strong> '+DB.esc(p.target)+'</span>':'')+
+        (p.category?'<span><strong>Category:</strong> '+DB.esc(p.category)+'</span>':'')+
+      '</div>'+
+      '<div class="proj-actions">'+
+        '<button class="proj-btn" onclick="showGetInvolved(\''+DB.esc(p.title)+'\')">Get Involved</button>'+
+        (isLeader?'<button class="proj-btn del" onclick="removeProject('+p.id+')">✕ Remove</button>':'')+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ADD PROJECT */
+window.addProject = function(){
+  var title = (document.getElementById('newTitle').value||'').trim();
+  var desc  = (document.getElementById('newDesc').value||'').trim();
+  if(!title||!desc){showToast('Title and description are required.','#FF3B30');return;}
+  DB.pushProject({
+    emoji: document.getElementById('newEmoji').value||'🚀',
+    title: title, desc: desc,
+    lead:  document.getElementById('newLead').value||'Leadership',
+    target:document.getElementById('newTarget').value||'TBD',
+    progress: parseInt(document.getElementById('newProgress').value)||0,
+    status: document.getElementById('newStatus').value||'active',
+    category: document.getElementById('newCategory').value||'General',
+  });
+  ['newTitle','newDesc','newEmoji','newLead','newTarget','newProgress','newCategory'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('newStatus').selectedIndex=0;
+  renderProjects();
+  showToast('Project posted to the family!');
+};
+
+/* REMOVE PROJECT */
+window.removeProject = function(id){
+  if(!confirm('Remove this project from the board?'))return;
+  DB.deleteProject(id);
+  renderProjects();
+  showToast('Project removed.');
+};
+
+window.showGetInvolved = function(title){
+  if(!u){alert('Please log in to express interest.');return;}
+  // Store interest in hub
+  DB.pushHubMessage({id:DB.ts(),name:u.name,role:u.role||'member',text:u.name+' expressed interest in: "'+title+'"',type:'interest',time:DB.ts(),reactions:{}});
+  showToast('Interest noted! Leadership will follow up.');
+};
+
+/* TOAST */
+function showToast(msg,color){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color||'var(--green)';t.style.color=color?'#fff':'#000';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+}
+
+/* INIT */
+seedDefaults();
+initUI();
+renderProjects();
+setInterval(renderProjects, 8000);
+</script>
 </body>
 </html>
