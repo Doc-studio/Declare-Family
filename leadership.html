@@ -4,116 +4,167 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Executive Command | Declare Family</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --gold:#FFD700; --gold-soft:rgba(255,215,0,0.08);
-  --dark:#050505; --panel:#0E0E10; --border:rgba(255,255,255,0.09);
-  --green:#00FF94; --green-soft:rgba(0,255,148,0.06);
-  --red:#FF3B30; --red-soft:rgba(255,59,48,0.08);
-  --blue:#4A9EFF; --blue-soft:rgba(74,158,255,0.08);
-  --teal:#2DD4BF; --amber:#FF9F43; --purple:#A855F7;
-  --dim:#888; --text:#e8e8e8;
+  --gold:#FFD700;--gold2:#FFA500;--dark:#050505;--panel:#0E0E10;
+  --border:rgba(255,255,255,0.09);--green:#00FF94;--red:#FF3B30;
+  --blue:#4A9EFF;--amber:#FF9F43;--purple:#A855F7;
+  --dim:#888;--text:#f0f0f0;
+  --gold-soft:rgba(255,215,0,.07);--green-soft:rgba(0,255,148,.06);
+  --red-soft:rgba(255,59,48,.06);--blue-soft:rgba(74,158,255,.06);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
 html,body{height:100%;overflow:hidden;}
 body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;display:flex;}
 
-/* ── SIDEBAR ──────────────────────────────────── */
-.side{
-  width:280px;background:#000;border-right:1px solid var(--border);
-  display:flex;flex-direction:column;padding:26px 18px;overflow-y:auto;flex-shrink:0;
+/* ── SIDEBAR ── */
+.sidebar{
+  width:268px;background:#000;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:22px 16px;overflow-y:auto;flex-shrink:0;
+  transition:transform .3s;
 }
-.brand-row{display:flex;align-items:center;gap:13px;margin-bottom:36px;}
-.brand-logo{width:46px;height:46px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;}
-.brand-txt{font-weight:800;font-size:12px;letter-spacing:.5px;line-height:1.4;}
-.brand-txt span{display:block;color:var(--gold);font-size:10px;letter-spacing:2px;}
-.nav-label{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:2px;margin:22px 0 8px 8px;display:block;}
+.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.brand-crest{width:44px;height:44px;background:var(--gold);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.brand-txt{font-size:11px;font-weight:800;letter-spacing:.5px;line-height:1.5;}
+.brand-txt span{display:block;color:var(--gold);font-size:9px;letter-spacing:2px;}
+
+.nav-label{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:2px;margin:14px 0 7px 6px;display:block;}
 .nav-link{
-  padding:12px 16px;border-radius:12px;cursor:pointer;transition:.25s;
-  color:var(--dim);text-decoration:none;display:flex;align-items:center;
-  gap:13px;font-size:13px;font-weight:600;margin-bottom:4px;border:1px solid transparent;
+  padding:11px 14px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--dim);
+  text-decoration:none;display:flex;align-items:center;gap:11px;font-size:13px;
+  font-weight:600;margin-bottom:3px;border:1px solid transparent;
 }
 .nav-link:hover{background:var(--gold-soft);color:#fff;border-color:rgba(255,215,0,.1);}
 .nav-link.active{background:var(--gold);color:#000;font-weight:800;}
-.mgmt-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:10px;margin-top:8px;}
-.sub-link{padding:9px 12px;font-size:12px;color:#666;text-decoration:none;display:flex;align-items:center;gap:9px;border-radius:8px;transition:.2s;}
-.sub-link:hover{color:var(--gold);background:#181818;}
-.back-link{margin-top:auto;color:var(--dim);font-size:12px;text-decoration:none;padding:10px;display:flex;align-items:center;gap:8px;}
-.back-link:hover{color:var(--gold);}
 
-/* ── MAIN STAGE ───────────────────────────────── */
+.monitor-btn{
+  display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;
+  border:1px solid rgba(0,255,148,.2);background:var(--green-soft);color:var(--green);
+  cursor:pointer;font-size:13px;font-weight:700;margin-bottom:3px;width:100%;
+  font-family:'Plus Jakarta Sans',sans-serif;text-align:left;transition:.2s;
+}
+.monitor-btn:hover{background:rgba(0,255,148,.12);border-color:var(--green);}
+
+.sub-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:8px;margin-top:6px;}
+.sub-link{padding:9px 12px;font-size:12px;color:#555;text-decoration:none;display:flex;align-items:center;gap:9px;border-radius:8px;transition:.2s;cursor:pointer;}
+.sub-link:hover{color:var(--gold);background:#111;}
+
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);}
+.status-pill{background:var(--green-soft);border:1px solid rgba(0,255,148,.2);border-radius:10px;padding:10px 14px;}
+.status-pill span{font-size:9px;color:var(--green);font-weight:800;letter-spacing:1px;display:block;}
+.status-pill p{font-size:11px;color:#888;margin-top:2px;}
+
+/* ── MAIN STAGE ── */
 .stage{flex:1;overflow-y:auto;background:#080808;-webkit-overflow-scrolling:touch;}
-.stage-inner{padding:32px 36px;max-width:1000px;margin:0 auto;}
+.stage-inner{padding:28px 32px;max-width:1060px;margin:0 auto;}
 
 /* HUD */
 .hud{
   background:var(--panel);border:1px solid var(--border);border-radius:20px;
-  padding:28px;display:flex;justify-content:space-between;align-items:flex-start;
-  margin-bottom:28px;gap:20px;
+  padding:26px;display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:24px;gap:20px;
 }
-.hud-left h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;margin-bottom:4px;}
-.hud-left p{color:var(--gold);font-size:13px;font-weight:600;}
-.hud-right{text-align:right;max-width:380px;}
+.hud-left h1{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:400;margin-bottom:4px;}
+.hud-left p{color:var(--gold);font-size:12px;font-weight:600;margin-bottom:10px;}
+.live-pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--green);background:var(--green-soft);border:1px solid rgba(0,255,148,.2);padding:5px 14px;border-radius:20px;}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:pls 1.5s infinite;}
+@keyframes pls{0%,100%{opacity:1;}50%{opacity:.2;}}
+.hud-right{text-align:right;max-width:360px;}
 #quoteDisplay{font-style:italic;color:var(--dim);font-size:13px;line-height:1.6;transition:opacity .5s;}
-.live-pill{
-  display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--green);
-  background:var(--green-soft);border:1px solid rgba(0,255,148,.2);padding:5px 14px;border-radius:20px;margin-top:10px;
-}
-.live-pill .dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:pls 1.5s infinite;}
-@keyframes pls{0%,100%{opacity:1}50%{opacity:.25}}
+#deviceTag{font-size:10px;color:#333;margin-top:8px;}
 
 /* BOT CARD */
 .bot-card{
-  background:linear-gradient(135deg,#121214,#000);border:1px solid var(--gold);
-  border-radius:20px;padding:22px;display:flex;align-items:center;gap:18px;margin-bottom:28px;
+  background:linear-gradient(135deg,#0c0c0e,#000);border:1px solid rgba(255,215,0,.3);
+  border-radius:18px;padding:20px 24px;display:flex;align-items:center;gap:18px;margin-bottom:24px;
 }
-.bot-avatar{width:54px;height:54px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 0 18px rgba(255,215,0,.25);}
-.bot-text{font-size:14px;line-height:1.6;color:#ddd;}
+.bot-avatar{width:50px;height:50px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 16px rgba(255,215,0,.2);}
+.bot-text{font-size:13px;line-height:1.6;color:#ccc;}
 
 /* SECTION LABEL */
-.sec-label{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sec-label{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 
-/* COMMAND CARDS */
-.cmd-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:22px;}
-.cmd-card.highlight-gold{border-color:rgba(255,215,0,.3);}
-.cmd-card.highlight-green{border-color:rgba(0,255,148,.25);background:var(--green-soft);}
-.cmd-card.highlight-red{border-color:rgba(255,59,48,.25);background:var(--red-soft);}
-.cmd-card.highlight-blue{border-color:rgba(74,158,255,.25);background:var(--blue-soft);}
+/* ALERT BADGE on section */
+.alert-badge{background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 
-/* Approval queue */
+/* CMD CARDS */
+.cmd-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.cmd-card.gold{border-color:rgba(255,215,0,.25);background:var(--gold-soft);}
+.cmd-card.green{border-color:rgba(0,255,148,.2);background:var(--green-soft);}
+.cmd-card.red{border-color:rgba(255,59,48,.2);background:var(--red-soft);}
+.cmd-card.blue{border-color:rgba(74,158,255,.2);background:var(--blue-soft);}
+
+/* APPROVAL ROW */
 .approval-row{
   display:flex;justify-content:space-between;align-items:center;
   padding:14px 16px;background:#000;border-radius:12px;margin-bottom:10px;
-  border:1px solid var(--border);gap:12px;
+  border:1px solid var(--border);gap:12px;flex-wrap:wrap;
 }
 .approval-info{flex:1;min-width:0;}
 .approval-info .tag{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;display:block;}
-.approval-info h4{font-size:15px;font-weight:800;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.approval-info p{font-size:11px;color:#666;margin:0;}
+.approval-info h4{font-size:14px;font-weight:800;margin-bottom:2px;}
+.approval-info p{font-size:11px;color:#555;margin:0;}
 .approval-btns{display:flex;gap:8px;flex-shrink:0;}
 .btn-approve{background:var(--green);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;}
 .btn-approve:hover{background:#00cc76;}
 .btn-deny{background:transparent;color:var(--red);border:1px solid var(--red);padding:8px 16px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;}
 .btn-deny:hover{background:var(--red);color:#fff;}
 
-/* Pioneer code system */
-.code-display{
-  background:#000;border:1px solid rgba(0,255,148,.3);border-radius:12px;padding:16px 20px;
-  margin-top:14px;display:none;
+/* MONITOR MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
+  display:none;align-items:center;justify-content:center;padding:20px;
 }
-.code-display .code-val{font-family:'Courier New',monospace;font-size:18px;color:var(--green);font-weight:800;letter-spacing:3px;word-break:break-all;}
-.code-display .code-note{font-size:11px;color:#555;margin-top:6px;}
-.copy-btn{background:var(--gold);border:none;padding:5px 14px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;margin-left:10px;font-family:inherit;}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#0a0a0a;border:1px solid var(--gold);border-radius:20px;
+  width:100%;max-width:900px;max-height:90vh;overflow-y:auto;padding:32px;
+  animation:fadeUp .3s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.modal-title{font-family:'DM Serif Display',serif;font-size:1.5rem;}
+.modal-close{width:36px;height:36px;background:#111;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--dim);transition:.2s;}
+.modal-close:hover{border-color:var(--red);color:var(--red);}
 
-/* Input row */
-.input-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+/* CLASS SELECTOR */
+.class-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.class-pill{
+  padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:none;
+  color:#666;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;transition:.2s;
+}
+.class-pill:hover{border-color:var(--gold);color:var(--gold);}
+.class-pill.active{background:var(--gold);color:#000;border-color:var(--gold);}
+
+/* MEMBER TABLE */
+.member-table{width:100%;border-collapse:separate;border-spacing:0 6px;}
+.member-table th{font-size:9px;color:#444;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:0 14px 8px;}
+.member-table th:first-child{padding-left:0;}
+.member-row-tr td{background:#000;padding:12px 14px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.member-row-tr td:first-child{border-radius:10px 0 0 10px;border-left:1px solid var(--border);padding-left:12px;}
+.member-row-tr td:last-child{border-radius:0 10px 10px 0;border-right:1px solid var(--border);}
+.member-avatar-sm{width:30px;height:30px;background:#111;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;margin-right:8px;}
+
+/* POST TO CLASS FORM */
+.post-form{background:#000;border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:16px;}
+.post-type-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.ptype-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:none;color:#555;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;transition:.2s;}
+.ptype-btn:hover,.ptype-btn.active{background:rgba(255,215,0,.08);border-color:var(--gold);color:var(--gold);}
+.post-input{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;color:#fff;padding:12px;font-family:inherit;font-size:13px;outline:none;resize:vertical;transition:.2s;margin-bottom:8px;}
+.post-input:focus{border-color:var(--gold);}
+.push-btn{background:var(--gold);color:#000;border:none;padding:11px 22px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;text-transform:uppercase;letter-spacing:.5px;}
+.push-btn:hover{background:#fff;}
+
+/* INPUT ROW */
+.input-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
 .input-row input,.input-row select{
   flex:1;min-width:140px;background:#1a1a1a;border:1px solid var(--border);
   padding:11px 14px;border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;transition:.2s;
 }
-.input-row input:focus,.input-row select:focus{border-color:var(--gold);}
+.input-row input:focus{border-color:var(--gold);}
 .action-btn{
   background:#1a1a1d;border:1px solid var(--border);color:#ccc;
   padding:11px 18px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;
@@ -124,69 +175,105 @@ body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sa
 .action-btn.gold:hover{background:#fff;}
 .action-btn.danger{color:var(--red);}
 .action-btn.danger:hover{border-color:var(--red);background:rgba(255,59,48,.08);}
+
 .result-box{margin-top:12px;padding:14px;background:#000;border-radius:10px;border:1px solid var(--border);display:none;font-size:13px;}
 
-/* Bot post panel */
-.bot-announce-area{display:flex;gap:10px;margin-bottom:12px;}
-.bot-announce-area textarea{flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:10px;color:#fff;padding:11px 14px;resize:none;height:70px;font-family:inherit;font-size:13px;outline:none;transition:.2s;}
-.bot-announce-area textarea:focus{border-color:var(--gold);}
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
+.stat-tile{background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;}
+.stat-tile .label{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;}
+.stat-tile .value{font-size:26px;font-weight:800;}
 
-/* Pending registration list */
-.reg-request-row{
-  display:flex;align-items:center;gap:12px;padding:14px;background:#000;
-  border-radius:12px;margin-bottom:8px;border:1px solid var(--border);flex-wrap:wrap;
+/* BROADCAST AREA */
+.broadcast-area{display:flex;gap:12px;align-items:flex-start;}
+.broadcast-area textarea{flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:10px;color:#fff;padding:12px;resize:none;height:76px;font-family:inherit;font-size:13px;outline:none;transition:.2s;}
+.broadcast-area textarea:focus{border-color:var(--gold);}
+.broadcast-controls{display:flex;flex-direction:column;gap:8px;min-width:170px;}
+.broadcast-controls select,.broadcast-controls input{background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;outline:none;}
+
+/* PIONEER CODE */
+.code-box{background:#000;border:1px solid rgba(0,255,148,.3);border-radius:12px;padding:16px;display:none;margin-top:12px;}
+.code-val{font-family:'Courier New',monospace;font-size:18px;color:var(--green);font-weight:800;letter-spacing:3px;}
+.copy-btn{background:var(--gold);border:none;padding:5px 14px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;margin-left:12px;font-family:inherit;}
+
+/* NOTIFICATION TOAST */
+.toast{
+  position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;
+  padding:12px 20px;border-radius:12px;font-weight:700;font-size:13px;
+  transform:translateY(20px);opacity:0;transition:.3s;z-index:600;pointer-events:none;
 }
-.reg-request-row .info{flex:1;min-width:160px;}
-.reg-request-row .info strong{font-size:14px;display:block;margin-bottom:2px;}
-.reg-request-row .info span{font-size:11px;color:#666;}
+.toast.show{transform:translateY(0);opacity:1;}
 
-/* ── MOBILE ───────────────────────────────────── */
-@media(max-width:850px){
-  body{flex-direction:column;overflow-y:auto;height:auto;}
-  .side{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:16px;}
-  .hud{flex-direction:column;gap:14px;}
+/* NAV ALERT DOT */
+.nav-alert{width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:auto;box-shadow:0 0 6px var(--red);}
+
+/* MOBILE NAV TOGGLE */
+.mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:400;width:42px;height:42px;background:var(--gold);border-radius:10px;border:none;font-size:18px;cursor:pointer;align-items:center;justify-content:center;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  html,body{overflow:auto;}
+  body{flex-direction:column;}
+  .sidebar{position:fixed;top:0;left:0;height:100%;z-index:350;transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-overlay.open{display:block;}
+  .mob-toggle{display:flex;}
+  .stage{width:100%;overflow:visible;}
+  .stage-inner{padding:72px 14px 32px;}
+  .hud{flex-direction:column;gap:12px;}
   .hud-right{text-align:left;max-width:100%;}
-  .stage-inner{padding:20px 16px;}
-  .bot-card{flex-direction:column;text-align:center;}
-  .approval-row{flex-direction:column;align-items:flex-start;}
-  .approval-btns{align-self:flex-end;}
-  .input-row{flex-direction:column;}
+  .broadcast-area{flex-direction:column;}
+  .broadcast-controls{min-width:100%;}
 }
-@media(orientation:landscape)and(max-height:500px){
-  .hud{padding:18px;}
-  .stage-inner{padding:18px;}
+@media(max-width:500px){
+  .modal-box{padding:20px 14px;}
+  .stage-inner{padding:68px 10px 24px;}
 }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<nav class="side">
+<button class="mob-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar" id="sidebar">
   <div class="brand-row">
-    <img src="hero-image.jpg.jpeg" class="brand-logo" alt="Declare">
+    <div class="brand-crest">🛡️</div>
     <div class="brand-txt">DECLARE FAMILY<span>EXECUTIVE COMMAND</span></div>
   </div>
 
   <span class="nav-label">Navigation</span>
   <a href="Dashboard.html" class="nav-link">📊 My Dashboard</a>
-  <a href="hub.html"        class="nav-link">🌐 Declare Hub</a>
-  <a href="thread.html"     class="nav-link">🟦 The Square</a>
+  <a href="hub.html" class="nav-link">🌐 Declare Hub</a>
+  <a href="thread.html" class="nav-link">🟦 The Square</a>
   <a href="leadership.html" class="nav-link active">🛡️ Command Centre</a>
 
-  <span class="nav-label">Family Management</span>
-  <div class="mgmt-box">
-    <a href="thread.html"     class="sub-link">🦅 The Square</a>
-    <a href="faith.html"      class="sub-link">🙏 Prayer Room</a>
-    <a href="talents.html"    class="sub-link">🎨 Talents</a>
-    <a href="projects.html"   class="sub-link">🏗️ Projects</a>
+  <span class="nav-label">Academy Management</span>
+  <button class="monitor-btn" onclick="openMonitor()">
+    🎓 Monitor School
+    <span id="monitorAlertDot" style="display:none;width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:auto;box-shadow:0 0 6px var(--red);"></span>
+  </button>
+
+  <span class="nav-label">Family Links</span>
+  <div class="sub-box">
+    <a href="faith.html" class="sub-link">🙏 Prayer Room</a>
+    <a href="talents.html" class="sub-link">🎨 Talents</a>
+    <a href="projects.html" class="sub-link">🏗️ Projects</a>
     <a href="achievements.html" class="sub-link">🏆 Achievements</a>
-    <a href="academy.html"    class="sub-link">🎓 Academy</a>
+    <a href="academy.html" class="sub-link">🎓 Academy</a>
   </div>
 
-  <a href="main.html" class="back-link">🏠 Back to Main Site</a>
+  <div class="sidebar-footer">
+    <div class="status-pill">
+      <span>PIONEER STATUS</span>
+      <p id="leaderName">Vision Pioneer · Active</p>
+    </div>
+  </div>
 </nav>
 
-<!-- MAIN STAGE -->
+<!-- ── MAIN STAGE ── -->
 <main class="stage">
 <div class="stage-inner">
 
@@ -194,48 +281,50 @@ body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sa
   <div class="hud">
     <div class="hud-left">
       <h1 id="greetName">Shalom, Leader</h1>
-      <p>Called. Equipped. Sent. — Executive Command Active</p>
-      <div class="live-pill"><span class="dot"></span><span id="sessionCount">0 Pioneer(s) · 0 Member(s) Online</span></div>
+      <p>Called · Equipped · Sent — Executive Command Active</p>
+      <div class="live-pill"><span class="live-dot"></span><span id="sessionCount">0 Pioneer(s) · 0 Member(s) Online</span></div>
     </div>
     <div class="hud-right">
       <div id="quoteDisplay">"Vision is the art of seeing what is invisible to others."</div>
-      <div style="font-size:11px;color:#444;margin-top:8px;" id="deviceTag">Detecting...</div>
+      <div id="deviceTag">Detecting device...</div>
     </div>
   </div>
 
-  <!-- BOT CARD -->
+  <!-- BOT -->
   <div class="bot-card">
     <div class="bot-avatar">🤖</div>
-    <div class="bot-text" id="botMsg">
-      <strong>System Intelligence:</strong> Welcome back, Leader. Loading family status...
+    <div class="bot-text" id="botMsg"><strong>System Intelligence:</strong> Welcome back, Leader. Loading family status...</div>
+  </div>
+
+  <!-- ── 1. TUTOR APPLICATIONS (with alert) ── -->
+  <div class="cmd-card gold" id="tutorAppsCard">
+    <div class="sec-label">
+      🎓 Academy Tutor Applications
+      <span class="alert-badge" id="tutorAlertBadge" style="display:none;">NEW</span>
+    </div>
+    <p style="font-size:12px;color:#666;margin-bottom:14px;">Tutor applicants await approval. Upon approval, the applicant is notified within the portal and given class access.</p>
+    <div id="tutorAppsList">
+      <p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending tutor applications.</p>
     </div>
   </div>
 
-  <!-- ── 1. PIONEER REGISTRATION APPROVALS ── -->
-  <div class="cmd-card highlight-gold" id="regApprovalCard">
+  <!-- ── 2. PIONEER REGISTRATION REQUESTS ── -->
+  <div class="cmd-card gold">
     <div class="sec-label">🛡️ Pioneer Registration Requests</div>
-    <p style="font-size:12px;color:#666;margin-bottom:16px;">Members who requested Pioneer or Admin access. Verify identity before approving. Upon approval, an access code is auto-generated for you to share with them manually.</p>
+    <p style="font-size:12px;color:#666;margin-bottom:14px;">Members who have requested Pioneer access. Verify identity in person before approving. An access code is auto-generated upon approval.</p>
     <div id="pioneerRequestList">
-      <p style="color:#555;text-align:center;padding:20px;font-size:13px;">No pending pioneer registration requests.</p>
+      <p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending pioneer requests.</p>
     </div>
   </div>
 
-  <!-- ── 2. ACADEMY TUTOR APPROVALS ── -->
-  <div class="cmd-card highlight-gold">
-    <div class="sec-label">🎓 Academy Gatekeeper — Pending Applications</div>
-    <div id="pendingList">
-      <p style="color:#555;text-align:center;padding:20px;font-size:13px;">The gates are clear. No pending applications.</p>
-    </div>
-  </div>
-
-  <!-- ── 3. BOT BROADCAST ── -->
-  <div class="cmd-card highlight-green">
-    <div class="sec-label">📢 Post a Global Announcement</div>
-    <p style="font-size:12px;color:#666;margin-bottom:14px;">This message will appear in the Live Ticker and the Hub feed for all members.</p>
-    <div class="bot-announce-area">
-      <textarea id="announceInput" placeholder="Write your announcement here..."></textarea>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <select id="announceCategory" style="background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;">
+  <!-- ── 3. GLOBAL BROADCAST ── -->
+  <div class="cmd-card green">
+    <div class="sec-label">📢 Global Broadcast</div>
+    <p style="font-size:12px;color:#666;margin-bottom:14px;">Broadcasts appear instantly in the Academy bot banner, Hub feed, and all class portals.</p>
+    <div class="broadcast-area">
+      <textarea id="announceInput" placeholder="Write your announcement, vision update, or session alert..."></textarea>
+      <div class="broadcast-controls">
+        <select id="announceCategory">
           <option>Announcement</option>
           <option>Upcoming Session</option>
           <option>Physical Event</option>
@@ -244,78 +333,178 @@ body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sa
           <option>Today's Momentum</option>
           <option>Partnership</option>
         </select>
-        <input type="text" id="announceDate" placeholder="Date (e.g. 25 Apr 2026)" style="background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;">
-        <input type="text" id="announceExpiry" placeholder="Expires YYYY-MM-DD (optional)" style="background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;">
-        <button class="action-btn gold" onclick="postAnnouncement()">BROADCAST</button>
+        <input type="text" id="announceDate" placeholder="Date (e.g. 25 Apr 2026)">
+        <button class="action-btn gold" onclick="postAnnouncement()">BROADCAST NOW</button>
       </div>
     </div>
     <div id="announceHistory" style="margin-top:16px;"></div>
   </div>
 
-  <!-- ── 4. SQUARE MODERATION ── -->
-  <div class="cmd-card highlight-red">
+  <!-- ── 4. POST DIRECT TO CLASS ── -->
+  <div class="cmd-card green">
+    <div class="sec-label">📚 Post Directly to a Class</div>
+    <p style="font-size:12px;color:#666;margin-bottom:14px;">Push topics, notes, videos, or links to any class. Students see it instantly.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+      <select id="directClass" style="flex:1;min-width:180px;background:#1a1a1a;border:1px solid var(--border);padding:11px;border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;">
+        <option value="Vertical Growth">Vertical Growth & Alignment</option>
+        <option value="Fiscal Kingdom">Fiscal Kingdom Stewardship</option>
+        <option value="Inner Psychology">Psychology 101: The Inner Man</option>
+        <option value="Sovereign Leadership">Sovereign Leadership Training</option>
+        <option value="Social Advancement">Social Life Advancement</option>
+        <option value="Creative Expression">Creative Expression & Identity</option>
+      </select>
+    </div>
+    <div class="post-form">
+      <div class="post-type-row">
+        <button class="ptype-btn active" onclick="setDPostType('topic',this)">📌 Topic/Notes</button>
+        <button class="ptype-btn" onclick="setDPostType('video',this)">🎥 Video URL</button>
+        <button class="ptype-btn" onclick="setDPostType('link',this)">🔗 Link</button>
+        <button class="ptype-btn" onclick="setDPostType('announcement',this)">📢 Alert</button>
+      </div>
+      <div id="dptTopic">
+        <input type="text" class="post-input" id="dptTitle" placeholder="Session title / unit name">
+        <textarea class="post-input" id="dptNotes" rows="5" placeholder="Write detailed session notes, teachings, scripture references..."></textarea>
+      </div>
+      <div id="dptVideo" style="display:none;">
+        <input type="text" class="post-input" id="dptVideoUrl" placeholder="YouTube or video URL (https://...)">
+      </div>
+      <div id="dptLink" style="display:none;">
+        <input type="text" class="post-input" id="dptLinkUrl" placeholder="https://resource-link.com">
+        <input type="text" class="post-input" id="dptLinkLabel" placeholder="Link description / label">
+      </div>
+      <div id="dptAnnouncement" style="display:none;">
+        <textarea class="post-input" id="dptAlert" rows="3" placeholder="Class-specific alert or update..."></textarea>
+      </div>
+      <button class="push-btn" onclick="pushToSelectedClass()">PUSH TO CLASS →</button>
+    </div>
+  </div>
+
+  <!-- ── 5. SQUARE MODERATION ── -->
+  <div class="cmd-card red">
     <div class="sec-label">🟦 Square Moderation</div>
     <div class="input-row" style="margin-top:0;">
-      <input type="text" id="targetID" placeholder="Enter Member ID (e.g. DF-2026-123/AB)">
+      <input type="text" id="targetID" placeholder="Enter Member ID (e.g. DF-2026-123)">
       <button class="action-btn" onclick="verifyTarget()">VERIFY</button>
     </div>
     <div id="targetResult" class="result-box"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-      <button class="action-btn" onclick="issueCmd('MUTE')">🔇 Mute Mic</button>
-      <button class="action-btn danger" onclick="issueCmd('KICK')">🚷 Remove from Session</button>
-      <button class="action-btn" onclick="purgeChatLog()">🗑️ Purge Chat Log</button>
+      <button class="action-btn" onclick="issueCmd('MUTE')">🔇 Mute</button>
+      <button class="action-btn danger" onclick="issueCmd('KICK')">🚷 Remove</button>
+      <button class="action-btn" onclick="purgeChatLog()">🗑️ Purge Chat</button>
     </div>
   </div>
 
-  <!-- ── 5. MEMBER RECOVERY ── -->
-  <div class="cmd-card highlight-blue">
+  <!-- ── 6. MEMBER RECOVERY ── -->
+  <div class="cmd-card blue">
     <div class="sec-label">🔑 Member Account Recovery</div>
     <div class="input-row" style="margin-top:0;">
-      <input type="text" id="recovSearch" placeholder="Search name or email">
+      <input type="text" id="recovSearch" placeholder="Search member name or email">
       <button class="action-btn" onclick="findMember()">SEARCH</button>
     </div>
     <div id="recovResult" class="result-box"></div>
   </div>
 
-  <!-- ── 6. LIVE STATS ── -->
+  <!-- ── 7. LIVE STATS ── -->
   <div class="cmd-card">
     <div class="sec-label">📊 Live Family Stats</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-top:4px;" id="statsGrid">
-      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Members Registered</div>
-        <div style="font-size:24px;font-weight:800;color:var(--gold);" id="statMembers">0</div>
-      </div>
-      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Currently Online</div>
-        <div style="font-size:24px;font-weight:800;color:var(--green);" id="statOnline">0</div>
-      </div>
-      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Pending Requests</div>
-        <div style="font-size:24px;font-weight:800;color:var(--amber);" id="statPending">0</div>
-      </div>
-      <div style="background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;">
-        <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Active Broadcasts</div>
-        <div style="font-size:24px;font-weight:800;color:var(--blue);" id="statBroadcasts">0</div>
-      </div>
+    <div class="stats-grid">
+      <div class="stat-tile"><div class="label">Members</div><div class="value" style="color:var(--gold);" id="statMembers">0</div></div>
+      <div class="stat-tile"><div class="label">Online Now</div><div class="value" style="color:var(--green);" id="statOnline">0</div></div>
+      <div class="stat-tile"><div class="label">Pending</div><div class="value" style="color:var(--amber);" id="statPending">0</div></div>
+      <div class="stat-tile"><div class="label">Broadcasts</div><div class="value" style="color:var(--blue);" id="statBroadcasts">0</div></div>
+      <div class="stat-tile"><div class="label">Classes Active</div><div class="value" style="color:var(--purple);" id="statClasses">6</div></div>
     </div>
   </div>
 
 </div>
 </main>
 
+<!-- ══════════════════════════════════
+   MONITOR SCHOOL MODAL
+══════════════════════════════════ -->
+<div class="modal-overlay" id="monitorModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 class="modal-title">🎓 Monitor School</h2>
+      <div class="modal-close" onclick="closeMonitor()">✕</div>
+    </div>
+
+    <p style="font-size:13px;color:#666;margin-bottom:18px;">Select a class to view enrolled members, track activity, and manage the session.</p>
+
+    <div class="class-selector" id="classSelector">
+      <!-- rendered by JS -->
+    </div>
+
+    <!-- Members Table -->
+    <div id="monitorContent">
+      <p style="color:#444;text-align:center;padding:30px;font-size:13px;">Select a class above to begin monitoring.</p>
+    </div>
+
+    <!-- Leader: Post to Monitored Class -->
+    <div id="monitorPostArea" style="display:none;margin-top:20px;">
+      <div class="sec-label" style="margin-bottom:12px;">📝 Post to This Class</div>
+      <div class="post-form">
+        <div class="post-type-row">
+          <button class="ptype-btn active" onclick="setMPostType('topic',this)">📌 Topic</button>
+          <button class="ptype-btn" onclick="setMPostType('video',this)">🎥 Video</button>
+          <button class="ptype-btn" onclick="setMPostType('link',this)">🔗 Link</button>
+          <button class="ptype-btn" onclick="setMPostType('announcement',this)">📢 Alert</button>
+        </div>
+        <div id="mptTopic">
+          <input type="text" class="post-input" id="mptTitle" placeholder="Session title / unit name">
+          <textarea class="post-input" id="mptNotes" rows="4" placeholder="Notes, teachings, content..."></textarea>
+        </div>
+        <div id="mptVideo" style="display:none;"><input type="text" class="post-input" id="mptVideoUrl" placeholder="Video URL (YouTube or direct)"></div>
+        <div id="mptLink" style="display:none;">
+          <input type="text" class="post-input" id="mptLinkUrl" placeholder="https://...">
+          <input type="text" class="post-input" id="mptLinkLabel" placeholder="Link description">
+        </div>
+        <div id="mptAnnouncement" style="display:none;"><textarea class="post-input" id="mptAlert" rows="3" placeholder="Class alert..."></textarea></div>
+        <button class="push-btn" onclick="pushFromMonitor()">PUSH TO CLASS ↑</button>
+      </div>
+
+      <!-- Enter Class as Leader -->
+      <div style="margin-top:14px;text-align:right;">
+        <button class="action-btn gold" onclick="enterClassAsLeader()">ENTER CLASS (LEADER VIEW) →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
 (function(){
 'use strict';
 
-/* ── helpers ─────────────────────────────────── */
+/* ── HELPERS ── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
-function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
-function simpleHash(s){var h=0;for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h;}return h.toString(36);}
+function isLeader(u){return u&&(u.role==='admin'||u.role==='leader');}
+function showToast(msg,color){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color||'var(--green)';t.style.color=color?'#fff':'#000';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+}
+function sto(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function sfrom(k,def){try{return JSON.parse(localStorage.getItem(k))||def;}catch(e){return def;}}
 
-var currentUser=session();
+var currentUser = session();
+var monitoringClass = null;
+var dPostType = 'topic';
+var mPostType = 'topic';
 
-/* ── auth guard ─────────────────────────────── */
+const CLASSES = [
+  {key:'Vertical Growth',label:'Vertical Growth & Alignment',emoji:'🙏'},
+  {key:'Fiscal Kingdom',label:'Fiscal Kingdom Stewardship',emoji:'💰'},
+  {key:'Inner Psychology',label:'Psychology 101: The Inner Man',emoji:'🧠'},
+  {key:'Sovereign Leadership',label:'Sovereign Leadership Training',emoji:'👑'},
+  {key:'Social Advancement',label:'Social Life Advancement',emoji:'🌐'},
+  {key:'Creative Expression',label:'Creative Expression & Identity',emoji:'🎨'}
+];
+
+/* ── AUTH GUARD ── */
 function guardLeader(){
   if(!currentUser){window.location.href='login.html';return false;}
   if(!isLeader(currentUser)){
@@ -325,14 +514,21 @@ function guardLeader(){
   return true;
 }
 
-/* ── device detection ───────────────────────── */
+/* ── DEVICE DETECT ── */
 function detectDevice(){
   var w=window.innerWidth,tag=document.getElementById('deviceTag');
   if(!tag)return;
-  tag.textContent=w<768?'MOBILE CONSOLE':w<1024?'TABLET INTERFACE':'DESKTOP COMMAND STATION';
+  tag.textContent=w<768?'📱 Mobile Console Active':w<1024?'📋 Tablet Interface Active':'🖥️ Desktop Command Station';
+  tag.style.color='#555';tag.style.fontSize='11px';tag.style.marginTop='8px';
 }
 
-/* ── quotes ─────────────────────────────────── */
+/* ── SIDEBAR TOGGLE ── */
+window.toggleSidebar=function(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+};
+
+/* ── QUOTES ── */
 var QUOTES=[
   '"True leaders don\'t create followers — they create more leaders."',
   '"Vision is the art of seeing what is invisible to others."',
@@ -340,7 +536,8 @@ var QUOTES=[
   '"Managing the heart of the family requires wisdom and grace."',
   '"Your influence today shapes the generation of tomorrow."',
   '"A Pioneer builds the bridge others will walk across."',
-  '"Integrity in leadership is the highest form of worship."'
+  '"Integrity in leadership is the highest form of worship."',
+  '"Where there is no vision, the people perish." — Proverbs 29:18'
 ];
 var qIdx=0;
 function rotateQuotes(){
@@ -349,206 +546,367 @@ function rotateQuotes(){
   if(el){el.style.opacity='0';setTimeout(function(){el.textContent=QUOTES[qIdx];el.style.opacity='1';},400);}
 }
 
-/* ── live counter ───────────────────────────── */
-var PRESENCE_TTL=25000;
+/* ── LIVE COUNTER ── */
 function updateLiveCounter(){
-  var map={};try{map=JSON.parse(localStorage.getItem('presenceMap'))||{};}catch(e){}
-  var now=Date.now(),c=0,pioneers=0,members=0;
-  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var map=sfrom('presenceMap',{});
+  var now=Date.now(),pioneers=0,members=0,total=0;
+  var users=sfrom('users',[]);
   Object.keys(map).forEach(function(k){
-    if(now-map[k]<PRESENCE_TTL){
-      c++;
+    if(now-map[k]<25000){total++;
       var u=users.find(function(u2){return u2.email===k||u2.id===k;});
       if(u&&isLeader(u))pioneers++;else members++;
     }
   });
   var el=document.getElementById('sessionCount');
   if(el)el.textContent=pioneers+' Pioneer(s) · '+members+' Member(s) Online';
-  var el2=document.getElementById('statOnline');if(el2)el2.textContent=c;
+  var el2=document.getElementById('statOnline');if(el2)el2.textContent=total;
   updateBotMsg(pioneers,members);
 }
 
 function updateBotMsg(p,m){
-  var el=document.getElementById('botMsg');
-  if(!el)return;
-  var adminNotif=[];try{adminNotif=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
-  var pioneer=[];try{pioneer=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var el=document.getElementById('botMsg');if(!el)return;
+  var apps=sfrom('adminNotifications',[]);
+  var pioneer=sfrom('pioneerRequests',[]);
   var parts=[];
-  if(pioneer.length>0)parts.push('<span style="color:var(--gold)">'+pioneer.length+' pioneer registration request(s)</span> awaiting your verification');
-  if(adminNotif.length>0)parts.push('<span style="color:var(--gold)">'+adminNotif.length+' academy application(s)</span> pending approval');
+  if(pioneer.length>0)parts.push('<span style="color:var(--gold)">'+pioneer.length+' pioneer request(s)</span> awaiting verification');
+  if(apps.length>0)parts.push('<span style="color:var(--gold)">'+apps.length+' tutor application(s)</span> pending approval');
   parts.push('<span style="color:var(--green)">'+p+' Pioneer(s)</span> and <span style="color:var(--gold)">'+m+' Member(s)</span> currently active');
   el.innerHTML='<strong>System Intelligence:</strong> Shalom, Leader. '+parts.join(' · ')+'.';
 }
 
-/* ── live stats ─────────────────────────────── */
+/* ── STATS ── */
 function updateStats(){
-  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
-  var notif=[];try{notif=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
-  var pioneer=[];try{pioneer=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
-  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  var users=sfrom('users',[]);
+  var apps=sfrom('adminNotifications',[]);
+  var pioneer=sfrom('pioneerRequests',[]);
+  var updates=sfrom('declareUpdates',[]);
   var el=document.getElementById('statMembers');if(el)el.textContent=users.length;
-  var el2=document.getElementById('statPending');if(el2)el2.textContent=notif.length+pioneer.length;
+  var el2=document.getElementById('statPending');if(el2)el2.textContent=apps.length+pioneer.length;
   var el3=document.getElementById('statBroadcasts');if(el3)el3.textContent=updates.length;
+  // Alert badges
+  var hasApps=apps.length>0;
+  var badge=document.getElementById('tutorAlertBadge');if(badge)badge.style.display=hasApps?'inline':'none';
+  var dot=document.getElementById('monitorAlertDot');if(dot)dot.style.display=hasApps?'block':'none';
 }
 
-/* ── pioneer code generator ─────────────────── */
-function genPioneerCode(){
-  return 'DF-PNR-'+Math.random().toString(36).slice(2,8).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();
-}
-
-/* ── pioneer registration requests ─────────── */
-function loadPioneerRequests(){
-  var list=[];try{list=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
-  var el=document.getElementById('pioneerRequestList');if(!el)return;
+/* ── TUTOR APPLICATIONS ── */
+function loadTutorApps(){
+  var list=sfrom('adminNotifications',[]);
+  var el=document.getElementById('tutorAppsList');if(!el)return;
   if(!list.length){
-    el.innerHTML='<p style="color:#555;text-align:center;padding:20px;font-size:13px;">No pending pioneer registration requests.</p>';
+    el.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending tutor applications.</p>';
     return;
   }
   el.innerHTML=list.map(function(req){
-    return '<div class="reg-request-row" id="preq-'+req.id+'">'+
-      '<div class="info">'+
-        '<strong>'+esc(req.name)+'</strong>'+
-        '<span>'+esc(req.email)+' · Requested: '+esc(req.roleRequested||'Pioneer')+'</span>'+
+    return '<div class="approval-row" id="app-'+req.id+'">'+
+      '<div class="approval-info">'+
+        '<span class="tag" style="color:var(--gold)">'+esc(req.mode||'Tutor')+' Application</span>'+
+        '<h4>'+esc(req.name||'Unknown')+'</h4>'+
+        '<p>Class: <strong style="color:#fff">'+esc(req.class)+'</strong> · '+esc(req.role||'Applicant')+' · '+esc(req.location||'')+'</p>'+
       '</div>'+
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
-        '<button class="btn-approve" onclick="approvePioneer('+req.id+')">✓ APPROVE + GENERATE CODE</button>'+
-        '<button class="btn-deny"    onclick="denyPioneer('+req.id+')">✗ DENY</button>'+
+      '<div class="approval-btns">'+
+        '<button class="btn-approve" onclick="processApp('+req.id+',\'approve\')">✓ APPROVE</button>'+
+        '<button class="btn-deny" onclick="processApp('+req.id+',\'deny\')">✗ DENY</button>'+
       '</div>'+
-      '<div class="code-display" id="code-'+req.id+'">'+
-        '<div style="font-size:10px;color:var(--green);font-weight:800;margin-bottom:6px;">GENERATED ACCESS CODE — Share this with '+esc(req.name)+' manually</div>'+
-        '<div class="code-val" id="codeval-'+req.id+'"></div>'+
-        '<div class="code-note">This code expires after first use. Keep it confidential.</div>'+
-        '<button class="copy-btn" onclick="copyCode('+req.id+')">COPY CODE</button>'+
+    '</div>';
+  }).join('');
+}
+
+window.processApp=function(id,action){
+  var list=sfrom('adminNotifications',[]);
+  var req=list.find(function(r){return r.id===id;});
+  if(!req)return;
+
+  if(action==='approve'){
+    // Add to approved tutors
+    var tutors=sfrom('approvedTutors',[]);
+    tutors.push(Object.assign({},req,{status:'active',approvedBy:currentUser.name,approvedAt:new Date().toISOString()}));
+    sto('approvedTutors',tutors);
+
+    // Notify the tutor in-portal
+    sto('tutorNotif_'+req.name+'_'+req.class,{
+      status:'approved',
+      class:req.class,
+      msg:'Your tutor application for '+req.class+' has been APPROVED! You now have instructor access.',
+      time:new Date().toISOString()
+    });
+
+    // Bot notice
+    var botNotices=sfrom('botNotices',[]);
+    botNotices.unshift({msg:'OFFICIAL: '+req.name+' has been approved as Tutor for the '+req.class+' class.',time:new Date().toISOString()});
+    sto('botNotices',botNotices);
+
+    showToast('✓ '+req.name+' approved as tutor for '+req.class);
+  } else {
+    // Notify denial
+    sto('tutorNotif_'+req.name+'_'+req.class,{status:'denied',class:req.class,msg:'Your tutor application for '+req.class+' was not approved at this time.',time:new Date().toISOString()});
+    showToast('Request denied.','#FF3B30');
+  }
+
+  list=list.filter(function(r){return r.id!==id;});
+  sto('adminNotifications',list);
+  loadTutorApps();updateStats();
+};
+
+/* ── PIONEER REQUESTS ── */
+function loadPioneerRequests(){
+  var list=sfrom('pioneerRequests',[]);
+  var el=document.getElementById('pioneerRequestList');if(!el)return;
+  if(!list.length){
+    el.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending pioneer requests.</p>';
+    return;
+  }
+  el.innerHTML=list.map(function(req){
+    return '<div class="approval-row" id="preq-'+req.id+'">'+
+      '<div class="approval-info">'+
+        '<span class="tag" style="color:var(--gold)">Pioneer Request</span>'+
+        '<h4>'+esc(req.name)+'</h4>'+
+        '<p>'+esc(req.email)+' · Role requested: '+esc(req.roleRequested||'Pioneer')+'</p>'+
+      '</div>'+
+      '<div class="approval-btns">'+
+        '<button class="btn-approve" onclick="approvePioneer('+req.id+')">✓ APPROVE + CODE</button>'+
+        '<button class="btn-deny" onclick="denyPioneer('+req.id+')">✗ DENY</button>'+
+      '</div>'+
+      '<div class="code-box" id="code-'+req.id+'">'+
+        '<div style="font-size:10px;color:var(--green);font-weight:800;margin-bottom:8px;">ACCESS CODE — Share with '+esc(req.name)+' directly</div>'+
+        '<div class="code-val" id="codeval-'+req.id+'">—</div>'+
+        '<div style="font-size:11px;color:#444;margin-top:6px;">Expires after first use. Keep confidential.</div>'+
+        '<button class="copy-btn" onclick="copyCode('+req.id+')">COPY</button>'+
       '</div>'+
     '</div>';
   }).join('');
 }
 
 window.approvePioneer=function(id){
-  var list=[];try{list=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var list=sfrom('pioneerRequests',[]);
   var req=list.find(function(r){return r.id===id;});
   if(!req)return;
-  var code=genPioneerCode();
-  // Store approved pioneer codes so they can register using it
-  var codes={}; try{codes=JSON.parse(localStorage.getItem('approvedPioneerCodes'))||{};}catch(e){}
+  var code='DF-PNR-'+Math.random().toString(36).slice(2,8).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();
+  var codes=sfrom('approvedPioneerCodes',{});
   codes[code]={email:req.email,role:req.roleRequested||'leader',name:req.name,usedAt:null};
-  localStorage.setItem('approvedPioneerCodes',JSON.stringify(codes));
-  // Show code in UI
+  sto('approvedPioneerCodes',codes);
   var codeBox=document.getElementById('code-'+id);
   var codeVal=document.getElementById('codeval-'+id);
   if(codeBox&&codeVal){codeVal.textContent=code;codeBox.style.display='block';}
-  // Notify via bot
-  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
-  updates.unshift({id:Date.now(),category:'Pioneer Spotlight',icon:'🛡️',text:'A new Pioneer has been approved and is joining the Declare Family leadership team.',date:'Today'});
-  localStorage.setItem('declareUpdates',JSON.stringify(updates));
-  alert('Code generated for '+req.name+'. Share the code displayed on screen with them directly.');
+  showToast('Pioneer approved. Share the code with '+req.name);
 };
 
 window.denyPioneer=function(id){
-  var list=[];try{list=JSON.parse(localStorage.getItem('pioneerRequests'))||[];}catch(e){}
+  var list=sfrom('pioneerRequests',[]);
   list=list.filter(function(r){return r.id!==id;});
-  localStorage.setItem('pioneerRequests',JSON.stringify(list));
+  sto('pioneerRequests',list);
   loadPioneerRequests();
-  alert('Request denied and removed.');
+  showToast('Request denied.','#FF3B30');
 };
 
 window.copyCode=function(id){
   var el=document.getElementById('codeval-'+id);
   if(!el)return;
-  navigator.clipboard.writeText(el.textContent).then(function(){alert('Code copied to clipboard.');});
+  navigator.clipboard.writeText(el.textContent).then(function(){showToast('Code copied to clipboard!');});
 };
 
-/* ── academy approvals ──────────────────────── */
-function loadAcademyApprovals(){
-  var list=[];try{list=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
-  var el=document.getElementById('pendingList');if(!el)return;
-  if(!list.length){
-    el.innerHTML='<p style="color:#555;text-align:center;padding:20px;font-size:13px;">The gates are clear. No pending applications.</p>';
-    return;
-  }
-  el.innerHTML=list.map(function(req){
-    var isLeaderReq=req.mode==='tutor';
-    return '<div class="approval-row">'+
-      '<div class="approval-info">'+
-        '<span class="tag" style="color:'+(isLeaderReq?'var(--green)':'var(--gold)')+'">'+esc(req.mode||'learner')+' Request</span>'+
-        '<h4>'+esc(req.name||'Unknown')+'</h4>'+
-        '<p>Class: <strong>'+esc(req.class||'')+'</strong> · Title: <em>'+esc(req.title||'')+'</em></p>'+
-      '</div>'+
-      '<div class="approval-btns">'+
-        '<button class="btn-approve" onclick="processAcademy('+req.id+',\'approve\')">APPROVE</button>'+
-        '<button class="btn-deny"    onclick="processAcademy('+req.id+',\'deny\')">DENY</button>'+
-      '</div>'+
-    '</div>';
-  }).join('');
-}
-
-window.processAcademy=function(id,action){
-  var list=[];try{list=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
-  var req=list.find(function(r){return r.id===id;});
-  if(!req)return;
-  if(action==='approve'){
-    if(req.mode==='tutor'){
-      var tutors=[];try{tutors=JSON.parse(localStorage.getItem('approvedTutors'))||[];}catch(e){}
-      tutors.push(Object.assign({},req,{status:'active',approvedBy:currentUser.name,approvedAt:new Date().toISOString()}));
-      localStorage.setItem('approvedTutors',JSON.stringify(tutors));
-    }else{
-      var enrolled=[];try{enrolled=JSON.parse(localStorage.getItem('enrolled_'+req.class))||[];}catch(e){}
-      enrolled.push(req);localStorage.setItem('enrolled_'+req.class,JSON.stringify(enrolled));
-      localStorage.setItem('isRegistered_'+req.class,'true');
-    }
-    // Bot notification
-    var botNotices=[];try{botNotices=JSON.parse(localStorage.getItem('botNotices'))||[];}catch(e){}
-    botNotices.unshift({type:'APPOINTMENT',msg:'OFFICIAL: '+req.title+' has been '+(req.mode==='tutor'?'appointed as a Tutor for':'enrolled in')+' the '+req.class+' class.'});
-    localStorage.setItem('botNotices',JSON.stringify(botNotices));
-    alert('ACCESS GRANTED: '+req.name+' approved.');
-  }else{
-    alert('Request denied and removed.');
-  }
-  list=list.filter(function(r){return r.id!==id;});
-  localStorage.setItem('adminNotifications',JSON.stringify(list));
-  loadAcademyApprovals();updateStats();
-};
-
-/* ── announcement / bot post ────────────────── */
+/* ── GLOBAL BROADCAST ── */
 window.postAnnouncement=function(){
   var text=(document.getElementById('announceInput').value||'').trim();
-  if(!text){alert('Please enter an announcement.');return;}
+  if(!text){showToast('Please enter an announcement.','#FF3B30');return;}
   var cat=document.getElementById('announceCategory').value;
   var date=document.getElementById('announceDate').value;
-  var expiry=document.getElementById('announceExpiry').value;
   var iconMap={'Announcement':'📢','Upcoming Session':'📅','Physical Event':'📍','Current Project':'🚀','Pioneer Spotlight':'👑',"Today's Momentum":'⚡','Partnership':'🤝'};
-  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
-  var entry={id:Date.now(),category:cat,icon:iconMap[cat]||'📢',text:text,date:date||'',expires:expiry||null,postedBy:currentUser.name};
-  updates.unshift(entry);localStorage.setItem('declareUpdates',JSON.stringify(updates));
-  document.getElementById('announceInput').value='';document.getElementById('announceDate').value='';document.getElementById('announceExpiry').value='';
+  var updates=sfrom('declareUpdates',[]);
+  updates.unshift({id:Date.now(),category:cat,icon:iconMap[cat]||'📢',text:text,date:date||'',postedBy:currentUser.name,time:new Date().toISOString()});
+  sto('declareUpdates',updates);
+
+  // Also push to botNotices for academy banner
+  var botNotices=sfrom('botNotices',[]);
+  botNotices.unshift({msg:(iconMap[cat]||'📢')+' '+text,time:new Date().toISOString()});
+  sto('botNotices',botNotices);
+
+  document.getElementById('announceInput').value='';
+  document.getElementById('announceDate').value='';
   loadAnnouncementHistory();
-  alert('Announcement broadcast successfully. It will appear in the Live Ticker and Hub within 30 seconds.');
+  updateStats();
+  showToast('Broadcast sent to all portals!');
 };
 
 function loadAnnouncementHistory(){
-  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  var updates=sfrom('declareUpdates',[]);
   var el=document.getElementById('announceHistory');if(!el)return;
   if(!updates.length){el.innerHTML='';return;}
-  el.innerHTML='<div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Recent Broadcasts</div>'+
-    updates.slice(0,5).map(function(u){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#000;border-radius:8px;margin-bottom:6px;border:1px solid var(--border);">'+
-        '<span style="font-size:12px;">'+esc(u.icon||'')+'&nbsp;'+esc(u.text.slice(0,60))+(u.text.length>60?'…':'')+'</span>'+
-        '<button onclick="removeAnnouncement('+u.id+')" style="background:none;border:none;color:#555;font-size:12px;cursor:pointer;padding:2px 6px;border-radius:4px;" title="Remove">✕</button>'+
+  el.innerHTML='<div style="font-size:9px;color:#333;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Recent Broadcasts</div>'+
+    updates.slice(0,4).map(function(u){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#000;border-radius:8px;margin-bottom:6px;border:1px solid var(--border);">'+
+        '<span style="font-size:12px;">'+(u.icon||'')+'&nbsp;'+esc(u.text.substring(0,55))+(u.text.length>55?'…':'')+'</span>'+
+        '<button onclick="removeAnnouncement('+u.id+')" style="background:none;border:none;color:#333;cursor:pointer;font-size:12px;padding:2px 6px;">✕</button>'+
       '</div>';
     }).join('');
 }
+
 window.removeAnnouncement=function(id){
-  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
+  var updates=sfrom('declareUpdates',[]);
   updates=updates.filter(function(u){return u.id!==id;});
-  localStorage.setItem('declareUpdates',JSON.stringify(updates));
+  sto('declareUpdates',updates);
   loadAnnouncementHistory();updateStats();
 };
 
-/* ── square commands ────────────────────────── */
+/* ── DIRECT POST TYPE ── */
+var dPostType='topic';
+window.setDPostType=function(type,btn){
+  dPostType=type;
+  document.querySelectorAll('#directClass~.post-form .ptype-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('dptTopic').style.display=type==='topic'?'block':'none';
+  document.getElementById('dptVideo').style.display=type==='video'?'block':'none';
+  document.getElementById('dptLink').style.display=type==='link'?'block':'none';
+  document.getElementById('dptAnnouncement').style.display=type==='announcement'?'block':'none';
+};
+
+window.pushToSelectedClass=function(){
+  var cls=document.getElementById('directClass').value;
+  pushPostToClass(cls,dPostType,'direct');
+};
+
+/* ── MONITOR MODAL ── */
+window.openMonitor=function(){
+  document.getElementById('monitorModal').classList.add('open');
+  renderClassSelector();
+  if(window.innerWidth<900){document.getElementById('sidebar').classList.remove('open');}
+};
+
+window.closeMonitor=function(){
+  document.getElementById('monitorModal').classList.remove('open');
+};
+
+function renderClassSelector(){
+  var sel=document.getElementById('classSelector');
+  sel.innerHTML=CLASSES.map(function(c){
+    var count=sfrom('classMembers_'+c.key,[]).length;
+    return '<button class="class-pill" onclick="selectClass(\''+c.key+'\')">'+'<span style="margin-right:6px;">'+c.emoji+'</span>'+c.label+'<span style="margin-left:8px;font-size:10px;color:#444;">('+count+')</span></button>';
+  }).join('');
+}
+
+window.selectClass=function(classKey){
+  monitoringClass=classKey;
+  document.querySelectorAll('.class-pill').forEach(function(p){p.classList.remove('active');});
+  event.target.closest('.class-pill').classList.add('active');
+  loadClassMonitor(classKey);
+  document.getElementById('monitorPostArea').style.display='block';
+};
+
+function loadClassMonitor(classKey){
+  var members=sfrom('classMembers_'+classKey,[]);
+  var posts=sfrom('classPosts_'+classKey,[]);
+  var comments=sfrom('comments_'+classKey,[]);
+  var content=document.getElementById('monitorContent');
+
+  var latestPost=posts.length>0?posts[posts.length-1]:null;
+  var cls=CLASSES.find(function(c){return c.key===classKey;})||{label:classKey,emoji:'🎓'};
+
+  var html='<div style="background:#000;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;">';
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
+  html+='<div><span style="font-size:20px;margin-right:10px;">'+cls.emoji+'</span><strong style="font-size:15px;">'+esc(cls.label)+'</strong></div>';
+  html+='<div style="display:flex;gap:10px;"><span style="font-size:12px;color:#555;">'+members.length+' enrolled</span><span style="font-size:12px;color:var(--gold);">'+posts.length+' posts</span><span style="font-size:12px;color:var(--green);">'+comments.length+' comments</span></div>';
+  html+='</div>';
+  if(latestPost){html+='<div style="font-size:12px;color:#666;">Latest post: <strong style="color:#ccc;">'+esc(latestPost.title||latestPost.url||'(media)')+'</strong></div>';}
+  html+='</div>';
+
+  if(members.length===0){
+    html+='<p style="color:#333;text-align:center;padding:20px;font-size:13px;">No enrolled members yet.</p>';
+  } else {
+    html+='<table class="member-table"><thead><tr><th>Member</th><th>Adm. No.</th><th>Role</th><th>Location</th><th>Progress</th></tr></thead><tbody>';
+    html+=members.map(function(m){
+      var stu=sfrom('student_'+classKey,null);
+      var progress=(stu&&stu.name===m.name)?((stu.progress||0)+'%'):'—';
+      return '<tr class="member-row-tr">'+
+        '<td><span class="member-avatar-sm">'+(m.avatar||'👤')+'</span>'+esc(m.name)+'</td>'+
+        '<td style="font-size:12px;color:var(--gold);font-family:monospace;">'+esc(m.adm)+'</td>'+
+        '<td style="font-size:12px;color:#666;">'+esc(m.role||'Student')+'</td>'+
+        '<td style="font-size:12px;color:#555;">'+esc(m.location||'—')+'</td>'+
+        '<td style="font-size:12px;color:var(--green);">'+progress+'</td>'+
+      '</tr>';
+    }).join('');
+    html+='</tbody></table>';
+  }
+
+  content.innerHTML=html;
+}
+
+/* ── MONITOR POST TYPE ── */
+var mPostType='topic';
+window.setMPostType=function(type,btn){
+  mPostType=type;
+  document.querySelectorAll('#monitorPostArea .ptype-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('mptTopic').style.display=type==='topic'?'block':'none';
+  document.getElementById('mptVideo').style.display=type==='video'?'block':'none';
+  document.getElementById('mptLink').style.display=type==='link'?'block':'none';
+  document.getElementById('mptAnnouncement').style.display=type==='announcement'?'block':'none';
+};
+
+window.pushFromMonitor=function(){
+  if(!monitoringClass){showToast('Select a class first.','#FF3B30');return;}
+  pushPostToClass(monitoringClass,mPostType,'monitor');
+};
+
+/* ── SHARED PUSH FUNCTION ── */
+function pushPostToClass(classKey,type,source){
+  var prefix=source==='monitor'?'mpt':'dpt';
+  var post={type:type,postedBy:currentUser.name,time:new Date().toISOString()};
+
+  if(type==='topic'){
+    var title=(document.getElementById(prefix+'Title').value||'').trim();
+    var notes=(document.getElementById(prefix+'Notes').value||'').trim();
+    if(!title&&!notes){showToast('Add a title or notes.','#FF3B30');return;}
+    post.title=title;post.content=notes;
+    document.getElementById(prefix+'Title').value='';
+    document.getElementById(prefix+'Notes').value='';
+  } else if(type==='video'){
+    var url=(document.getElementById(prefix+'VideoUrl').value||'').trim();
+    if(!url){showToast('Enter a video URL.','#FF3B30');return;}
+    post.url=url;
+    document.getElementById(prefix+'VideoUrl').value='';
+  } else if(type==='link'){
+    var lurl=(document.getElementById(prefix+'LinkUrl').value||'').trim();
+    var label=(document.getElementById(prefix+'LinkLabel').value||'').trim();
+    if(!lurl){showToast('Enter a URL.','#FF3B30');return;}
+    post.url=lurl;post.label=label||lurl;
+    document.getElementById(prefix+'LinkUrl').value='';
+    document.getElementById(prefix+'LinkLabel').value='';
+  } else if(type==='announcement'){
+    var afield=prefix==='mpt'?'mptAlert':'dptAlert';
+    var txt=(document.getElementById(afield).value||'').trim();
+    if(!txt){showToast('Enter an announcement.','#FF3B30');return;}
+    post.title='Announcement';post.content=txt;
+    document.getElementById(afield).value='';
+    // Bot notices
+    var bn=sfrom('botNotices',[]);
+    bn.unshift({msg:'📢 '+classKey+': '+txt,time:post.time});
+    sto('botNotices',bn);
+  }
+
+  var posts=sfrom('classPosts_'+classKey,[]);
+  posts.push(post);
+  sto('classPosts_'+classKey,posts);
+
+  // Also push to comments as tutor
+  var comments=sfrom('comments_'+classKey,[]);
+  comments.push({user:currentUser.name,avatar:'👑',msg:'['+type.toUpperCase()+'] '+(post.title||post.url||post.content?.substring(0,80)),time:post.time,role:'tutor'});
+  sto('comments_'+classKey,comments);
+
+  showToast('Posted to '+classKey+' successfully!');
+  if(source==='monitor'&&monitoringClass)loadClassMonitor(monitoringClass);
+}
+
+/* ── ENTER CLASS AS LEADER ── */
+window.enterClassAsLeader=function(){
+  if(!monitoringClass){showToast('Select a class first.','#FF3B30');return;}
+  window.open('classroom.html?class='+encodeURIComponent(monitoringClass),'_blank');
+};
+
+/* ── SQUARE MODERATION ── */
 window.verifyTarget=function(){
   var id=(document.getElementById('targetID').value||'').trim();
-  if(!id){alert('Enter a member ID first.');return;}
-  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  if(!id){showToast('Enter a Member ID.','#FF3B30');return;}
+  var users=sfrom('users',[]);
   var found=users.find(function(u){return u.memberID===id;});
   var res=document.getElementById('targetResult');
   res.style.display='block';
@@ -558,60 +916,79 @@ window.verifyTarget=function(){
 
 window.issueCmd=function(action){
   var id=(document.getElementById('targetID').value||'').trim();
-  if(!id){alert('Enter a member ID first.');return;}
-  var cmds={};try{cmds=JSON.parse(localStorage.getItem('systemCommands'))||{};}catch(e){}
-  cmds[id]=action;localStorage.setItem('systemCommands',JSON.stringify(cmds));
-  alert('COMMAND ISSUED: '+action+' sent to '+id);
+  if(!id){showToast('Enter a Member ID first.','#FF3B30');return;}
+  var cmds=sfrom('systemCommands',{});
+  cmds[id]=action;sto('systemCommands',cmds);
+  showToast('Command "'+action+'" sent to '+id);
 };
 
 window.purgeChatLog=function(){
-  if(confirm('This will permanently delete all Square chat messages. Proceed?')){
-    localStorage.removeItem('threadComments');alert('Chat log purged.');
+  if(confirm('Permanently delete all Square chat messages?')){
+    localStorage.removeItem('threadComments');
+    showToast('Chat log purged.');
   }
 };
 
-/* ── member recovery ────────────────────────── */
+/* ── MEMBER RECOVERY ── */
 window.findMember=function(){
   var q=(document.getElementById('recovSearch').value||'').toLowerCase();
   if(!q)return;
-  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var users=sfrom('users',[]);
   var found=users.find(function(u){return (u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
   var res=document.getElementById('recovResult');
   res.style.display='block';
-  if(found)res.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><div><strong style="color:var(--gold)">'+esc(found.name)+'</strong><br><span style="font-size:11px;color:#666;">ID: '+esc(found.memberID||'—')+'  ·  '+esc(found.email)+'</span></div><button class="action-btn gold" style="padding:8px 14px;font-size:11px;" onclick="issueRecoveryKey(\''+esc(found.memberID||found.email)+'\')">ISSUE RECOVERY KEY</button></div>';
-  else res.innerHTML='<span style="color:var(--red);font-size:12px;">No member found.</span>';
+  if(found){
+    res.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">'+
+      '<div><strong style="color:var(--gold)">'+esc(found.name)+'</strong><br><span style="font-size:11px;color:#555;">ID: '+esc(found.memberID||'—')+'  ·  '+esc(found.email)+'</span></div>'+
+      '<button class="action-btn gold" style="padding:8px 14px;font-size:11px;" onclick="issueRecoveryKey(\''+esc(found.memberID||found.email)+'\')">ISSUE RECOVERY KEY</button>'+
+    '</div>';
+  } else {
+    res.innerHTML='<span style="color:var(--red);font-size:12px;">No member found.</span>';
+  }
 };
 
 window.issueRecoveryKey=function(id){
   if(!confirm('Have two Pioneers verified this person\'s identity?'))return;
-  var users=[];try{users=JSON.parse(localStorage.getItem('users'))||[];}catch(e){}
+  var users=sfrom('users',[]);
   var idx=users.findIndex(function(u){return u.memberID===id||u.email===id;});
-  if(idx===-1){alert('User not found.');return;}
+  if(idx===-1){showToast('User not found.','#FF3B30');return;}
   var tempKey='Declare'+Math.floor(1000+Math.random()*9000);
-  // Store as hash
   var h=0;for(var i=0;i<tempKey.length;i++){h=((h<<5)-h)+tempKey.charCodeAt(i);h=h&h;}
   users[idx].passwordHash=h.toString(36);
   delete users[idx].password;
-  localStorage.setItem('users',JSON.stringify(users));
-  alert('SUCCESS. Temporary Recovery Key: '+tempKey+'\n\nShare this with the member. They can login then change their password.');
+  sto('users',users);
+  alert('SUCCESS. Temporary Recovery Key: '+tempKey+'\n\nShare this with the member privately. They can log in then update their password.');
 };
 
-/* ── INIT ───────────────────────────────────── */
+/* ── PRESENCE HEARTBEAT ── */
+function heartbeat(){
+  if(!currentUser)return;
+  var map=sfrom('presenceMap',{});
+  map[currentUser.email||currentUser.id||currentUser.name]=Date.now();
+  sto('presenceMap',map);
+}
+
+/* ── INIT ── */
 document.addEventListener('DOMContentLoaded',function(){
   if(!guardLeader())return;
 
-  document.getElementById('greetName').textContent='Shalom, '+(currentUser.name||'Leader').split(' ')[0];
-  detectDevice();
+  var greet=document.getElementById('greetName');
+  if(greet)greet.textContent='Shalom, '+(currentUser.name||'Leader').split(' ')[0];
+  var ln=document.getElementById('leaderName');
+  if(ln)ln.textContent=(currentUser.name||'Pioneer')+' · Active';
 
+  detectDevice();
+  loadTutorApps();
   loadPioneerRequests();
-  loadAcademyApprovals();
   loadAnnouncementHistory();
   updateLiveCounter();
   updateStats();
+  rotateQuotes();
+  heartbeat();
 
   setInterval(rotateQuotes,7000);
   setInterval(updateLiveCounter,5000);
-  setInterval(function(){loadPioneerRequests();loadAcademyApprovals();updateStats();},10000);
+  setInterval(function(){loadTutorApps();loadPioneerRequests();updateStats();heartbeat();},8000);
   window.addEventListener('resize',detectDevice);
   window.addEventListener('orientationchange',function(){setTimeout(detectDevice,200);});
 });
