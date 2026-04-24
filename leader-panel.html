@@ -1,328 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Executive Command | Declare Family</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --gold: #FFD700; --red: #FF3B30; --dark: #050505; --panel: #0E0E10;
-            --border: rgba(255, 255, 255, 0.1); --green: #00FF94; --text-dim: #aaa;
-            --accent: #111113;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tutor Command | Declare Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700;--gold2:#FFA500;--dark:#050505;--panel:#0E0E10;
+  --border:rgba(255,255,255,0.09);--green:#00FF94;--red:#FF3B30;
+  --blue:#4A9EFF;--dim:#888;--text:#f0f0f0;
+  --gold-soft:rgba(255,215,0,.07);--green-soft:rgba(0,255,148,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;display:flex;}
 
-        /* --- AUTO-DETECTION & GLOBAL RESET --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+/* ── SIDEBAR ── */
+.sidebar{
+  width:260px;background:#000;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:22px 16px;overflow-y:auto;flex-shrink:0;transition:transform .3s;
+}
+.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.brand-icon{width:42px;height:42px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.brand-txt{font-size:11px;font-weight:800;line-height:1.5;}
+.brand-txt span{display:block;color:var(--green);font-size:9px;letter-spacing:2px;}
 
-        body {
-            background: var(--dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0; height: 100vh; display: flex; overflow: hidden;
-        }
+.nav-label{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:2px;margin:14px 0 6px 6px;display:block;}
+.nav-link{padding:11px 14px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:11px;font-size:13px;font-weight:600;margin-bottom:3px;border:1px solid transparent;}
+.nav-link:hover{background:var(--gold-soft);color:#fff;border-color:rgba(255,215,0,.1);}
+.nav-link.active{background:var(--gold);color:#000;font-weight:800;}
 
-        /* --- NAVIGATION --- */
-        .side-nav {
-            width: 280px; background: #000; border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 25px; transition: 0.3s;
-        }
+.class-btn{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--border);background:none;color:#666;cursor:pointer;
+  font-size:12px;font-weight:700;margin-bottom:5px;width:100%;font-family:inherit;
+  text-align:left;transition:.2s;
+}
+.class-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-soft);}
+.class-btn.active{background:var(--gold);color:#000;border-color:var(--gold);}
 
-        .nav-brand { 
-            border: 1px solid var(--gold); padding: 10px; color: var(--gold); 
-            font-weight: 800; text-align: center; letter-spacing: 2px; margin-bottom: 40px;
-        }
+.sidebar-footer{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);}
+.tutor-badge{background:var(--green-soft);border:1px solid rgba(0,255,148,.25);border-radius:10px;padding:12px;}
+.tutor-badge span{font-size:9px;color:var(--green);font-weight:800;letter-spacing:1px;display:block;}
+.tutor-badge p{font-size:11px;color:#888;margin-top:3px;}
 
-        .nav-link {
-            padding: 15px; color: var(--text-dim); text-decoration: none;
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 12px;
-            transition: 0.2s; border-radius: 8px; margin-bottom: 5px;
-        }
+/* ── MAIN STAGE ── */
+.stage{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.stage-inner{padding:28px 32px;max-width:1000px;margin:0 auto;}
 
-        .nav-link:hover, .nav-link.active { background: rgba(255, 215, 0, 0.05); color: var(--gold); }
+/* PENDING APPROVAL STATE */
+.pending-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 20px;text-align:center;
+}
+.pending-icon{font-size:64px;margin-bottom:24px;animation:spin 3s linear infinite;}
+@keyframes spin{0%,100%{transform:rotate(0deg);}50%{transform:rotate(10deg);}25%,75%{transform:rotate(-5deg);}}
+.pending-title{font-family:'DM Serif Display',serif;font-size:1.8rem;margin-bottom:10px;}
+.pending-sub{color:var(--dim);font-size:14px;line-height:1.6;max-width:400px;}
 
-        /* --- MAIN COMMAND AREA --- */
-        .main-command {
-            flex: 1; display: flex; flex-direction: column; overflow-y: auto;
-            -webkit-overflow-scrolling: touch; /* Smooth mobile scroll */
-        }
+/* HEADER HUD */
+.hud{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.hud-title{font-family:'DM Serif Display',serif;font-size:1.4rem;margin-bottom:4px;}
+.hud-sub{color:var(--gold);font-size:12px;font-weight:600;}
+.live-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--green);background:var(--green-soft);border:1px solid rgba(0,255,148,.2);padding:4px 12px;border-radius:20px;margin-top:8px;}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pls 1.5s infinite;}
+@keyframes pls{0%,100%{opacity:1;}50%{opacity:.2;}}
 
-        .header-strip {
-            padding: 20px 40px; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 100;
-        }
+/* CMD CARDS */
+.cmd-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px;}
+.cmd-card.green{border-color:rgba(0,255,148,.2);background:var(--green-soft);}
+.cmd-card.gold{border-color:rgba(255,215,0,.2);background:var(--gold-soft);}
+.sec-label{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sec-label.green{color:var(--green);}
 
-        /* --- VERTICAL GRID LAYOUT --- */
-        .vertical-grid {
-            padding: 30px 40px; display: flex; flex-direction: column; gap: 25px;
-            max-width: 1000px; margin: 0 auto; width: 100%;
-        }
+/* POST PANEL */
+.post-type-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.ptype-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:none;color:#555;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;transition:.2s;}
+.ptype-btn:hover,.ptype-btn.active{background:rgba(0,255,148,.08);border-color:var(--green);color:var(--green);}
+.post-input{width:100%;background:#000;border:1px solid #1a1a1a;border-radius:10px;color:#fff;padding:12px;font-family:inherit;font-size:13px;outline:none;resize:vertical;transition:.2s;margin-bottom:8px;}
+.post-input:focus{border-color:var(--green);}
+.push-btn{background:var(--green);color:#000;border:none;padding:12px 24px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;text-transform:uppercase;letter-spacing:.5px;}
+.push-btn:hover{background:#00cc76;}
 
-        .command-card {
-            background: var(--panel); border: 1px solid var(--border);
-            border-radius: 16px; padding: 25px; position: relative;
-        }
+/* STUDENT ROWS */
+.student-row{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;background:#000;
+  border-radius:12px;margin-bottom:8px;border:1px solid var(--border);
+}
+.student-av{width:34px;height:34px;background:#111;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.student-name{font-size:13px;font-weight:700;}
+.student-adm{font-size:10px;color:#444;font-family:monospace;}
+.progress-bar-wrap{flex:1;min-width:60px;}
+.progress-bar{height:4px;background:#111;border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:4px;transition:width .5s;}
 
-        .card-title {
-            color: var(--gold); font-size: 11px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;
-            display: flex; align-items: center; gap: 10px;
-        }
+/* POSTS FEED */
+.post-item{background:#000;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.post-item .post-type-tag{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;}
+.post-item .post-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.post-item .post-time{font-size:10px;color:#333;}
+.post-item .del-btn{float:right;background:none;border:none;color:#333;cursor:pointer;font-size:12px;transition:.2s;}
+.post-item .del-btn:hover{color:var(--red);}
 
-        /* --- SQUARE AUTHORITY INTERFACE --- */
-        .square-controls {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;
-        }
+/* COMMENTS FEED */
+.comment-item{background:#0a0a0a;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.comment-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.comment-av{font-size:14px;}
+.comment-author{font-size:12px;font-weight:800;}
+.comment-time{font-size:10px;color:#333;margin-left:auto;}
+.comment-body{font-size:13px;color:#aaa;}
 
-        .action-btn {
-            background: #151518; border: 1px solid var(--border); color: #fff;
-            padding: 15px; border-radius: 10px; cursor: pointer; text-align: left;
-            transition: 0.2s; font-size: 12px; font-weight: 600;
-        }
+/* NOTIFICATION TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;padding:12px 20px;border-radius:12px;font-weight:700;font-size:13px;transform:translateY(20px);opacity:0;transition:.3s;z-index:600;pointer-events:none;}
+.toast.show{transform:translateY(0);opacity:1;}
 
-        .action-btn:hover { border-color: var(--gold); background: #1a1a1d; }
-        .action-btn.danger:hover { border-color: var(--red); color: var(--red); }
+/* MOBILE */
+.mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:400;width:42px;height:42px;background:var(--green);border-radius:10px;border:none;font-size:18px;cursor:pointer;align-items:center;justify-content:center;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;}
 
-        /* --- ACADEMY & RECOVERY TOOLS --- */
-        .request-item {
-            background: #111; padding: 15px; border-radius: 12px;
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
-        }
-
-        .input-group { display: flex; gap: 10px; margin-top: 15px; }
-        input {
-            background: #1a1a1d; border: 1px solid var(--border);
-            padding: 12px; border-radius: 8px; color: #fff; flex: 1;
-        }
-
-        /* --- QUOTE ENGINE --- */
-        #quoteDisplay {
-            font-style: italic; color: var(--text-dim); text-align: center;
-            padding: 20px; border-top: 1px solid var(--border); font-size: 13px;
-        }
-
-        /* --- MOBILE ADAPTATION --- */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .side-nav { width: 100%; height: auto; padding: 15px; border-right: none; border-bottom: 1px solid var(--border); }
-            .nav-brand { margin-bottom: 15px; }
-            .side-nav .nav-link { display: inline-flex; margin-right: 10px; padding: 8px 12px; }
-            .vertical-grid { padding: 20px; }
-            .header-strip { padding: 15px 20px; flex-direction: column; gap: 10px; text-align: center; }
-        }
-    </style>
+@media(max-width:900px){
+  html,body{overflow:auto;}
+  body{flex-direction:column;}
+  .sidebar{position:fixed;top:0;left:0;height:100%;z-index:350;transform:translateX(-100%);width:268px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-overlay.open{display:block;}
+  .mob-toggle{display:flex;}
+  .stage{width:100%;overflow:visible;}
+  .stage-inner{padding:70px 14px 28px;}
+  .hud{flex-direction:column;}
+}
+@media(max-width:480px){
+  .stage-inner{padding:64px 10px 20px;}
+}
+</style>
 </head>
 <body>
 
-    <nav class="side-nav">
-        <div class="nav-brand">DECLARE PIONEER</div>
-        <a href="hub.html" class="nav-link">🏠 Global Hub</a>
-        <a href="thread.html" class="nav-link">🟦 The Square</a>
-        <a href="leadership.html" class="nav-link active">🛠️ Executive Command</a>
-        <a href="academy.html" class="nav-link">📚 Academy</a>
-        
-        <div style="margin-top: auto; padding: 15px; border-radius: 10px; background: rgba(0,255,148,0.05); border: 1px solid var(--green);">
-            <span style="font-size: 10px; color: var(--green); font-weight: 800;">STATUS</span>
-            <div style="font-size: 12px;">Vision Pioneer Active</div>
-        </div>
-    </nav>
+<button class="mob-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <main class="main-command">
-        <header class="header-strip">
-            <div>
-                <h2 style="margin:0; font-size: 18px;">Leadership Command Center</h2>
-                <span id="deviceTag" style="font-size: 10px; color: var(--gold); background: var(--gold-muted); padding: 2px 6px; border-radius: 4px;">Detecting System...</span>
-            </div>
-            <div id="liveCounter" style="color: var(--green); font-weight: 800; font-size: 12px;">● 0 MEMBERS ONLINE</div>
-        </header>
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar" id="sidebar">
+  <div class="brand-row">
+    <div class="brand-icon">🌿</div>
+    <div class="brand-txt">DECLARE ACADEMY<span>INSTRUCTOR PANEL</span></div>
+  </div>
 
-        <div class="vertical-grid">
-            
-            <section class="command-card">
-                <div class="card-title"><span>🟦</span> Square Moderation Engine</div>
-                <div class="input-group" style="margin-bottom: 20px;">
-                    <input type="text" id="targetUserID" placeholder="Enter Member ID (e.g. M-123)">
-                    <button class="action-btn" onclick="verifyTarget()" style="background: var(--gold); color: #000;">FETCH TARGET</button>
-                </div>
-                <div class="square-controls">
-                    <button class="action-btn danger" onclick="issueCommand('MUTE')">🔇 Mute Microphone</button>
-                    <button class="action-btn danger" onclick="issueCommand('STOP_SCREEN')">🚫 Stop Screen Share</button>
-                    <button class="action-btn danger" onclick="issueCommand('KICK')">🚷 Kick from Session</button>
-                    <button class="action-btn" onclick="issueCommand('CLEAR_CHAT')">🗑️ Purge Chat Log</button>
-                </div>
-            </section>
+  <span class="nav-label">Navigation</span>
+  <a href="hub.html" class="nav-link">🌐 Global Hub</a>
+  <a href="academy.html" class="nav-link">🎓 Academy</a>
+  <a href="leadership.html" class="nav-link">🛡️ Command Centre</a>
+  <a href="leader-panel.html" class="nav-link active">🌿 Tutor Panel</a>
 
-            <section class="command-card">
-                <div class="card-title"><span>🎓</span> Academy Tutor Requests</div>
-                <div id="concernsList">
-                    <div style="color: var(--text-dim); font-size: 12px; text-align: center; padding: 20px;">Scanning Academy Database...</div>
-                </div>
-            </section>
+  <span class="nav-label">My Classes</span>
+  <div id="myClassButtons">
+    <p style="font-size:12px;color:#333;padding:10px 6px;">Loading your assigned classes...</p>
+  </div>
 
-            <section class="command-card">
-                <div class="card-title"><span>🔑</span> Member Recovery Key Generator</div>
-                <div class="input-group">
-                    <input type="text" id="recoverySearch" placeholder="Search Member Name or Email">
-                    <button class="action-btn" onclick="findMember()" style="padding: 0 20px;">SEARCH</button>
-                </div>
-                <div id="recoveryResult" style="margin-top: 15px; display: none;"></div>
-            </section>
+  <div class="sidebar-footer">
+    <div class="tutor-badge">
+      <span>TUTOR STATUS</span>
+      <p id="tutorName">Loading...</p>
+    </div>
+  </div>
+</nav>
 
-            <section class="command-card">
-                <div class="card-title"><span>🛡️</span> Pioneer Network Quotes</div>
-                <div id="quoteDisplay">"The vision is for an appointed time..."</div>
-            </section>
+<!-- ── MAIN STAGE ── -->
+<main class="stage">
+<div class="stage-inner" id="mainStage">
 
-        </div>
-    </main>
+  <!-- This will be rendered by JS based on approval state -->
+  <div class="pending-screen" id="pendingScreen">
+    <div class="pending-icon">⏳</div>
+    <div class="pending-title">Application Under Review</div>
+    <p class="pending-sub">Your tutor application has been submitted and is being reviewed by the Pioneer leadership. You will be notified here once approved.</p>
+  </div>
 
-    <script>
-        // --- 1. CORE AUTH & DEVICE DETECTION ---
-        const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+</div>
+</main>
 
-        function checkLeadershipAccess() {
-            if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'leader')) {
-                alert("ACCESS DENIED: Required Pioneer Clearances Not Found.");
-                window.location.href = "hub.html";
-                return false;
-            }
-            detectDevice();
-            return true;
-        }
+<div class="toast" id="toast"></div>
 
-        function detectDevice() {
-            const width = window.innerWidth;
-            const deviceTag = document.getElementById("deviceTag");
-            if (width < 768) {
-                deviceTag.innerText = "MOBILE CONSOLE ACTIVE";
-            } else if (width < 1024) {
-                deviceTag.innerText = "TABLET INTERFACE ACTIVE";
-            } else {
-                deviceTag.innerText = "DESKTOP COMMAND STATION";
-            }
-        }
+<script>
+(function(){
+'use strict';
 
-        // --- 2. SQUARE AUTHORITY LOGIC ---
-        function issueCommand(action) {
-            const targetId = document.getElementById("targetUserID").value.trim();
-            if (!targetId) return alert("Please specify a target Member ID.");
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function sto(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function sfrom(k,def){try{return JSON.parse(localStorage.getItem(k))||def;}catch(e){return def;}}
+function showToast(msg,color){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color||'var(--green)';t.style.color=color?'#fff':'#000';
+  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+}
 
-            // Communication via LocalStorage 'systemCommands'
-            let commands = JSON.parse(localStorage.getItem("systemCommands")) || {};
-            commands[targetId] = action;
-            localStorage.setItem("systemCommands", JSON.stringify(commands));
-            
-            alert(`COMMAND ISSUED: ${action} sent to ${targetId}`);
-        }
+var currentUser=sfrom('loggedInUser',null);
+var myApprovedClasses=[];
+var activeClass=null;
+var postType='topic';
 
-        function verifyTarget() {
-            const id = document.getElementById("targetUserID").value;
-            const users = JSON.parse(localStorage.getItem("users")) || [];
-            const found = users.find(u => u.memberID === id);
-            if (found) alert(`TARGET VERIFIED: ${found.name} (${found.email})`);
-            else alert("ID NOT FOUND IN SYSTEM");
-        }
+/* ── SIDEBAR TOGGLE ── */
+window.toggleSidebar=function(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+};
 
-        // --- 3. ACADEMY APPROVAL LOGIC ---
-        function loadRequests() {
-            const list = document.getElementById('concernsList');
-            let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
-            
-            if (adminNotify.length === 0) {
-                list.innerHTML = `<div style="color:var(--text-dim); text-align:center; padding:20px;">No pending applications.</div>`;
-                return;
-            }
+/* ── DETECT APPROVAL STATUS ── */
+function detectStatus(){
+  if(!currentUser){window.location.href='login.html';return;}
 
-            list.innerHTML = adminNotify.map(req => `
-                <div class="request-item">
-                    <div>
-                        <strong style="color:var(--gold);">${req.name}</strong>
-                        <div style="font-size:10px; color:#555;">Wants to join: ${req.class}</div>
-                    </div>
-                    <div style="display:flex; gap:5px;">
-                        <button class="action-btn" onclick="processRequest(${req.id}, 'approve')" style="padding:5px 10px; font-size:10px; background:var(--green); color:#000;">GRANT</button>
-                        <button class="action-btn danger" onclick="processRequest(${req.id}, 'deny')" style="padding:5px 10px; font-size:10px;">DENY</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+  var name=currentUser.name||'';
+  var approvedTutors=sfrom('approvedTutors',[]);
+  var isAdmin=currentUser.role==='admin'||currentUser.role==='leader';
 
-        function processRequest(id, action) {
-            let adminNotify = JSON.parse(localStorage.getItem("adminNotifications")) || [];
-            const req = adminNotify.find(r => r.id === id);
-            
-            if (action === 'approve' && req) {
-                let approved = JSON.parse(localStorage.getItem("approvedTutors")) || [];
-                approved.push({...req, status: 'active', approvedBy: currentUser.name});
-                localStorage.setItem("approvedTutors", JSON.stringify(approved));
-            }
-            
-            localStorage.setItem("adminNotifications", JSON.stringify(adminNotify.filter(r => r.id !== id)));
-            loadRequests();
-        }
+  document.getElementById('tutorName').textContent=name+' · '+
+    (isAdmin?'Admin/Pioneer':approvedTutors.length>0?'Approved Tutor':'Pending Review');
 
-        // --- 4. RECOVERY & QUOTES ---
-        const quotes = [
-            "Vision is the art of seeing things invisible.",
-            "Greatness is not for the chosen, it is for the called.",
-            "Integrity in leadership is the highest form of worship.",
-            "A Pioneer builds the bridge others will walk across."
-        ];
+  // Find all classes this tutor is approved for
+  myApprovedClasses=approvedTutors.filter(function(t){return t.name===name;});
 
-        function rotateQuotes() {
-            const display = document.getElementById("quoteDisplay");
-            display.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
-        }
+  if(isAdmin){
+    // Admins see all classes
+    var CLASSES=[
+      {key:'Vertical Growth',label:'Vertical Growth & Alignment',emoji:'🙏'},
+      {key:'Fiscal Kingdom',label:'Fiscal Kingdom Stewardship',emoji:'💰'},
+      {key:'Inner Psychology',label:'Psychology 101: The Inner Man',emoji:'🧠'},
+      {key:'Sovereign Leadership',label:'Sovereign Leadership Training',emoji:'👑'},
+      {key:'Social Advancement',label:'Social Life Advancement',emoji:'🌐'},
+      {key:'Creative Expression',label:'Creative Expression & Identity',emoji:'🎨'}
+    ];
+    myApprovedClasses=CLASSES.map(function(c){return Object.assign({},c,{class:c.key});});
+  }
 
-        function findMember() {
-            const query = document.getElementById("recoverySearch").value.toLowerCase();
-            const users = JSON.parse(localStorage.getItem("users")) || [];
-            const found = users.find(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
-            const resultDiv = document.getElementById("recoveryResult");
+  if(myApprovedClasses.length>0||isAdmin){
+    renderApprovedPanel();
+  } else {
+    checkPendingNotification(name);
+  }
+}
 
-            if (found) {
-                resultDiv.style.display = "block";
-                resultDiv.innerHTML = `
-                    <div class="request-item">
-                        <div><strong>${found.name}</strong><br><span style="font-size:10px;">ID: ${found.memberID}</span></div>
-                        <button class="action-btn" onclick="issueKey('${found.memberID}')" style="background:var(--red);">ISSUE KEY</button>
-                    </div>
-                `;
-            } else {
-                resultDiv.innerHTML = "No user found.";
-            }
-        }
+function checkPendingNotification(name){
+  // Check if there's an approval or denial notification
+  var allClasses=['Vertical Growth','Fiscal Kingdom','Inner Psychology','Sovereign Leadership','Social Advancement','Creative Expression'];
+  var found=null;
+  allClasses.forEach(function(c){
+    var notif=sfrom('tutorNotif_'+name+'_'+c,null);
+    if(notif&&!found)found=notif;
+  });
 
-        function issueKey(id) {
-            if (confirm("Have two Pioneers verified this identity?")) {
-                let users = JSON.parse(localStorage.getItem("users")) || [];
-                const idx = users.findIndex(u => u.memberID === id);
-                const tempKey = "DECLARE" + Math.floor(1000 + Math.random() * 9000);
-                users[idx].password = tempKey;
-                localStorage.setItem("users", JSON.stringify(users));
-                alert("SUCCESS. Recovery Key: " + tempKey);
-            }
-        }
+  var screen=document.getElementById('pendingScreen');
+  if(found){
+    if(found.status==='approved'){
+      screen.innerHTML='<div class="pending-icon">🎉</div>'+
+        '<div class="pending-title">Application Approved!</div>'+
+        '<p class="pending-sub">Congratulations! Your application for the <strong style="color:var(--gold)">'+esc(found.class)+'</strong> class has been approved. You now have instructor access.</p>'+
+        '<br><button onclick="window.location.reload()" style="margin-top:16px;background:var(--green);color:#000;border:none;padding:14px 28px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;">ENTER INSTRUCTOR PANEL →</button>';
+    } else {
+      screen.innerHTML='<div class="pending-icon">❌</div>'+
+        '<div class="pending-title">Application Not Approved</div>'+
+        '<p class="pending-sub">Your application for the '+esc(found.class)+' class was not approved at this time. You may re-apply or contact leadership for more information.</p>'+
+        '<br><a href="academy.html" style="display:inline-block;margin-top:16px;color:var(--gold);font-size:13px;">← Return to Academy</a>';
+    }
+  }
+}
 
-        function updateLiveCounter() {
-            const count = Math.floor(Math.random() * 5) + 1; // Simulated
-            document.getElementById("liveCounter").innerText = `● ${count} MEMBERS ONLINE`;
-        }
+/* ── RENDER APPROVED TUTOR VIEW ── */
+function renderApprovedPanel(){
+  document.getElementById('pendingScreen').style.display='none';
 
-        // --- INITIALIZE ---
-        document.addEventListener("DOMContentLoaded", () => {
-            if (checkLeadershipAccess()) {
-                loadRequests();
-                rotateQuotes();
-                updateLiveCounter();
-                setInterval(rotateQuotes, 10000);
-                setInterval(updateLiveCounter, 5000);
-            }
-        });
+  // Render class buttons in sidebar
+  var btnsContainer=document.getElementById('myClassButtons');
+  btnsContainer.innerHTML=myApprovedClasses.map(function(c){
+    var cls=c.class||c.key;
+    var count=sfrom('classMembers_'+cls,[]).length;
+    return '<button class="class-btn" onclick="selectClass(\''+cls+'\')" id="clsbtn-'+encodeURIComponent(cls)+'">'+
+      '<span>'+(c.emoji||'🎓')+'</span>'+
+      '<span style="flex:1;">'+(c.label||cls)+'</span>'+
+      '<span style="font-size:10px;color:#444;">'+count+'</span>'+
+    '</button>';
+  }).join('');
 
-        window.addEventListener('resize', detectDevice);
-    </script>
+  // Auto-select first class
+  if(myApprovedClasses.length>0){
+    selectClass(myApprovedClasses[0].class||myApprovedClasses[0].key);
+  }
+}
+
+/* ── SELECT CLASS ── */
+window.selectClass=function(classKey){
+  activeClass=classKey;
+  document.querySelectorAll('.class-btn').forEach(function(b){b.classList.remove('active');});
+  var btn=document.getElementById('clsbtn-'+encodeURIComponent(classKey));
+  if(btn)btn.classList.add('active');
+
+  if(window.innerWidth<900){document.getElementById('sidebar').classList.remove('open');}
+  renderClassPanel(classKey);
+};
+
+/* ── RENDER CLASS PANEL ── */
+function renderClassPanel(classKey){
+  var CMAP={
+    'Vertical Growth':{label:'Vertical Growth & Alignment',emoji:'🙏'},
+    'Fiscal Kingdom':{label:'Fiscal Kingdom Stewardship',emoji:'💰'},
+    'Inner Psychology':{label:'Psychology 101: The Inner Man',emoji:'🧠'},
+    'Sovereign Leadership':{label:'Sovereign Leadership Training',emoji:'👑'},
+    'Social Advancement':{label:'Social Life Advancement',emoji:'🌐'},
+    'Creative Expression':{label:'Creative Expression & Identity',emoji:'🎨'}
+  };
+  var cls=CMAP[classKey]||{label:classKey,emoji:'🎓'};
+  var members=sfrom('classMembers_'+classKey,[]);
+  var posts=sfrom('classPosts_'+classKey,[]);
+  var comments=sfrom('comments_'+classKey,[]);
+
+  var stage=document.getElementById('mainStage');
+  stage.innerHTML=
+    // HUD
+    '<div class="hud">'+
+      '<div>'+
+        '<div class="hud-title">'+cls.emoji+' '+esc(cls.label)+'</div>'+
+        '<div class="hud-sub">Instructor Dashboard · Active Class</div>'+
+        '<div class="live-pill"><span class="live-dot"></span>'+members.length+' Enrolled · '+posts.length+' Posts · '+comments.length+' Interactions</div>'+
+      '</div>'+
+      '<div>'+
+        '<button onclick="openClassroom(\''+classKey+'\')" style="background:var(--gold);color:#000;border:none;padding:11px 22px;border-radius:10px;font-weight:800;cursor:pointer;font-size:12px;font-family:\'Plus Jakarta Sans\',sans-serif;letter-spacing:.5px;">OPEN CLASSROOM →</button>'+
+      '</div>'+
+    '</div>'+
+
+    // POST TO CLASS
+    '<div class="cmd-card green">'+
+      '<div class="sec-label green">📝 Post to Class</div>'+
+      '<div class="post-type-row">'+
+        '<button class="ptype-btn active" onclick="setPostType(\'topic\',this)">📌 Topic/Notes</button>'+
+        '<button class="ptype-btn" onclick="setPostType(\'video\',this)">🎥 Video URL</button>'+
+        '<button class="ptype-btn" onclick="setPostType(\'link\',this)">🔗 Resource Link</button>'+
+        '<button class="ptype-btn" onclick="setPostType(\'announcement\',this)">📢 Class Alert</button>'+
+      '</div>'+
+      '<div id="ptTopic">'+
+        '<input type="text" class="post-input" id="ptTitle" placeholder="Session title or unit name">'+
+        '<textarea class="post-input" id="ptNotes" rows="5" placeholder="Write detailed notes, teachings, scriptures, or session content here..."></textarea>'+
+      '</div>'+
+      '<div id="ptVideo" style="display:none;"><input type="text" class="post-input" id="ptVideoUrl" placeholder="YouTube URL or direct video link (https://...)"></div>'+
+      '<div id="ptLink" style="display:none;">'+
+        '<input type="text" class="post-input" id="ptLinkUrl" placeholder="https://resource-link.com">'+
+        '<input type="text" class="post-input" id="ptLinkLabel" placeholder="Link label / description">'+
+      '</div>'+
+      '<div id="ptAnnouncement" style="display:none;"><textarea class="post-input" id="ptAlert" rows="3" placeholder="Class-specific alert or update for all students..."></textarea></div>'+
+      '<button class="push-btn" onclick="pushPost()">PUSH TO CLASS ↑</button>'+
+    '</div>'+
+
+    // POSTED CONTENT
+    '<div class="cmd-card">'+
+      '<div class="sec-label">📚 Posted Content ('+posts.length+')</div>'+
+      '<div id="postsListArea">'+renderPostsList(posts,classKey)+'</div>'+
+    '</div>'+
+
+    // ENROLLED STUDENTS
+    '<div class="cmd-card gold">'+
+      '<div class="sec-label">👥 Enrolled Students ('+members.length+')</div>'+
+      '<div id="membersArea">'+renderMembersList(members,classKey)+'</div>'+
+    '</div>'+
+
+    // CLASS INTERACTIONS
+    '<div class="cmd-card">'+
+      '<div class="sec-label">💬 Student Interactions ('+comments.length+')</div>'+
+      '<div id="commentsArea">'+renderCommentsList(comments)+'</div>'+
+    '</div>';
+}
+
+/* ── RENDER POSTS LIST ── */
+function renderPostsList(posts,classKey){
+  if(!posts.length)return '<p style="color:#333;font-size:13px;text-align:center;padding:16px;">No content posted yet. Push your first session above.</p>';
+  return posts.slice().reverse().slice(0,8).map(function(p,i){
+    var realIdx=posts.length-1-i;
+    return '<div class="post-item">'+
+      '<button class="del-btn" onclick="deletePost('+realIdx+',\''+classKey+'\')">✕</button>'+
+      '<span class="post-type-tag">'+p.type+(p.postedBy?' · '+esc(p.postedBy):'')+'</span>'+
+      '<div class="post-title">'+(p.title?esc(p.title):p.url?'<a href="'+esc(p.url)+'" target="_blank" style="color:var(--gold);">'+esc(p.url.substring(0,50))+'...</a>':'(content)')+'</div>'+
+      (p.content?'<div style="font-size:12px;color:#555;margin-top:4px;line-height:1.5;">'+esc(p.content.substring(0,100))+(p.content.length>100?'…':'')+'</div>':'')+
+      '<div class="post-time">'+(p.time?new Date(p.time).toLocaleString():'')+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── RENDER MEMBERS LIST ── */
+function renderMembersList(members,classKey){
+  if(!members.length)return '<p style="color:#333;font-size:13px;text-align:center;padding:16px;">No students enrolled yet.</p>';
+  return members.map(function(m){
+    var stu=sfrom('student_'+classKey,null);
+    var progress=(stu&&stu.name===m.name)?(stu.progress||0):0;
+    return '<div class="student-row">'+
+      '<div class="student-av">'+(m.avatar||'👤')+'</div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div class="student-name">'+esc(m.name)+'</div>'+
+        '<div class="student-adm">'+esc(m.adm)+'</div>'+
+        '<div class="progress-bar-wrap" style="margin-top:5px;">'+
+          '<div class="progress-bar"><div class="progress-fill" style="width:'+progress+'%"></div></div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:11px;color:var(--gold);font-weight:700;min-width:36px;text-align:right;">'+progress+'%</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── RENDER COMMENTS LIST ── */
+function renderCommentsList(comments){
+  if(!comments.length)return '<p style="color:#333;font-size:13px;text-align:center;padding:16px;">No interactions yet.</p>';
+  return comments.slice().reverse().slice(0,10).map(function(c){
+    return '<div class="comment-item">'+
+      '<div class="comment-header">'+
+        '<span class="comment-av">'+(c.avatar||'💬')+'</span>'+
+        '<span class="comment-author">'+esc(c.user)+'</span>'+
+        (c.role==='tutor'?'<span style="background:rgba(0,255,148,.1);color:var(--green);padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;">TUTOR</span>':'')+
+        (c.role==='bot'?'<span style="background:rgba(255,215,0,.1);color:var(--gold);padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;">BOT</span>':'')+
+        '<span class="comment-time">'+(c.time?new Date(c.time).toLocaleString([],{hour:'2-digit',minute:'2-digit',month:'short',day:'numeric'}):'')+'</span>'+
+      '</div>'+
+      '<div class="comment-body">'+esc(c.msg)+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+/* ── POST TYPE SWITCH ── */
+window.setPostType=function(type,btn){
+  postType=type;
+  document.querySelectorAll('.post-type-row .ptype-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('ptTopic').style.display=type==='topic'?'block':'none';
+  document.getElementById('ptVideo').style.display=type==='video'?'block':'none';
+  document.getElementById('ptLink').style.display=type==='link'?'block':'none';
+  document.getElementById('ptAnnouncement').style.display=type==='announcement'?'block':'none';
+};
+
+/* ── PUSH POST ── */
+window.pushPost=function(){
+  if(!activeClass){showToast('Select a class first.','#ff4d4d');return;}
+  var name=(currentUser&&currentUser.name)||'Instructor';
+  var post={type:postType,postedBy:name,time:new Date().toISOString()};
+
+  if(postType==='topic'){
+    var title=(document.getElementById('ptTitle').value||'').trim();
+    var notes=(document.getElementById('ptNotes').value||'').trim();
+    if(!title&&!notes){showToast('Add a title or notes.','#ff4d4d');return;}
+    post.title=title;post.content=notes;
+    document.getElementById('ptTitle').value='';
+    document.getElementById('ptNotes').value='';
+  } else if(postType==='video'){
+    var url=(document.getElementById('ptVideoUrl').value||'').trim();
+    if(!url){showToast('Enter a video URL.','#ff4d4d');return;}
+    post.url=url;
+    document.getElementById('ptVideoUrl').value='';
+  } else if(postType==='link'){
+    var lurl=(document.getElementById('ptLinkUrl').value||'').trim();
+    var llabel=(document.getElementById('ptLinkLabel').value||'').trim();
+    if(!lurl){showToast('Enter a URL.','#ff4d4d');return;}
+    post.url=lurl;post.label=llabel||lurl;
+    document.getElementById('ptLinkUrl').value='';
+    document.getElementById('ptLinkLabel').value='';
+  } else if(postType==='announcement'){
+    var atxt=(document.getElementById('ptAlert').value||'').trim();
+    if(!atxt){showToast('Enter an announcement.','#ff4d4d');return;}
+    post.title='Announcement';post.content=atxt;
+    document.getElementById('ptAlert').value='';
+    // Push to botNotices
+    var bn=sfrom('botNotices',[]);
+    bn.unshift({msg:'📢 '+activeClass+': '+atxt,time:post.time});
+    sto('botNotices',bn);
+  }
+
+  var posts=sfrom('classPosts_'+activeClass,[]);
+  posts.push(post);
+  sto('classPosts_'+activeClass,posts);
+
+  // Add to comments as tutor post
+  var comments=sfrom('comments_'+activeClass,[]);
+  comments.push({user:name,avatar:'🌿',msg:'['+postType.toUpperCase()+'] '+(post.title||post.url||post.content.substring(0,80)),time:post.time,role:'tutor'});
+  sto('comments_'+activeClass,comments);
+
+  showToast('Content pushed to class!');
+  setTimeout(function(){renderClassPanel(activeClass);},300);
+};
+
+/* ── DELETE POST ── */
+window.deletePost=function(idx,classKey){
+  if(!confirm('Remove this post from the class?'))return;
+  var posts=sfrom('classPosts_'+classKey,[]);
+  posts.splice(idx,1);
+  sto('classPosts_'+classKey,posts);
+  renderClassPanel(classKey);
+  showToast('Post removed.');
+};
+
+/* ── OPEN CLASSROOM ── */
+window.openClassroom=function(classKey){
+  window.open('classroom.html?class='+encodeURIComponent(classKey),'_blank');
+};
+
+/* ── AUTO REFRESH ── */
+function autoRefresh(){
+  if(activeClass){
+    var stage=document.getElementById('mainStage');
+    if(stage&&stage.querySelector('.hud')){
+      // Only refresh the lists, not the whole panel
+      var members=sfrom('classMembers_'+activeClass,[]);
+      var posts=sfrom('classPosts_'+activeClass,[]);
+      var comments=sfrom('comments_'+activeClass,[]);
+      var mEl=document.getElementById('membersArea');
+      var cEl=document.getElementById('commentsArea');
+      var pEl=document.getElementById('postsListArea');
+      if(mEl)mEl.innerHTML=renderMembersList(members,activeClass);
+      if(cEl)cEl.innerHTML=renderCommentsList(comments);
+      if(pEl)pEl.innerHTML=renderPostsList(posts,activeClass);
+    }
+  }
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',function(){
+  if(!currentUser){window.location.href='login.html';return;}
+  detectStatus();
+  setInterval(autoRefresh,6000);
+});
+
+})();
+</script>
 </body>
 </html>
