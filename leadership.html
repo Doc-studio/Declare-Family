@@ -5,472 +5,331 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Executive Command | Declare Family</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="declare-db.js"></script>
 <style>
 :root{
-  --gold:#FFD700;--gold2:#FFA500;--dark:#050505;--panel:#0E0E10;
+  --gold:#FFD700;--dark:#050505;--panel:#0E0E10;
   --border:rgba(255,255,255,0.09);--green:#00FF94;--red:#FF3B30;
-  --blue:#4A9EFF;--amber:#FF9F43;--purple:#A855F7;
-  --dim:#888;--text:#f0f0f0;
-  --gold-soft:rgba(255,215,0,.07);--green-soft:rgba(0,255,148,.06);
-  --red-soft:rgba(255,59,48,.06);--blue-soft:rgba(74,158,255,.06);
+  --blue:#4A9EFF;--amber:#FF9F43;--purple:#A855F7;--dim:#888;
+  --gs:rgba(255,215,0,.07);--gns:rgba(0,255,148,.06);
+  --rs:rgba(255,59,48,.06);--bs:rgba(74,158,255,.06);--ps:rgba(168,85,247,.05);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:10px;}
 html,body{height:100%;overflow:hidden;}
-body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;display:flex;}
+body{background:var(--dark);color:#f0f0f0;font-family:'Plus Jakarta Sans',sans-serif;display:flex;}
 
-/* ── SIDEBAR ── */
-.sidebar{
-  width:268px;background:#000;border-right:1px solid var(--border);
-  display:flex;flex-direction:column;padding:22px 16px;overflow-y:auto;flex-shrink:0;
-  transition:transform .3s;
-}
-.brand-row{display:flex;align-items:center;gap:12px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);}
-.brand-crest{width:44px;height:44px;background:var(--gold);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.brand-txt{font-size:11px;font-weight:800;letter-spacing:.5px;line-height:1.5;}
-.brand-txt span{display:block;color:var(--gold);font-size:9px;letter-spacing:2px;}
+/* SIDEBAR */
+.sidebar{width:256px;background:#000;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 13px;overflow-y:auto;flex-shrink:0;transition:transform .3s;}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.brand-icon{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.brand-txt{font-size:10px;font-weight:800;line-height:1.5;} .brand-txt span{display:block;color:var(--gold);font-size:8px;letter-spacing:2px;}
+.nav-sec{font-size:9px;color:#2a2a2a;text-transform:uppercase;letter-spacing:2px;margin:12px 0 5px 5px;display:block;}
+.nav-lnk{padding:9px 11px;border-radius:9px;cursor:pointer;transition:.2s;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;margin-bottom:2px;border:1px solid transparent;}
+.nav-lnk:hover{background:var(--gs);color:#fff;border-color:rgba(255,215,0,.1);}
+.nav-lnk.active{background:var(--gold);color:#000;font-weight:800;}
+.nav-dot{width:6px;height:6px;background:var(--red);border-radius:50%;margin-left:auto;display:none;box-shadow:0 0 5px var(--red);}
+.sid-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);}
+.sid-pill{background:var(--gns);border:1px solid rgba(0,255,148,.2);border-radius:9px;padding:9px;}
+.sid-pill span{font-size:8px;color:var(--green);font-weight:800;letter-spacing:1px;display:block;}
+.sid-pill p{font-size:11px;color:#555;margin-top:2px;}
 
-.nav-label{font-size:9px;color:#333;text-transform:uppercase;letter-spacing:2px;margin:14px 0 7px 6px;display:block;}
-.nav-link{
-  padding:11px 14px;border-radius:10px;cursor:pointer;transition:.2s;color:var(--dim);
-  text-decoration:none;display:flex;align-items:center;gap:11px;font-size:13px;
-  font-weight:600;margin-bottom:3px;border:1px solid transparent;
-}
-.nav-link:hover{background:var(--gold-soft);color:#fff;border-color:rgba(255,215,0,.1);}
-.nav-link.active{background:var(--gold);color:#000;font-weight:800;}
-
-.monitor-btn{
-  display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:10px;
-  border:1px solid rgba(0,255,148,.2);background:var(--green-soft);color:var(--green);
-  cursor:pointer;font-size:13px;font-weight:700;margin-bottom:3px;width:100%;
-  font-family:'Plus Jakarta Sans',sans-serif;text-align:left;transition:.2s;
-}
-.monitor-btn:hover{background:rgba(0,255,148,.12);border-color:var(--green);}
-
-.sub-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:8px;margin-top:6px;}
-.sub-link{padding:9px 12px;font-size:12px;color:#555;text-decoration:none;display:flex;align-items:center;gap:9px;border-radius:8px;transition:.2s;cursor:pointer;}
-.sub-link:hover{color:var(--gold);background:#111;}
-
-.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);}
-.status-pill{background:var(--green-soft);border:1px solid rgba(0,255,148,.2);border-radius:10px;padding:10px 14px;}
-.status-pill span{font-size:9px;color:var(--green);font-weight:800;letter-spacing:1px;display:block;}
-.status-pill p{font-size:11px;color:#888;margin-top:2px;}
-
-/* ── MAIN STAGE ── */
-.stage{flex:1;overflow-y:auto;background:#080808;-webkit-overflow-scrolling:touch;}
-.stage-inner{padding:28px 32px;max-width:1060px;margin:0 auto;}
+/* STAGE */
+.stage{flex:1;overflow-y:auto;background:#070708;-webkit-overflow-scrolling:touch;}
+.inner{padding:22px 26px;max-width:1080px;margin:0 auto;}
 
 /* HUD */
-.hud{
-  background:var(--panel);border:1px solid var(--border);border-radius:20px;
-  padding:26px;display:flex;justify-content:space-between;align-items:flex-start;
-  margin-bottom:24px;gap:20px;
-}
-.hud-left h1{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:400;margin-bottom:4px;}
-.hud-left p{color:var(--gold);font-size:12px;font-weight:600;margin-bottom:10px;}
-.live-pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:var(--green);background:var(--green-soft);border:1px solid rgba(0,255,148,.2);padding:5px 14px;border-radius:20px;}
-.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 6px var(--green);animation:pls 1.5s infinite;}
-@keyframes pls{0%,100%{opacity:1;}50%{opacity:.2;}}
-.hud-right{text-align:right;max-width:360px;}
-#quoteDisplay{font-style:italic;color:var(--dim);font-size:13px;line-height:1.6;transition:opacity .5s;}
-#deviceTag{font-size:10px;color:#333;margin-top:8px;}
+.hud{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;gap:14px;flex-wrap:wrap;}
+.hud h1{font-family:'DM Serif Display',serif;font-size:clamp(1.2rem,2.5vw,1.7rem);margin-bottom:3px;}
+.hud .sub{color:var(--gold);font-size:11px;font-weight:600;margin-bottom:7px;}
+.live-pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;color:var(--green);background:var(--gns);border:1px solid rgba(0,255,148,.2);padding:4px 11px;border-radius:20px;}
+.ldot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pls 1.5s infinite;}
+@keyframes pls{0%,100%{opacity:1;}50%{opacity:.15;}}
+.hud-q{font-style:italic;color:#3a3a3a;font-size:12px;max-width:300px;transition:opacity .5s;text-align:right;line-height:1.55;}
 
-/* BOT CARD */
-.bot-card{
-  background:linear-gradient(135deg,#0c0c0e,#000);border:1px solid rgba(255,215,0,.3);
-  border-radius:18px;padding:20px 24px;display:flex;align-items:center;gap:18px;margin-bottom:24px;
-}
-.bot-avatar{width:50px;height:50px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 16px rgba(255,215,0,.2);}
-.bot-text{font-size:13px;line-height:1.6;color:#ccc;}
+/* BOT */
+.bot-bar{background:#080808;border:1px solid rgba(255,215,0,.18);border-radius:14px;padding:15px 18px;display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.bot-av{width:40px;height:40px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.bot-txt{font-size:12px;line-height:1.6;color:#aaa;}
 
-/* SECTION LABEL */
-.sec-label{font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+/* CARDS */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;}
+.card.gold{border-color:rgba(255,215,0,.2);background:var(--gs);}
+.card.green{border-color:rgba(0,255,148,.16);background:var(--gns);}
+.card.red{border-color:rgba(255,59,48,.16);background:var(--rs);}
+.card.blue{border-color:rgba(74,158,255,.16);background:var(--bs);}
+.card.purple{border-color:rgba(168,85,247,.16);background:var(--ps);}
+.card.amber{border-color:rgba(255,159,67,.18);background:rgba(255,159,67,.04);}
 
-/* ALERT BADGE on section */
-.alert-badge{background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+/* LABELS */
+.clabel{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.clabel.gold{color:var(--gold);} .clabel.green{color:var(--green);} .clabel.blue{color:var(--blue);}
+.clabel.red{color:var(--red);} .clabel.purple{color:var(--purple);} .clabel.amber{color:var(--amber);}
+.sub-p{font-size:11px;color:#444;margin-bottom:13px;line-height:1.5;}
+.sub-p a{color:var(--gold);text-decoration:none;} .sub-p a:hover{text-decoration:underline;}
+.abadge{background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:12px;animation:ablink 2s infinite;}
+@keyframes ablink{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-/* CMD CARDS */
-.cmd-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
-.cmd-card.gold{border-color:rgba(255,215,0,.25);background:var(--gold-soft);}
-.cmd-card.green{border-color:rgba(0,255,148,.2);background:var(--green-soft);}
-.cmd-card.red{border-color:rgba(255,59,48,.2);background:var(--red-soft);}
-.cmd-card.blue{border-color:rgba(74,158,255,.2);background:var(--blue-soft);}
+/* INPUTS */
+.frow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.fi,.fsel,.fta{background:#000;border:1px solid #181818;border-radius:9px;color:#fff;padding:10px 13px;font-family:inherit;font-size:12px;outline:none;transition:.2s;}
+.fi,.fsel{flex:1;min-width:110px;} .fta{width:100%;resize:vertical;min-height:72px;}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--gold);}
+.fi.gn:focus,.fta.gn:focus{border-color:var(--green);}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:9px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;border:none;text-transform:uppercase;letter-spacing:.5px;}
+.btn.gold{background:var(--gold);color:#000;} .btn.gold:hover{background:#fff;}
+.btn.green{background:var(--green);color:#000;} .btn.green:hover{background:#00cc76;}
+.btn.red{background:none;border:1px solid var(--red);color:var(--red);} .btn.red:hover{background:var(--red);color:#fff;}
+.btn.out{background:none;border:1px solid #252525;color:#666;} .btn.out:hover{border-color:var(--red);color:var(--red);}
+
+/* POST TYPES */
+.ptrow{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap;}
+.ptbtn{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:none;color:#444;cursor:pointer;font-size:10px;font-weight:700;font-family:inherit;transition:.2s;}
+.ptbtn:hover,.ptbtn.active{background:var(--gs);border-color:var(--gold);color:var(--gold);}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:9px;margin-bottom:16px;}
+.st{background:#000;border:1px solid var(--border);border-radius:11px;padding:13px;text-align:center;}
+.st .lbl{font-size:8px;color:#2a2a2a;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
+.st .val{font-size:22px;font-weight:800;}
+
+/* MOD ROWS */
+.mrow{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#000;border-radius:10px;margin-bottom:6px;border:1px solid var(--border);}
+.mrow-info{flex:1;min-width:0;font-size:11px;color:#666;}
+.mrow-info strong{color:#e0e0e0;display:block;font-size:12px;margin-bottom:1px;}
+.mrow-acts{display:flex;gap:5px;flex-shrink:0;}
+.sm-btn{padding:5px 10px;border-radius:7px;font-size:10px;font-weight:800;cursor:pointer;font-family:inherit;border:1px solid;transition:.2s;}
+.sm-btn.approve{background:var(--green);color:#000;border-color:var(--green);}
+.sm-btn.approve:hover{background:#00cc76;}
+.sm-btn.deny{background:none;color:var(--red);border-color:var(--red);}
+.sm-btn.deny:hover{background:var(--red);color:#fff;}
+.sm-btn.out{background:none;color:#555;border-color:#222;}
+.sm-btn.out:hover{border-color:var(--red);color:var(--red);}
+.sm-btn.gn{background:none;color:var(--green);border-color:rgba(0,255,148,.3);}
+.sm-btn.gn:hover{background:var(--green);color:#000;}
+.sm-btn.pu{background:none;color:var(--purple);border-color:rgba(168,85,247,.3);}
+.sm-btn.pu:hover{background:var(--purple);color:#fff;}
+.sm-btn.au{background:none;color:var(--gold);border-color:rgba(255,215,0,.3);}
+.sm-btn.au:hover{background:var(--gold);color:#000;}
+
+/* CODE BOX */
+.code-box{background:#000;border:1px solid rgba(0,255,148,.3);border-radius:11px;padding:14px;display:none;margin-top:8px;}
+.code-val{font-family:monospace;font-size:17px;color:var(--green);font-weight:800;letter-spacing:3px;}
+.res-box{margin-top:9px;padding:11px;background:#000;border-radius:9px;border:1px solid var(--border);display:none;font-size:12px;}
 
 /* APPROVAL ROW */
-.approval-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 16px;background:#000;border-radius:12px;margin-bottom:10px;
-  border:1px solid var(--border);gap:12px;flex-wrap:wrap;
-}
-.approval-info{flex:1;min-width:0;}
-.approval-info .tag{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;display:block;}
-.approval-info h4{font-size:14px;font-weight:800;margin-bottom:2px;}
-.approval-info p{font-size:11px;color:#555;margin:0;}
-.approval-btns{display:flex;gap:8px;flex-shrink:0;}
-.btn-approve{background:var(--green);color:#000;border:none;padding:8px 16px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;}
-.btn-approve:hover{background:#00cc76;}
-.btn-deny{background:transparent;color:var(--red);border:1px solid var(--red);padding:8px 16px;border-radius:8px;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit;transition:.2s;}
-.btn-deny:hover{background:var(--red);color:#fff;}
+.aprow{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;background:#000;border-radius:11px;margin-bottom:7px;border:1px solid var(--border);gap:9px;flex-wrap:wrap;}
+.aprow-info{flex:1;min-width:0;}
+.aprow-info .tag{font-size:8px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;display:block;}
+.aprow-info h4{font-size:13px;font-weight:800;margin-bottom:1px;}
+.aprow-info p{font-size:10px;color:#444;}
+.aprow-btns{display:flex;gap:6px;flex-shrink:0;}
 
-/* MONITOR MODAL */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
-  display:none;align-items:center;justify-content:center;padding:20px;
-}
-.modal-overlay.open{display:flex;}
-.modal-box{
-  background:#0a0a0a;border:1px solid var(--gold);border-radius:20px;
-  width:100%;max-width:900px;max-height:90vh;overflow-y:auto;padding:32px;
-  animation:fadeUp .3s ease;
-}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.modal-title{font-family:'DM Serif Display',serif;font-size:1.5rem;}
-.modal-close{width:36px;height:36px;background:#111;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--dim);transition:.2s;}
-.modal-close:hover{border-color:var(--red);color:var(--red);}
-
-/* CLASS SELECTOR */
-.class-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
-.class-pill{
-  padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:none;
-  color:#666;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;transition:.2s;
-}
-.class-pill:hover{border-color:var(--gold);color:var(--gold);}
-.class-pill.active{background:var(--gold);color:#000;border-color:var(--gold);}
-
-/* MEMBER TABLE */
-.member-table{width:100%;border-collapse:separate;border-spacing:0 6px;}
-.member-table th{font-size:9px;color:#444;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:0 14px 8px;}
-.member-table th:first-child{padding-left:0;}
-.member-row-tr td{background:#000;padding:12px 14px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.member-row-tr td:first-child{border-radius:10px 0 0 10px;border-left:1px solid var(--border);padding-left:12px;}
-.member-row-tr td:last-child{border-radius:0 10px 10px 0;border-right:1px solid var(--border);}
-.member-avatar-sm{width:30px;height:30px;background:#111;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;margin-right:8px;}
-
-/* POST TO CLASS FORM */
-.post-form{background:#000;border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:16px;}
-.post-type-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
-.ptype-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:none;color:#555;cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;transition:.2s;}
-.ptype-btn:hover,.ptype-btn.active{background:rgba(255,215,0,.08);border-color:var(--gold);color:var(--gold);}
-.post-input{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;color:#fff;padding:12px;font-family:inherit;font-size:13px;outline:none;resize:vertical;transition:.2s;margin-bottom:8px;}
-.post-input:focus{border-color:var(--gold);}
-.push-btn{background:var(--gold);color:#000;border:none;padding:11px 22px;border-radius:10px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;transition:.2s;text-transform:uppercase;letter-spacing:.5px;}
-.push-btn:hover{background:#fff;}
-
-/* INPUT ROW */
-.input-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
-.input-row input,.input-row select{
-  flex:1;min-width:140px;background:#1a1a1a;border:1px solid var(--border);
-  padding:11px 14px;border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;transition:.2s;
-}
-.input-row input:focus{border-color:var(--gold);}
-.action-btn{
-  background:#1a1a1d;border:1px solid var(--border);color:#ccc;
-  padding:11px 18px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;
-  transition:.2s;font-family:inherit;white-space:nowrap;
-}
-.action-btn:hover{border-color:var(--gold);color:var(--gold);}
-.action-btn.gold{background:var(--gold);color:#000;border-color:var(--gold);}
-.action-btn.gold:hover{background:#fff;}
-.action-btn.danger{color:var(--red);}
-.action-btn.danger:hover{border-color:var(--red);background:rgba(255,59,48,.08);}
-
-.result-box{margin-top:12px;padding:14px;background:#000;border-radius:10px;border:1px solid var(--border);display:none;font-size:13px;}
-
-/* STATS GRID */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;}
-.stat-tile{background:#000;border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center;}
-.stat-tile .label{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;}
-.stat-tile .value{font-size:26px;font-weight:800;}
-
-/* BROADCAST AREA */
-.broadcast-area{display:flex;gap:12px;align-items:flex-start;}
-.broadcast-area textarea{flex:1;background:#1a1a1a;border:1px solid var(--border);border-radius:10px;color:#fff;padding:12px;resize:none;height:76px;font-family:inherit;font-size:13px;outline:none;transition:.2s;}
-.broadcast-area textarea:focus{border-color:var(--gold);}
-.broadcast-controls{display:flex;flex-direction:column;gap:8px;min-width:170px;}
-.broadcast-controls select,.broadcast-controls input{background:#1a1a1a;border:1px solid var(--border);padding:10px;border-radius:10px;color:#fff;font-family:inherit;font-size:12px;outline:none;}
-
-/* PIONEER CODE */
-.code-box{background:#000;border:1px solid rgba(0,255,148,.3);border-radius:12px;padding:16px;display:none;margin-top:12px;}
-.code-val{font-family:'Courier New',monospace;font-size:18px;color:var(--green);font-weight:800;letter-spacing:3px;}
-.copy-btn{background:var(--gold);border:none;padding:5px 14px;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;margin-left:12px;font-family:inherit;}
-
-/* NOTIFICATION TOAST */
-.toast{
-  position:fixed;bottom:24px;right:24px;background:var(--green);color:#000;
-  padding:12px 20px;border-radius:12px;font-weight:700;font-size:13px;
-  transform:translateY(20px);opacity:0;transition:.3s;z-index:600;pointer-events:none;
-}
+/* MOBILE */
+.mob-tog{display:none;position:fixed;top:12px;left:12px;z-index:400;width:40px;height:40px;background:var(--gold);border-radius:9px;border:none;font-size:16px;cursor:pointer;align-items:center;justify-content:center;}
+.sid-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--green);color:#000;padding:11px 18px;border-radius:11px;font-weight:700;font-size:12px;transform:translateY(18px);opacity:0;transition:.3s;z-index:700;pointer-events:none;}
 .toast.show{transform:translateY(0);opacity:1;}
 
-/* NAV ALERT DOT */
-.nav-alert{width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:auto;box-shadow:0 0 6px var(--red);}
-
-/* MOBILE NAV TOGGLE */
-.mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:400;width:42px;height:42px;background:var(--gold);border-radius:10px;border:none;font-size:18px;cursor:pointer;align-items:center;justify-content:center;}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  html,body{overflow:auto;}
-  body{flex-direction:column;}
-  .sidebar{position:fixed;top:0;left:0;height:100%;z-index:350;transform:translateX(-100%);width:280px;}
+@media(max-width:860px){
+  html,body{overflow:auto;}body{flex-direction:column;}
+  .sidebar{position:fixed;top:0;left:0;height:100%;z-index:350;transform:translateX(-100%);width:256px;}
   .sidebar.open{transform:translateX(0);}
-  .sidebar-overlay.open{display:block;}
-  .mob-toggle{display:flex;}
-  .stage{width:100%;overflow:visible;}
-  .stage-inner{padding:72px 14px 32px;}
-  .hud{flex-direction:column;gap:12px;}
-  .hud-right{text-align:left;max-width:100%;}
-  .broadcast-area{flex-direction:column;}
-  .broadcast-controls{min-width:100%;}
+  .sid-overlay.open{display:block;}
+  .mob-tog{display:flex;} .stage{width:100%;overflow:visible;}
+  .inner{padding:64px 11px 24px;} .hud{flex-direction:column;gap:9px;} .hud-q{text-align:left;max-width:100%;}
 }
-@media(max-width:500px){
-  .modal-box{padding:20px 14px;}
-  .stage-inner{padding:68px 10px 24px;}
-}
+@media(max-width:480px){.inner{padding:60px 9px 20px;}.stats{grid-template-columns:repeat(3,1fr);}}
 </style>
 </head>
 <body>
 
-<button class="mob-toggle" onclick="toggleSidebar()">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<button class="mob-tog" onclick="tog()">☰</button>
+<div class="sid-overlay" id="sOverlay" onclick="tog()"></div>
 
-<!-- ── SIDEBAR ── -->
 <nav class="sidebar" id="sidebar">
-  <div class="brand-row">
-    <div class="brand-crest">🛡️</div>
-    <div class="brand-txt">DECLARE FAMILY<span>EXECUTIVE COMMAND</span></div>
-  </div>
-
-  <span class="nav-label">Navigation</span>
-  <a href="Dashboard.html" class="nav-link">📊 My Dashboard</a>
-  <a href="hub.html" class="nav-link">🌐 Declare Hub</a>
-  <a href="thread.html" class="nav-link">🟦 The Square</a>
-  <a href="leadership.html" class="nav-link active">🛡️ Command Centre</a>
-
-  <span class="nav-label">Academy Management</span>
-  <button class="monitor-btn" onclick="openMonitor()">
-    🎓 Monitor School
-    <span id="monitorAlertDot" style="display:none;width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:auto;box-shadow:0 0 6px var(--red);"></span>
-  </button>
-
-  <span class="nav-label">Family Links</span>
-  <div class="sub-box">
-    <a href="faith.html" class="sub-link">🙏 Prayer Room</a>
-    <a href="talents.html" class="sub-link">🎨 Talents</a>
-    <a href="projects.html" class="sub-link">🏗️ Projects</a>
-    <a href="achievements.html" class="sub-link">🏆 Achievements</a>
-    <a href="academy.html" class="sub-link">🎓 Academy</a>
-  </div>
-
-  <div class="sidebar-footer">
-    <div class="status-pill">
-      <span>PIONEER STATUS</span>
-      <p id="leaderName">Vision Pioneer · Active</p>
-    </div>
-  </div>
+  <div class="brand"><div class="brand-icon">🛡️</div><div class="brand-txt">DECLARE FAMILY<span>EXECUTIVE COMMAND</span></div></div>
+  <span class="nav-sec">Navigation</span>
+  <a href="Dashboard.html" class="nav-lnk">📊 Dashboard</a>
+  <a href="hub.html" class="nav-lnk">🌐 Declare Hub</a>
+  <a href="thread.html" class="nav-lnk">🟦 The Square</a>
+  <a href="leadership.html" class="nav-lnk active">🛡️ Command Centre</a>
+  <span class="nav-sec">Manage Pages</span>
+  <a href="#sec-academy" class="nav-lnk" onclick="jmp('sec-academy')">🎓 Academy Posts</a>
+  <a href="#sec-broadcast" class="nav-lnk" onclick="jmp('sec-broadcast')">📢 Broadcasts</a>
+  <a href="#sec-projects" class="nav-lnk" onclick="jmp('sec-projects')">🚀 Projects</a>
+  <a href="#sec-achievements" class="nav-lnk" onclick="jmp('sec-achievements')">🏆 Achievements</a>
+  <a href="#sec-prayer" class="nav-lnk" onclick="jmp('sec-prayer')">🕊️ Prayer Wall</a>
+  <a href="#sec-talents" class="nav-lnk" onclick="jmp('sec-talents')">🎨 Talents</a>
+  <a href="#sec-approvals" class="nav-lnk" onclick="jmp('sec-approvals')">
+    ✅ Approvals <span class="nav-dot" id="appDot"></span>
+  </a>
+  <a href="#sec-moderation" class="nav-lnk" onclick="jmp('sec-moderation')">🔧 Moderation</a>
+  <div class="sid-foot"><div class="sid-pill"><span>PIONEER ACTIVE</span><p id="ldName">Loading...</p></div></div>
 </nav>
 
-<!-- ── MAIN STAGE ── -->
 <main class="stage">
-<div class="stage-inner">
+<div class="inner">
 
-  <!-- HUD -->
   <div class="hud">
-    <div class="hud-left">
-      <h1 id="greetName">Shalom, Leader</h1>
-      <p>Called · Equipped · Sent — Executive Command Active</p>
-      <div class="live-pill"><span class="live-dot"></span><span id="sessionCount">0 Pioneer(s) · 0 Member(s) Online</span></div>
+    <div>
+      <h1 id="greet">Shalom, Leader</h1>
+      <div class="sub">Called · Equipped · Sent — Executive Command Active</div>
+      <div class="live-pill"><span class="ldot"></span><span id="onlineLbl">0 Pioneer(s) · 0 Member(s) Online</span></div>
     </div>
-    <div class="hud-right">
-      <div id="quoteDisplay">"Vision is the art of seeing what is invisible to others."</div>
-      <div id="deviceTag">Detecting device...</div>
-    </div>
+    <div class="hud-q" id="quoteEl">"Vision is the art of seeing what is invisible to others."</div>
   </div>
 
-  <!-- BOT -->
-  <div class="bot-card">
-    <div class="bot-avatar">🤖</div>
-    <div class="bot-text" id="botMsg"><strong>System Intelligence:</strong> Welcome back, Leader. Loading family status...</div>
+  <div class="bot-bar">
+    <div class="bot-av">🤖</div>
+    <div class="bot-txt" id="botTxt">System Intelligence: Loading family status...</div>
   </div>
 
-  <!-- ── 1. TUTOR APPLICATIONS (with alert) ── -->
-  <div class="cmd-card gold" id="tutorAppsCard">
-    <div class="sec-label">
-      🎓 Academy Tutor Applications
-      <span class="alert-badge" id="tutorAlertBadge" style="display:none;">NEW</span>
-    </div>
-    <p style="font-size:12px;color:#666;margin-bottom:14px;">Tutor applicants await approval. Upon approval, the applicant is notified within the portal and given class access.</p>
-    <div id="tutorAppsList">
-      <p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending tutor applications.</p>
-    </div>
+  <!-- STATS -->
+  <div class="stats">
+    <div class="st"><div class="lbl">Members</div><div class="val" style="color:var(--gold);" id="sM">0</div></div>
+    <div class="st"><div class="lbl">Online</div><div class="val" style="color:var(--green);" id="sO">0</div></div>
+    <div class="st"><div class="lbl">Class Posts</div><div class="val" style="color:var(--blue);" id="sCP">0</div></div>
+    <div class="st"><div class="lbl">Broadcasts</div><div class="val" style="color:var(--amber);" id="sBR">0</div></div>
+    <div class="st"><div class="lbl">Projects</div><div class="val" style="color:var(--purple);" id="sPR">0</div></div>
+    <div class="st"><div class="lbl">Pending</div><div class="val" style="color:var(--red);" id="sPE">0</div></div>
   </div>
 
-  <!-- ── 2. PIONEER REGISTRATION REQUESTS ── -->
-  <div class="cmd-card gold">
-    <div class="sec-label">🛡️ Pioneer Registration Requests</div>
-    <p style="font-size:12px;color:#666;margin-bottom:14px;">Members who have requested Pioneer access. Verify identity in person before approving. An access code is auto-generated upon approval.</p>
-    <div id="pioneerRequestList">
-      <p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending pioneer requests.</p>
-    </div>
-  </div>
-
-  <!-- ── 3. GLOBAL BROADCAST ── -->
-  <div class="cmd-card green">
-    <div class="sec-label">📢 Global Broadcast</div>
-    <p style="font-size:12px;color:#666;margin-bottom:14px;">Broadcasts appear instantly in the Academy bot banner, Hub feed, and all class portals.</p>
-    <div class="broadcast-area">
-      <textarea id="announceInput" placeholder="Write your announcement, vision update, or session alert..."></textarea>
-      <div class="broadcast-controls">
-        <select id="announceCategory">
-          <option>Announcement</option>
-          <option>Upcoming Session</option>
-          <option>Physical Event</option>
-          <option>Current Project</option>
-          <option>Pioneer Spotlight</option>
-          <option>Today's Momentum</option>
-          <option>Partnership</option>
-        </select>
-        <input type="text" id="announceDate" placeholder="Date (e.g. 25 Apr 2026)">
-        <button class="action-btn gold" onclick="postAnnouncement()">BROADCAST NOW</button>
-      </div>
-    </div>
-    <div id="announceHistory" style="margin-top:16px;"></div>
-  </div>
-
-  <!-- ── 4. POST DIRECT TO CLASS ── -->
-  <div class="cmd-card green">
-    <div class="sec-label">📚 Post Directly to a Class</div>
-    <p style="font-size:12px;color:#666;margin-bottom:14px;">Push topics, notes, videos, or links to any class. Students see it instantly.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-      <select id="directClass" style="flex:1;min-width:180px;background:#1a1a1a;border:1px solid var(--border);padding:11px;border-radius:10px;color:#fff;font-family:inherit;font-size:13px;outline:none;">
-        <option value="Vertical Growth">Vertical Growth & Alignment</option>
+  <!-- 1. ACADEMY POST TO CLASS -->
+  <div class="card green" id="sec-academy">
+    <div class="clabel green">🎓 Post Directly to Academy Class</div>
+    <div class="sub-p">Content appears in the student classroom immediately. Students see it in real-time. <a href="academy.html" target="_blank">Open Academy →</a></div>
+    <div class="frow">
+      <select class="fsel" id="postClass">
+        <option value="Vertical Growth">Vertical Growth &amp; Alignment</option>
         <option value="Fiscal Kingdom">Fiscal Kingdom Stewardship</option>
         <option value="Inner Psychology">Psychology 101: The Inner Man</option>
         <option value="Sovereign Leadership">Sovereign Leadership Training</option>
         <option value="Social Advancement">Social Life Advancement</option>
-        <option value="Creative Expression">Creative Expression & Identity</option>
+        <option value="Creative Expression">Creative Expression &amp; Identity</option>
       </select>
+      <button class="btn out" onclick="window.open('classroom.html?class='+encodeURIComponent(document.getElementById('postClass').value),'_blank')" style="white-space:nowrap;">Open Class →</button>
     </div>
-    <div class="post-form">
-      <div class="post-type-row">
-        <button class="ptype-btn active" onclick="setDPostType('topic',this)">📌 Topic/Notes</button>
-        <button class="ptype-btn" onclick="setDPostType('video',this)">🎥 Video URL</button>
-        <button class="ptype-btn" onclick="setDPostType('link',this)">🔗 Link</button>
-        <button class="ptype-btn" onclick="setDPostType('announcement',this)">📢 Alert</button>
-      </div>
-      <div id="dptTopic">
-        <input type="text" class="post-input" id="dptTitle" placeholder="Session title / unit name">
-        <textarea class="post-input" id="dptNotes" rows="5" placeholder="Write detailed session notes, teachings, scripture references..."></textarea>
-      </div>
-      <div id="dptVideo" style="display:none;">
-        <input type="text" class="post-input" id="dptVideoUrl" placeholder="YouTube or video URL (https://...)">
-      </div>
-      <div id="dptLink" style="display:none;">
-        <input type="text" class="post-input" id="dptLinkUrl" placeholder="https://resource-link.com">
-        <input type="text" class="post-input" id="dptLinkLabel" placeholder="Link description / label">
-      </div>
-      <div id="dptAnnouncement" style="display:none;">
-        <textarea class="post-input" id="dptAlert" rows="3" placeholder="Class-specific alert or update..."></textarea>
-      </div>
-      <button class="push-btn" onclick="pushToSelectedClass()">PUSH TO CLASS →</button>
+    <div class="ptrow">
+      <button class="ptbtn active" onclick="setPT('topic',this)">📌 Topic/Notes</button>
+      <button class="ptbtn" onclick="setPT('video',this)">🎥 Video URL</button>
+      <button class="ptbtn" onclick="setPT('link',this)">🔗 Resource Link</button>
+      <button class="ptbtn" onclick="setPT('announcement',this)">📢 Class Alert</button>
+    </div>
+    <div id="pt-topic">
+      <div class="frow"><input type="text" class="fi" id="pt-title" placeholder="Session title / unit name"></div>
+      <textarea class="fta gn" id="pt-notes" placeholder="Write detailed session notes, teachings, scripture references..."></textarea>
+    </div>
+    <div id="pt-video" style="display:none;"><input type="text" class="fi" id="pt-videoUrl" placeholder="YouTube or direct video URL (https://...)" style="width:100%;margin-bottom:8px;"></div>
+    <div id="pt-link" style="display:none;"><div class="frow"><input type="text" class="fi" id="pt-linkUrl" placeholder="https://resource.com"><input type="text" class="fi" id="pt-linkLabel" placeholder="Link description"></div></div>
+    <div id="pt-announcement" style="display:none;"><textarea class="fta gn" id="pt-alert" placeholder="Class-specific alert or update..."></textarea></div>
+    <div class="frow" style="margin-top:10px;"><button class="btn green" onclick="pushToClass()">PUSH TO CLASS ↑</button></div>
+    <div style="margin-top:16px;">
+      <div style="font-size:8px;color:#222;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Recent Class Posts</div>
+      <div id="recentPosts"></div>
     </div>
   </div>
 
-  <!-- ── 5. SQUARE MODERATION ── -->
-  <div class="cmd-card red">
-    <div class="sec-label">🟦 Square Moderation</div>
-    <div class="input-row" style="margin-top:0;">
-      <input type="text" id="targetID" placeholder="Enter Member ID (e.g. DF-2026-123)">
-      <button class="action-btn" onclick="verifyTarget()">VERIFY</button>
+  <!-- 2. GLOBAL BROADCAST -->
+  <div class="card gold" id="sec-broadcast">
+    <div class="clabel gold">📢 Global Broadcast</div>
+    <div class="sub-p">Appears instantly in Hub feed, Academy bot banner, and the bottom ticker on all pages.</div>
+    <textarea class="fta" id="annInput" placeholder="Write your announcement, vision update, session alert..."></textarea>
+    <div class="frow" style="margin-top:9px;">
+      <select class="fsel" id="annCat">
+        <option>Announcement</option><option>Upcoming Session</option><option>Physical Event</option>
+        <option>Current Project</option><option>Pioneer Spotlight</option><option>Today's Momentum</option><option>Partnership</option>
+      </select>
+      <input type="text" class="fi" id="annDate" placeholder="Date (e.g. 25 Apr 2026)" style="max-width:180px;">
+      <button class="btn gold" onclick="broadcast()">BROADCAST NOW</button>
     </div>
-    <div id="targetResult" class="result-box"></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
-      <button class="action-btn" onclick="issueCmd('MUTE')">🔇 Mute</button>
-      <button class="action-btn danger" onclick="issueCmd('KICK')">🚷 Remove</button>
-      <button class="action-btn" onclick="purgeChatLog()">🗑️ Purge Chat</button>
-    </div>
+    <div id="broadcastHistory" style="margin-top:13px;"></div>
   </div>
 
-  <!-- ── 6. MEMBER RECOVERY ── -->
-  <div class="cmd-card blue">
-    <div class="sec-label">🔑 Member Account Recovery</div>
-    <div class="input-row" style="margin-top:0;">
-      <input type="text" id="recovSearch" placeholder="Search member name or email">
-      <button class="action-btn" onclick="findMember()">SEARCH</button>
+  <!-- 3. PROJECTS -->
+  <div class="card amber" id="sec-projects">
+    <div class="clabel amber">🚀 Projects Management</div>
+    <div class="sub-p">Add or remove projects visible on <a href="projects.html" target="_blank">projects.html</a>. Changes are immediate.</div>
+    <div class="frow"><input type="text" class="fi" id="pj-title" placeholder="Project title *"><input type="text" class="fi" id="pj-emoji" placeholder="Emoji" style="max-width:72px;"></div>
+    <textarea class="fta" id="pj-desc" placeholder="Project description *"></textarea>
+    <div class="frow" style="margin-top:8px;">
+      <input type="text" class="fi" id="pj-lead" placeholder="Project lead">
+      <input type="text" class="fi" id="pj-target" placeholder="Target date">
+      <input type="number" class="fi" id="pj-progress" placeholder="Progress %" min="0" max="100" style="max-width:110px;">
+      <select class="fsel" id="pj-status" style="max-width:140px;">
+        <option value="active">Active</option><option value="planning">Planning</option>
+        <option value="paused">Paused</option><option value="completed">Completed</option>
+      </select>
+      <button class="btn gold" onclick="addProject()">ADD PROJECT</button>
     </div>
-    <div id="recovResult" class="result-box"></div>
+    <div id="projList" style="margin-top:13px;"></div>
   </div>
 
-  <!-- ── 7. LIVE STATS ── -->
-  <div class="cmd-card">
-    <div class="sec-label">📊 Live Family Stats</div>
-    <div class="stats-grid">
-      <div class="stat-tile"><div class="label">Members</div><div class="value" style="color:var(--gold);" id="statMembers">0</div></div>
-      <div class="stat-tile"><div class="label">Online Now</div><div class="value" style="color:var(--green);" id="statOnline">0</div></div>
-      <div class="stat-tile"><div class="label">Pending</div><div class="value" style="color:var(--amber);" id="statPending">0</div></div>
-      <div class="stat-tile"><div class="label">Broadcasts</div><div class="value" style="color:var(--blue);" id="statBroadcasts">0</div></div>
-      <div class="stat-tile"><div class="label">Classes Active</div><div class="value" style="color:var(--purple);" id="statClasses">6</div></div>
+  <!-- 4. ACHIEVEMENTS -->
+  <div class="card gold" id="sec-achievements">
+    <div class="clabel gold">🏆 Hall of Achievements</div>
+    <div class="sub-p">Milestones appear on <a href="achievements.html" target="_blank">achievements.html</a> immediately after adding.</div>
+    <div class="frow">
+      <input type="text" class="fi" id="ac-title" placeholder="Achievement title *">
+      <input type="text" class="fi" id="ac-emoji" placeholder="Emoji" style="max-width:72px;">
+      <input type="text" class="fi" id="ac-date" placeholder="Date (e.g. Jan 2026)" style="max-width:160px;">
     </div>
+    <textarea class="fta" id="ac-body" placeholder="Describe this milestone in detail..."></textarea>
+    <div class="frow" style="margin-top:8px;">
+      <input type="text" class="fi" id="ac-badge" placeholder="Badge label (e.g. MILESTONE)">
+      <select class="fsel" id="ac-type" style="max-width:160px;">
+        <option value="milestone">Milestone</option><option value="partnership">Partnership</option>
+        <option value="launch">Launch</option><option value="community">Community Impact</option>
+      </select>
+      <button class="btn gold" onclick="addAchievement()">ADD TO HALL</button>
+    </div>
+    <div id="achList" style="margin-top:13px;"></div>
+  </div>
+
+  <!-- 5. PRAYER WALL MODERATION -->
+  <div class="card blue" id="sec-prayer">
+    <div class="clabel blue">🕊️ Prayer Wall Moderation</div>
+    <div class="sub-p">Manage the <a href="faith.html" target="_blank">Prayer Room</a>. Mark prayers answered or remove posts. Updates reflect immediately.</div>
+    <div id="prayerModList"></div>
+  </div>
+
+  <!-- 6. TALENTS MODERATION -->
+  <div class="card purple" id="sec-talents">
+    <div class="clabel purple">🎨 Talent Showcase Moderation</div>
+    <div class="sub-p">Pin or remove content from the <a href="talents.html" target="_blank">Talent Showcase</a>. Pinned posts appear at the top.</div>
+    <div id="talentModList"></div>
+  </div>
+
+  <!-- 7. APPROVALS -->
+  <div class="card gold" id="sec-approvals">
+    <div class="clabel gold">✅ Pending Approvals <span class="abadge" id="appBadge" style="display:none;">NEW</span></div>
+    <div style="font-size:10px;font-weight:800;color:#333;letter-spacing:1px;margin-bottom:9px;text-transform:uppercase;">Tutor Applications</div>
+    <div id="tutorList"><p style="color:#333;font-size:12px;padding:8px 0;">No pending tutor applications.</p></div>
+    <div style="font-size:10px;font-weight:800;color:#333;letter-spacing:1px;margin:16px 0 9px;text-transform:uppercase;">Pioneer Requests</div>
+    <div id="pioneerList"><p style="color:#333;font-size:12px;padding:8px 0;">No pending pioneer requests.</p></div>
+  </div>
+
+  <!-- 8. MODERATION TOOLS -->
+  <div class="card red" id="sec-moderation">
+    <div class="clabel red">🔧 Moderation &amp; Recovery</div>
+    <div class="frow">
+      <input type="text" class="fi" id="modTarget" placeholder="Member ID or name">
+      <button class="btn out" onclick="lookUp()">LOOK UP</button>
+      <button class="btn out" onclick="issueCmd('MUTE')" style="border-color:#555;color:#555;">🔇 Mute</button>
+      <button class="btn red" onclick="issueCmd('KICK')">🚷 Remove</button>
+    </div>
+    <div id="modResult" class="res-box"></div>
+    <div class="frow" style="margin-top:13px;">
+      <input type="text" class="fi" id="recovQ" placeholder="Search member for account recovery">
+      <button class="btn out" onclick="findMember()">SEARCH</button>
+    </div>
+    <div id="recovResult" class="res-box"></div>
   </div>
 
 </div>
 </main>
-
-<!-- ══════════════════════════════════
-   MONITOR SCHOOL MODAL
-══════════════════════════════════ -->
-<div class="modal-overlay" id="monitorModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h2 class="modal-title">🎓 Monitor School</h2>
-      <div class="modal-close" onclick="closeMonitor()">✕</div>
-    </div>
-
-    <p style="font-size:13px;color:#666;margin-bottom:18px;">Select a class to view enrolled members, track activity, and manage the session.</p>
-
-    <div class="class-selector" id="classSelector">
-      <!-- rendered by JS -->
-    </div>
-
-    <!-- Members Table -->
-    <div id="monitorContent">
-      <p style="color:#444;text-align:center;padding:30px;font-size:13px;">Select a class above to begin monitoring.</p>
-    </div>
-
-    <!-- Leader: Post to Monitored Class -->
-    <div id="monitorPostArea" style="display:none;margin-top:20px;">
-      <div class="sec-label" style="margin-bottom:12px;">📝 Post to This Class</div>
-      <div class="post-form">
-        <div class="post-type-row">
-          <button class="ptype-btn active" onclick="setMPostType('topic',this)">📌 Topic</button>
-          <button class="ptype-btn" onclick="setMPostType('video',this)">🎥 Video</button>
-          <button class="ptype-btn" onclick="setMPostType('link',this)">🔗 Link</button>
-          <button class="ptype-btn" onclick="setMPostType('announcement',this)">📢 Alert</button>
-        </div>
-        <div id="mptTopic">
-          <input type="text" class="post-input" id="mptTitle" placeholder="Session title / unit name">
-          <textarea class="post-input" id="mptNotes" rows="4" placeholder="Notes, teachings, content..."></textarea>
-        </div>
-        <div id="mptVideo" style="display:none;"><input type="text" class="post-input" id="mptVideoUrl" placeholder="Video URL (YouTube or direct)"></div>
-        <div id="mptLink" style="display:none;">
-          <input type="text" class="post-input" id="mptLinkUrl" placeholder="https://...">
-          <input type="text" class="post-input" id="mptLinkLabel" placeholder="Link description">
-        </div>
-        <div id="mptAnnouncement" style="display:none;"><textarea class="post-input" id="mptAlert" rows="3" placeholder="Class alert..."></textarea></div>
-        <button class="push-btn" onclick="pushFromMonitor()">PUSH TO CLASS ↑</button>
-      </div>
-
-      <!-- Enter Class as Leader -->
-      <div style="margin-top:14px;text-align:right;">
-        <button class="action-btn gold" onclick="enterClassAsLeader()">ENTER CLASS (LEADER VIEW) →</button>
-      </div>
-    </div>
-
-  </div>
-</div>
 
 <div class="toast" id="toast"></div>
 
@@ -478,520 +337,413 @@ body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sa
 (function(){
 'use strict';
 
+/* ── AUTH ── */
+var u = DB.currentUser();
+if(!u){ window.location.href='login.html'; return; }
+if(!DB.isLeader(u)){ alert('RESTRICTED: Pioneer credentials required.'); window.location.href='Dashboard.html'; return; }
+
+var el=document.getElementById('greet'); if(el) el.textContent='Shalom, '+(u.name||'Leader').split(' ')[0];
+var ln=document.getElementById('ldName'); if(ln) ln.textContent=(u.name||'Pioneer')+' · Active';
+
 /* ── HELPERS ── */
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
-function isLeader(u){return u&&(u.role==='admin'||u.role==='leader');}
+function T(id){ return document.getElementById(id); }
 function showToast(msg,color){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.style.background=color||'var(--green)';t.style.color=color?'#fff':'#000';
-  t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
+  var t=T('toast'); t.textContent=msg;
+  t.style.background=color||'var(--green)'; t.style.color=color?'#fff':'#000';
+  t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3500);
 }
-function sto(k,v){localStorage.setItem(k,JSON.stringify(v));}
-function sfrom(k,def){try{return JSON.parse(localStorage.getItem(k))||def;}catch(e){return def;}}
+function mrow(html){ return '<div class="mrow">'+html+'</div>'; }
+function aprow(html){ return '<div class="aprow">'+html+'</div>'; }
 
-var currentUser = session();
-var monitoringClass = null;
-var dPostType = 'topic';
-var mPostType = 'topic';
-
-const CLASSES = [
-  {key:'Vertical Growth',label:'Vertical Growth & Alignment',emoji:'🙏'},
-  {key:'Fiscal Kingdom',label:'Fiscal Kingdom Stewardship',emoji:'💰'},
-  {key:'Inner Psychology',label:'Psychology 101: The Inner Man',emoji:'🧠'},
-  {key:'Sovereign Leadership',label:'Sovereign Leadership Training',emoji:'👑'},
-  {key:'Social Advancement',label:'Social Life Advancement',emoji:'🌐'},
-  {key:'Creative Expression',label:'Creative Expression & Identity',emoji:'🎨'}
-];
-
-/* ── AUTH GUARD ── */
-function guardLeader(){
-  if(!currentUser){window.location.href='login.html';return false;}
-  if(!isLeader(currentUser)){
-    alert('RESTRICTED: Pioneer credentials required.');
-    window.location.href='Dashboard.html';return false;
-  }
-  return true;
-}
-
-/* ── DEVICE DETECT ── */
-function detectDevice(){
-  var w=window.innerWidth,tag=document.getElementById('deviceTag');
-  if(!tag)return;
-  tag.textContent=w<768?'📱 Mobile Console Active':w<1024?'📋 Tablet Interface Active':'🖥️ Desktop Command Station';
-  tag.style.color='#555';tag.style.fontSize='11px';tag.style.marginTop='8px';
-}
-
-/* ── SIDEBAR TOGGLE ── */
-window.toggleSidebar=function(){
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarOverlay').classList.toggle('open');
+/* ── SIDEBAR ── */
+window.tog=function(){
+  T('sidebar').classList.toggle('open');
+  T('sOverlay').classList.toggle('open');
+};
+window.jmp=function(id){
+  var el=T(id); if(el) el.scrollIntoView({behavior:'smooth'});
+  if(window.innerWidth<860) T('sidebar').classList.remove('open');
 };
 
 /* ── QUOTES ── */
-var QUOTES=[
-  '"True leaders don\'t create followers — they create more leaders."',
-  '"Vision is the art of seeing what is invisible to others."',
-  '"The family\'s strength is in our unity and divine calling."',
-  '"Managing the heart of the family requires wisdom and grace."',
-  '"Your influence today shapes the generation of tomorrow."',
-  '"A Pioneer builds the bridge others will walk across."',
-  '"Integrity in leadership is the highest form of worship."',
-  '"Where there is no vision, the people perish." — Proverbs 29:18'
-];
-var qIdx=0;
-function rotateQuotes(){
-  qIdx=(qIdx+1)%QUOTES.length;
-  var el=document.getElementById('quoteDisplay');
-  if(el){el.style.opacity='0';setTimeout(function(){el.textContent=QUOTES[qIdx];el.style.opacity='1';},400);}
-}
+var QQ=['"True leaders create more leaders."','"Vision is the art of seeing the invisible."',
+'"Managing the family requires wisdom and grace."','"A Pioneer builds bridges others will walk across."',
+'"Integrity in leadership is the highest form of worship."','"Where there is no vision, the people perish."'];
+var qi=0;
+function rotQ(){ qi=(qi+1)%QQ.length; var e=T('quoteEl');if(e){e.style.opacity='0';setTimeout(function(){e.textContent=QQ[qi];e.style.opacity='1';},400);} }
 
-/* ── LIVE COUNTER ── */
-function updateLiveCounter(){
-  var map=sfrom('presenceMap',{});
-  var now=Date.now(),pioneers=0,members=0,total=0;
-  var users=sfrom('users',[]);
-  Object.keys(map).forEach(function(k){
-    if(now-map[k]<25000){total++;
-      var u=users.find(function(u2){return u2.email===k||u2.id===k;});
-      if(u&&isLeader(u))pioneers++;else members++;
-    }
-  });
-  var el=document.getElementById('sessionCount');
-  if(el)el.textContent=pioneers+' Pioneer(s) · '+members+' Member(s) Online';
-  var el2=document.getElementById('statOnline');if(el2)el2.textContent=total;
-  updateBotMsg(pioneers,members);
-}
-
-function updateBotMsg(p,m){
-  var el=document.getElementById('botMsg');if(!el)return;
-  var apps=sfrom('adminNotifications',[]);
-  var pioneer=sfrom('pioneerRequests',[]);
+/* ── LIVE STATS ── */
+function refreshStats(){
+  var online=DB.getOnlineCount();
+  var ol=T('onlineLbl'); if(ol) ol.textContent=online.pioneers+' Pioneer(s) · '+online.members+' Member(s) Online';
+  T('sM').textContent=(DB.get(DB.KEYS.users,[])).length;
+  T('sO').textContent=online.total;
+  T('sBR').textContent=(DB.get(DB.KEYS.declareUpdates,[])).length;
+  T('sPR').textContent=DB.getProjects().length;
+  var CLASSES=['Vertical Growth','Fiscal Kingdom','Inner Psychology','Sovereign Leadership','Social Advancement','Creative Expression'];
+  var tp=0; CLASSES.forEach(function(c){tp+=DB.getClassPosts(c).length;}); T('sCP').textContent=tp;
+  var pending=DB.getTutorApps().length+DB.getPioneerRequests().length;
+  T('sPE').textContent=pending;
+  var d=T('appDot'),b=T('appBadge');
+  if(d) d.style.display=pending>0?'block':'none';
+  if(b) b.style.display=pending>0?'inline':'none';
+  // bot message
   var parts=[];
-  if(pioneer.length>0)parts.push('<span style="color:var(--gold)">'+pioneer.length+' pioneer request(s)</span> awaiting verification');
-  if(apps.length>0)parts.push('<span style="color:var(--gold)">'+apps.length+' tutor application(s)</span> pending approval');
-  parts.push('<span style="color:var(--green)">'+p+' Pioneer(s)</span> and <span style="color:var(--gold)">'+m+' Member(s)</span> currently active');
-  el.innerHTML='<strong>System Intelligence:</strong> Shalom, Leader. '+parts.join(' · ')+'.';
+  if(pending>0) parts.push('<span style="color:var(--gold)">'+pending+' approval(s)</span> awaiting action');
+  parts.push('<span style="color:var(--green)">'+online.pioneers+' Pioneer(s)</span> and <span style="color:var(--gold)">'+online.members+' Member(s)</span> active');
+  var bt=T('botTxt'); if(bt) bt.innerHTML='<strong>System Intelligence:</strong> Shalom, '+u.name.split(' ')[0]+'. '+parts.join(' · ')+'.';
 }
 
-/* ── STATS ── */
-function updateStats(){
-  var users=sfrom('users',[]);
-  var apps=sfrom('adminNotifications',[]);
-  var pioneer=sfrom('pioneerRequests',[]);
-  var updates=sfrom('declareUpdates',[]);
-  var el=document.getElementById('statMembers');if(el)el.textContent=users.length;
-  var el2=document.getElementById('statPending');if(el2)el2.textContent=apps.length+pioneer.length;
-  var el3=document.getElementById('statBroadcasts');if(el3)el3.textContent=updates.length;
-  // Alert badges
-  var hasApps=apps.length>0;
-  var badge=document.getElementById('tutorAlertBadge');if(badge)badge.style.display=hasApps?'inline':'none';
-  var dot=document.getElementById('monitorAlertDot');if(dot)dot.style.display=hasApps?'block':'none';
-}
+/* ══ ACADEMY POST TO CLASS ══ */
+var aPT='topic';
+window.setPT=function(type,btn){
+  aPT=type;
+  document.querySelectorAll('.ptbtn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  ['topic','video','link','announcement'].forEach(function(t){ var e=T('pt-'+t); if(e) e.style.display='none'; });
+  var show=T('pt-'+type); if(show) show.style.display='block';
+};
 
-/* ── TUTOR APPLICATIONS ── */
-function loadTutorApps(){
-  var list=sfrom('adminNotifications',[]);
-  var el=document.getElementById('tutorAppsList');if(!el)return;
-  if(!list.length){
-    el.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending tutor applications.</p>';
-    return;
+window.pushToClass=function(){
+  var cls=T('postClass').value;
+  var post={type:aPT, postedBy:u.name};
+  if(aPT==='topic'){
+    var title=(T('pt-title').value||'').trim();
+    var notes=(T('pt-notes').value||'').trim();
+    if(!title&&!notes){showToast('Add a title or notes.','#FF3B30');return;}
+    post.title=title; post.content=notes;
+    T('pt-title').value=''; T('pt-notes').value='';
+  } else if(aPT==='video'){
+    var url=(T('pt-videoUrl').value||'').trim();
+    if(!url){showToast('Enter a video URL.','#FF3B30');return;}
+    post.url=url; T('pt-videoUrl').value='';
+  } else if(aPT==='link'){
+    var lurl=(T('pt-linkUrl').value||'').trim();
+    if(!lurl){showToast('Enter a link URL.','#FF3B30');return;}
+    post.url=lurl; post.label=T('pt-linkLabel').value||lurl;
+    T('pt-linkUrl').value=''; T('pt-linkLabel').value='';
+  } else if(aPT==='announcement'){
+    var atxt=(T('pt-alert').value||'').trim();
+    if(!atxt){showToast('Enter an announcement.','#FF3B30');return;}
+    post.title='Announcement'; post.content=atxt;
+    T('pt-alert').value='';
   }
-  el.innerHTML=list.map(function(req){
-    return '<div class="approval-row" id="app-'+req.id+'">'+
-      '<div class="approval-info">'+
-        '<span class="tag" style="color:var(--gold)">'+esc(req.mode||'Tutor')+' Application</span>'+
-        '<h4>'+esc(req.name||'Unknown')+'</h4>'+
-        '<p>Class: <strong style="color:#fff">'+esc(req.class)+'</strong> · '+esc(req.role||'Applicant')+' · '+esc(req.location||'')+'</p>'+
-      '</div>'+
-      '<div class="approval-btns">'+
-        '<button class="btn-approve" onclick="processApp('+req.id+',\'approve\')">✓ APPROVE</button>'+
-        '<button class="btn-deny" onclick="processApp('+req.id+',\'deny\')">✗ DENY</button>'+
-      '</div>'+
-    '</div>';
+  DB.pushClassPost(cls, post);
+  DB.pushComment(cls,{user:u.name,avatar:'👑',msg:'['+aPT.toUpperCase()+'] '+(post.title||post.url||'').substring(0,100),role:'tutor'});
+  loadRecentPosts(); refreshStats();
+  showToast('✅ Posted to '+cls+' — visible in classroom now!');
+};
+
+function loadRecentPosts(){
+  var CLASSES=['Vertical Growth','Fiscal Kingdom','Inner Psychology','Sovereign Leadership','Social Advancement','Creative Expression'];
+  var all=[];
+  CLASSES.forEach(function(c){ DB.getClassPosts(c).forEach(function(p){all.push(Object.assign({},p,{_class:c}));}); });
+  all.sort(function(a,b){return b.time-a.time;});
+  var el=T('recentPosts'); if(!el) return;
+  if(!all.length){el.innerHTML='<p style="color:#222;font-size:11px;">No posts yet.</p>';return;}
+  el.innerHTML=all.slice(0,5).map(function(p){
+    return mrow(
+      '<div class="mrow-info"><strong>'+DB.esc(p._class)+'</strong> · <span style="color:var(--gold);">'+DB.esc(p.type)+'</span>: '+DB.esc((p.title||p.url||p.content||'').substring(0,55))+
+      '<br><span style="font-size:9px;color:#2a2a2a;">'+DB.fmtTime(p.time)+' · by '+DB.esc(p.postedBy||'—')+'</span></div>'+
+      '<div class="mrow-acts">'+
+        '<button class="sm-btn out" onclick="delClassPost(\''+DB.esc(p._class)+'\','+p.id+')">✕ Remove</button>'+
+        '<button class="sm-btn au" onclick="window.open(\'classroom.html?class='+encodeURIComponent(p._class)+'\',\'_blank\')">→ Class</button>'+
+      '</div>'
+    );
   }).join('');
 }
 
-window.processApp=function(id,action){
-  var list=sfrom('adminNotifications',[]);
-  var req=list.find(function(r){return r.id===id;});
-  if(!req)return;
-
-  if(action==='approve'){
-    // Add to approved tutors
-    var tutors=sfrom('approvedTutors',[]);
-    tutors.push(Object.assign({},req,{status:'active',approvedBy:currentUser.name,approvedAt:new Date().toISOString()}));
-    sto('approvedTutors',tutors);
-
-    // Notify the tutor in-portal
-    sto('tutorNotif_'+req.name+'_'+req.class,{
-      status:'approved',
-      class:req.class,
-      msg:'Your tutor application for '+req.class+' has been APPROVED! You now have instructor access.',
-      time:new Date().toISOString()
-    });
-
-    // Bot notice
-    var botNotices=sfrom('botNotices',[]);
-    botNotices.unshift({msg:'OFFICIAL: '+req.name+' has been approved as Tutor for the '+req.class+' class.',time:new Date().toISOString()});
-    sto('botNotices',botNotices);
-
-    showToast('✓ '+req.name+' approved as tutor for '+req.class);
-  } else {
-    // Notify denial
-    sto('tutorNotif_'+req.name+'_'+req.class,{status:'denied',class:req.class,msg:'Your tutor application for '+req.class+' was not approved at this time.',time:new Date().toISOString()});
-    showToast('Request denied.','#FF3B30');
-  }
-
-  list=list.filter(function(r){return r.id!==id;});
-  sto('adminNotifications',list);
-  loadTutorApps();updateStats();
+window.delClassPost=function(cls,id){
+  if(!confirm('Remove this post from '+cls+'?'))return;
+  DB.deleteClassPost(cls,id); loadRecentPosts(); refreshStats();
+  showToast('Post removed from '+cls+'.');
 };
 
-/* ── PIONEER REQUESTS ── */
-function loadPioneerRequests(){
-  var list=sfrom('pioneerRequests',[]);
-  var el=document.getElementById('pioneerRequestList');if(!el)return;
-  if(!list.length){
-    el.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:13px;">No pending pioneer requests.</p>';
-    return;
-  }
+/* ══ BROADCAST ══ */
+window.broadcast=function(){
+  var txt=(T('annInput').value||'').trim();
+  if(!txt){showToast('Please write an announcement.','#FF3B30');return;}
+  var cat=T('annCat').value;
+  var date=T('annDate').value;
+  var icons={Announcement:'📢','Upcoming Session':'📅','Physical Event':'📍','Current Project':'🚀','Pioneer Spotlight':'👑',"Today's Momentum":'⚡',Partnership:'🤝'};
+  DB.pushUpdate({category:cat,icon:icons[cat]||'📢',text:txt,date:date,postedBy:u.name});
+  T('annInput').value=''; T('annDate').value='';
+  loadBroadcastHistory(); refreshStats();
+  showToast('📢 Broadcast sent! Visible across all portals immediately.');
+};
+
+function loadBroadcastHistory(){
+  var updates=DB.get(DB.KEYS.declareUpdates,[]);
+  var el=T('broadcastHistory'); if(!el) return;
+  if(!updates.length){el.innerHTML='';return;}
+  el.innerHTML=updates.slice(0,5).map(function(upd){
+    return mrow(
+      '<div class="mrow-info"><strong>'+(upd.icon||'')+'&nbsp;'+DB.esc(upd.text.substring(0,65))+(upd.text.length>65?'…':'')+'</strong>'+
+      '<br><span style="font-size:9px;color:#2a2a2a;">'+DB.esc(upd.category||'')+(upd.date?' · '+DB.esc(upd.date):'')+'</span></div>'+
+      '<button class="sm-btn out" onclick="delBroadcast('+upd.id+')">✕</button>'
+    );
+  }).join('');
+}
+
+window.delBroadcast=function(id){
+  var u2=DB.get(DB.KEYS.declareUpdates,[]).filter(function(x){return x.id!==id;});
+  DB.set(DB.KEYS.declareUpdates,u2); loadBroadcastHistory(); refreshStats();
+};
+
+/* ══ PROJECTS ══ */
+window.addProject=function(){
+  var title=(T('pj-title').value||'').trim();
+  var desc=(T('pj-desc').value||'').trim();
+  if(!title||!desc){showToast('Title and description are required.','#FF3B30');return;}
+  DB.pushProject({
+    emoji:T('pj-emoji').value||'🚀',title:title,desc:desc,
+    lead:T('pj-lead').value||u.name,
+    target:T('pj-target').value||'TBD',
+    progress:parseInt(T('pj-progress').value)||0,
+    status:T('pj-status').value||'active',
+  });
+  ['pj-title','pj-desc','pj-emoji','pj-lead','pj-target','pj-progress'].forEach(function(id){T(id).value='';});
+  T('pj-status').selectedIndex=0;
+  loadProjList(); refreshStats();
+  showToast('🚀 Project added! Visible on projects.html immediately.');
+};
+
+function loadProjList(){
+  var projects=DB.getProjects();
+  var el=T('projList'); if(!el) return;
+  if(!projects.length){el.innerHTML='<p style="color:#222;font-size:11px;">No projects yet.</p>';return;}
+  el.innerHTML=projects.map(function(p){
+    return mrow(
+      '<div class="mrow-info"><strong>'+(p.emoji||'🚀')+' '+DB.esc(p.title)+'</strong> <span style="font-size:9px;color:var(--amber);">'+DB.esc(p.status)+'</span> · '+p.progress+'%'+
+      '<br><span style="font-size:9px;color:#2a2a2a;">'+DB.esc(p.lead||'')+(p.target?' · Target: '+DB.esc(p.target):'')+'</span></div>'+
+      '<button class="sm-btn out" onclick="delProject('+p.id+')">✕ Remove</button>'
+    );
+  }).join('');
+}
+
+window.delProject=function(id){
+  if(!confirm('Remove this project?'))return;
+  DB.deleteProject(id); loadProjList(); refreshStats();
+  showToast('Project removed.');
+};
+
+/* ══ ACHIEVEMENTS ══ */
+window.addAchievement=function(){
+  var title=(T('ac-title').value||'').trim();
+  var body=(T('ac-body').value||'').trim();
+  if(!title||!body){showToast('Title and description are required.','#FF3B30');return;}
+  DB.pushAchievement({
+    emoji:T('ac-emoji').value||'🏆',title:title,body:body,
+    date:T('ac-date').value||new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'}),
+    badge:(T('ac-badge').value||'Achievement').toUpperCase(),
+    type:T('ac-type').value||'milestone',
+  });
+  ['ac-title','ac-body','ac-emoji','ac-date','ac-badge'].forEach(function(id){T(id).value='';});
+  T('ac-type').selectedIndex=0;
+  loadAchList();
+  showToast('🏆 Achievement added to the Hall! Visible on achievements.html immediately.');
+};
+
+function loadAchList(){
+  var ach=DB.getAchievements();
+  var el=T('achList'); if(!el) return;
+  if(!ach.length){el.innerHTML='<p style="color:#222;font-size:11px;">No achievements yet.</p>';return;}
+  el.innerHTML=ach.slice(0,5).map(function(a){
+    return mrow(
+      '<div class="mrow-info"><strong>'+(a.emoji||'🏆')+' '+DB.esc(a.title)+'</strong>'+
+      '<br><span style="font-size:9px;color:#2a2a2a;">'+DB.esc(a.date||'')+'</span></div>'+
+      '<button class="sm-btn out" onclick="delAch('+a.id+')">✕ Remove</button>'
+    );
+  }).join('');
+}
+
+window.delAch=function(id){
+  if(!confirm('Remove this achievement?'))return;
+  DB.deleteAchievement(id); loadAchList();
+  showToast('Achievement removed.');
+};
+
+/* ══ PRAYER WALL MOD ══ */
+function loadPrayerMod(){
+  var prayers=DB.getPrayers();
+  var el=T('prayerModList'); if(!el) return;
+  if(!prayers.length){el.innerHTML='<p style="color:#222;font-size:11px;">Prayer wall is empty.</p>';return;}
+  el.innerHTML=prayers.slice(0,10).map(function(p){
+    return mrow(
+      '<div class="mrow-info"><strong>'+DB.esc(p.name||'Member')+'</strong> · <span style="color:var(--blue);">'+DB.esc(p.type||'prayer')+'</span> · '+DB.esc(p.status||'open')+
+      '<br><span style="font-size:11px;color:#888;">'+DB.esc((p.text||'').substring(0,70))+'</span>'+
+      '<br><span style="font-size:9px;color:#2a2a2a;">'+DB.fmtTime(p.time)+'</span></div>'+
+      '<div class="mrow-acts">'+
+        (p.status!=='answered'?'<button class="sm-btn gn" onclick="markAnswered('+p.id+')">✓ Answered</button>':'')+
+        '<button class="sm-btn out" onclick="delPrayer('+p.id+')">✕</button>'+
+      '</div>'
+    );
+  }).join('');
+}
+
+window.markAnswered=function(id){
+  var pp=DB.getPrayers(); var p=pp.find(function(x){return x.id===id;});
+  if(p){p.status='answered'; DB.savePrayers(pp);}
+  loadPrayerMod();
+  showToast('✅ Marked as answered. Visible on faith.html now.');
+};
+
+window.delPrayer=function(id){
+  if(!confirm('Remove this prayer post?'))return;
+  DB.savePrayers(DB.getPrayers().filter(function(p){return p.id!==id;}));
+  loadPrayerMod();
+  showToast('Prayer post removed.');
+};
+
+/* ══ TALENTS MOD ══ */
+function loadTalentMod(){
+  var talents=DB.getTalents();
+  var el=T('talentModList'); if(!el) return;
+  if(!talents.length){el.innerHTML='<p style="color:#222;font-size:11px;">No talent posts yet.</p>';return;}
+  el.innerHTML=talents.slice(0,10).map(function(t){
+    return mrow(
+      '<div class="mrow-info"><strong>'+(t.pinned?'📌 ':'')+DB.esc(t.title)+'</strong> · by '+DB.esc(t.author)+' · <span style="color:var(--purple);">'+DB.esc(t.type)+'</span>'+
+      '<br><span style="font-size:9px;color:#2a2a2a;">'+DB.fmtTime(t.time)+'</span></div>'+
+      '<div class="mrow-acts">'+
+        '<button class="sm-btn au" onclick="pinTalent('+t.id+')">'+(t.pinned?'📌 Unpin':'📌 Pin')+'</button>'+
+        '<button class="sm-btn out" onclick="delTalent('+t.id+')">✕</button>'+
+      '</div>'
+    );
+  }).join('');
+}
+
+window.pinTalent=function(id){
+  var tts=DB.getTalents(); var t=tts.find(function(x){return x.id===id;});
+  if(t){t.pinned=!t.pinned; DB.saveTalents(tts);}
+  loadTalentMod();
+  showToast(t&&t.pinned?'📌 Pinned to top!':'Post unpinned.');
+};
+
+window.delTalent=function(id){
+  if(!confirm('Remove this talent post?'))return;
+  DB.deleteTalent(id); loadTalentMod();
+  showToast('Talent post removed.');
+};
+
+/* ══ TUTOR APPROVALS ══ */
+function loadTutorApps(){
+  var apps=DB.getTutorApps();
+  var el=T('tutorList'); if(!el) return;
+  if(!apps.length){el.innerHTML='<p style="color:#333;font-size:12px;padding:6px 0;">No pending tutor applications.</p>';return;}
+  el.innerHTML=apps.map(function(app){
+    return aprow(
+      '<div class="aprow-info"><span class="tag" style="color:var(--gold);">Tutor Application</span>'+
+      '<h4>'+DB.esc(app.name||'Unknown')+'</h4>'+
+      '<p>Class: <strong style="color:#ccc;">'+DB.esc(app.class)+'</strong> · '+DB.esc(app.role||'Applicant')+(app.location?' · '+DB.esc(app.location):'')+'</p></div>'+
+      '<div class="aprow-btns">'+
+        '<button class="sm-btn approve" onclick="approveTutor('+app.id+')">✓ APPROVE</button>'+
+        '<button class="sm-btn deny" onclick="denyTutor('+app.id+')">✗ DENY</button>'+
+      '</div>'
+    );
+  }).join('');
+}
+
+window.approveTutor=function(id){
+  DB.approveTutor(id); loadTutorApps(); refreshStats();
+  showToast('✅ Tutor approved! They are notified in-portal automatically.');
+};
+window.denyTutor=function(id){
+  DB.denyTutor(id); loadTutorApps(); refreshStats();
+  showToast('Application denied.','#FF3B30');
+};
+
+/* ══ PIONEER APPROVALS ══ */
+function loadPioneerReqs(){
+  var list=DB.getPioneerRequests();
+  var el=T('pioneerList'); if(!el) return;
+  if(!list.length){el.innerHTML='<p style="color:#333;font-size:12px;padding:6px 0;">No pending pioneer requests.</p>';return;}
   el.innerHTML=list.map(function(req){
-    return '<div class="approval-row" id="preq-'+req.id+'">'+
-      '<div class="approval-info">'+
-        '<span class="tag" style="color:var(--gold)">Pioneer Request</span>'+
-        '<h4>'+esc(req.name)+'</h4>'+
-        '<p>'+esc(req.email)+' · Role requested: '+esc(req.roleRequested||'Pioneer')+'</p>'+
-      '</div>'+
-      '<div class="approval-btns">'+
-        '<button class="btn-approve" onclick="approvePioneer('+req.id+')">✓ APPROVE + CODE</button>'+
-        '<button class="btn-deny" onclick="denyPioneer('+req.id+')">✗ DENY</button>'+
+    return aprow(
+      '<div class="aprow-info"><span class="tag" style="color:var(--green);">Pioneer Request</span>'+
+      '<h4>'+DB.esc(req.name)+'</h4>'+
+      '<p>'+DB.esc(req.email||'')+(req.roleRequested?' · Role: '+DB.esc(req.roleRequested):'')+'</p></div>'+
+      '<div class="aprow-btns">'+
+        '<button class="sm-btn approve" onclick="approvePioneer('+req.id+')">✓ APPROVE + CODE</button>'+
+        '<button class="sm-btn deny" onclick="denyPioneer('+req.id+')">✗ DENY</button>'+
       '</div>'+
       '<div class="code-box" id="code-'+req.id+'">'+
-        '<div style="font-size:10px;color:var(--green);font-weight:800;margin-bottom:8px;">ACCESS CODE — Share with '+esc(req.name)+' directly</div>'+
-        '<div class="code-val" id="codeval-'+req.id+'">—</div>'+
-        '<div style="font-size:11px;color:#444;margin-top:6px;">Expires after first use. Keep confidential.</div>'+
-        '<button class="copy-btn" onclick="copyCode('+req.id+')">COPY</button>'+
-      '</div>'+
-    '</div>';
+        '<div style="font-size:9px;color:var(--green);font-weight:800;margin-bottom:7px;">ACCESS CODE — Share privately with '+DB.esc(req.name)+'</div>'+
+        '<div class="code-val" id="cval-'+req.id+'">—</div>'+
+        '<button onclick="copyCode(\''+req.id+'\')" style="margin-top:8px;background:var(--gold);color:#000;border:none;padding:4px 13px;border-radius:6px;font-size:9px;font-weight:800;cursor:pointer;">COPY CODE</button>'+
+      '</div>'
+    );
   }).join('');
 }
 
 window.approvePioneer=function(id){
-  var list=sfrom('pioneerRequests',[]);
-  var req=list.find(function(r){return r.id===id;});
-  if(!req)return;
-  var code='DF-PNR-'+Math.random().toString(36).slice(2,8).toUpperCase()+'-'+Date.now().toString(36).slice(-4).toUpperCase();
-  var codes=sfrom('approvedPioneerCodes',{});
-  codes[code]={email:req.email,role:req.roleRequested||'leader',name:req.name,usedAt:null};
-  sto('approvedPioneerCodes',codes);
-  var codeBox=document.getElementById('code-'+id);
-  var codeVal=document.getElementById('codeval-'+id);
-  if(codeBox&&codeVal){codeVal.textContent=code;codeBox.style.display='block';}
-  showToast('Pioneer approved. Share the code with '+req.name);
-};
-
-window.denyPioneer=function(id){
-  var list=sfrom('pioneerRequests',[]);
-  list=list.filter(function(r){return r.id!==id;});
-  sto('pioneerRequests',list);
-  loadPioneerRequests();
-  showToast('Request denied.','#FF3B30');
-};
-
-window.copyCode=function(id){
-  var el=document.getElementById('codeval-'+id);
-  if(!el)return;
-  navigator.clipboard.writeText(el.textContent).then(function(){showToast('Code copied to clipboard!');});
-};
-
-/* ── GLOBAL BROADCAST ── */
-window.postAnnouncement=function(){
-  var text=(document.getElementById('announceInput').value||'').trim();
-  if(!text){showToast('Please enter an announcement.','#FF3B30');return;}
-  var cat=document.getElementById('announceCategory').value;
-  var date=document.getElementById('announceDate').value;
-  var iconMap={'Announcement':'📢','Upcoming Session':'📅','Physical Event':'📍','Current Project':'🚀','Pioneer Spotlight':'👑',"Today's Momentum":'⚡','Partnership':'🤝'};
-  var updates=sfrom('declareUpdates',[]);
-  updates.unshift({id:Date.now(),category:cat,icon:iconMap[cat]||'📢',text:text,date:date||'',postedBy:currentUser.name,time:new Date().toISOString()});
-  sto('declareUpdates',updates);
-
-  // Also push to botNotices for academy banner
-  var botNotices=sfrom('botNotices',[]);
-  botNotices.unshift({msg:(iconMap[cat]||'📢')+' '+text,time:new Date().toISOString()});
-  sto('botNotices',botNotices);
-
-  document.getElementById('announceInput').value='';
-  document.getElementById('announceDate').value='';
-  loadAnnouncementHistory();
-  updateStats();
-  showToast('Broadcast sent to all portals!');
-};
-
-function loadAnnouncementHistory(){
-  var updates=sfrom('declareUpdates',[]);
-  var el=document.getElementById('announceHistory');if(!el)return;
-  if(!updates.length){el.innerHTML='';return;}
-  el.innerHTML='<div style="font-size:9px;color:#333;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Recent Broadcasts</div>'+
-    updates.slice(0,4).map(function(u){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#000;border-radius:8px;margin-bottom:6px;border:1px solid var(--border);">'+
-        '<span style="font-size:12px;">'+(u.icon||'')+'&nbsp;'+esc(u.text.substring(0,55))+(u.text.length>55?'…':'')+'</span>'+
-        '<button onclick="removeAnnouncement('+u.id+')" style="background:none;border:none;color:#333;cursor:pointer;font-size:12px;padding:2px 6px;">✕</button>'+
-      '</div>';
-    }).join('');
-}
-
-window.removeAnnouncement=function(id){
-  var updates=sfrom('declareUpdates',[]);
-  updates=updates.filter(function(u){return u.id!==id;});
-  sto('declareUpdates',updates);
-  loadAnnouncementHistory();updateStats();
-};
-
-/* ── DIRECT POST TYPE ── */
-var dPostType='topic';
-window.setDPostType=function(type,btn){
-  dPostType=type;
-  document.querySelectorAll('#directClass~.post-form .ptype-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  document.getElementById('dptTopic').style.display=type==='topic'?'block':'none';
-  document.getElementById('dptVideo').style.display=type==='video'?'block':'none';
-  document.getElementById('dptLink').style.display=type==='link'?'block':'none';
-  document.getElementById('dptAnnouncement').style.display=type==='announcement'?'block':'none';
-};
-
-window.pushToSelectedClass=function(){
-  var cls=document.getElementById('directClass').value;
-  pushPostToClass(cls,dPostType,'direct');
-};
-
-/* ── MONITOR MODAL ── */
-window.openMonitor=function(){
-  document.getElementById('monitorModal').classList.add('open');
-  renderClassSelector();
-  if(window.innerWidth<900){document.getElementById('sidebar').classList.remove('open');}
-};
-
-window.closeMonitor=function(){
-  document.getElementById('monitorModal').classList.remove('open');
-};
-
-function renderClassSelector(){
-  var sel=document.getElementById('classSelector');
-  sel.innerHTML=CLASSES.map(function(c){
-    var count=sfrom('classMembers_'+c.key,[]).length;
-    return '<button class="class-pill" onclick="selectClass(\''+c.key+'\')">'+'<span style="margin-right:6px;">'+c.emoji+'</span>'+c.label+'<span style="margin-left:8px;font-size:10px;color:#444;">('+count+')</span></button>';
-  }).join('');
-}
-
-window.selectClass=function(classKey){
-  monitoringClass=classKey;
-  document.querySelectorAll('.class-pill').forEach(function(p){p.classList.remove('active');});
-  event.target.closest('.class-pill').classList.add('active');
-  loadClassMonitor(classKey);
-  document.getElementById('monitorPostArea').style.display='block';
-};
-
-function loadClassMonitor(classKey){
-  var members=sfrom('classMembers_'+classKey,[]);
-  var posts=sfrom('classPosts_'+classKey,[]);
-  var comments=sfrom('comments_'+classKey,[]);
-  var content=document.getElementById('monitorContent');
-
-  var latestPost=posts.length>0?posts[posts.length-1]:null;
-  var cls=CLASSES.find(function(c){return c.key===classKey;})||{label:classKey,emoji:'🎓'};
-
-  var html='<div style="background:#000;border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:16px;">';
-  html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
-  html+='<div><span style="font-size:20px;margin-right:10px;">'+cls.emoji+'</span><strong style="font-size:15px;">'+esc(cls.label)+'</strong></div>';
-  html+='<div style="display:flex;gap:10px;"><span style="font-size:12px;color:#555;">'+members.length+' enrolled</span><span style="font-size:12px;color:var(--gold);">'+posts.length+' posts</span><span style="font-size:12px;color:var(--green);">'+comments.length+' comments</span></div>';
-  html+='</div>';
-  if(latestPost){html+='<div style="font-size:12px;color:#666;">Latest post: <strong style="color:#ccc;">'+esc(latestPost.title||latestPost.url||'(media)')+'</strong></div>';}
-  html+='</div>';
-
-  if(members.length===0){
-    html+='<p style="color:#333;text-align:center;padding:20px;font-size:13px;">No enrolled members yet.</p>';
-  } else {
-    html+='<table class="member-table"><thead><tr><th>Member</th><th>Adm. No.</th><th>Role</th><th>Location</th><th>Progress</th></tr></thead><tbody>';
-    html+=members.map(function(m){
-      var stu=sfrom('student_'+classKey,null);
-      var progress=(stu&&stu.name===m.name)?((stu.progress||0)+'%'):'—';
-      return '<tr class="member-row-tr">'+
-        '<td><span class="member-avatar-sm">'+(m.avatar||'👤')+'</span>'+esc(m.name)+'</td>'+
-        '<td style="font-size:12px;color:var(--gold);font-family:monospace;">'+esc(m.adm)+'</td>'+
-        '<td style="font-size:12px;color:#666;">'+esc(m.role||'Student')+'</td>'+
-        '<td style="font-size:12px;color:#555;">'+esc(m.location||'—')+'</td>'+
-        '<td style="font-size:12px;color:var(--green);">'+progress+'</td>'+
-      '</tr>';
-    }).join('');
-    html+='</tbody></table>';
+  var code=DB.approvePioneer(id);
+  if(code){
+    var cb=T('code-'+id),cv=T('cval-'+id);
+    if(cb&&cv){cv.textContent=code;cb.style.display='block';}
+    showToast('✅ Pioneer approved! Share the code shown below.');
   }
-
-  content.innerHTML=html;
-}
-
-/* ── MONITOR POST TYPE ── */
-var mPostType='topic';
-window.setMPostType=function(type,btn){
-  mPostType=type;
-  document.querySelectorAll('#monitorPostArea .ptype-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  document.getElementById('mptTopic').style.display=type==='topic'?'block':'none';
-  document.getElementById('mptVideo').style.display=type==='video'?'block':'none';
-  document.getElementById('mptLink').style.display=type==='link'?'block':'none';
-  document.getElementById('mptAnnouncement').style.display=type==='announcement'?'block':'none';
+  loadPioneerReqs(); refreshStats();
 };
+window.denyPioneer=function(id){ DB.denyPioneer(id); loadPioneerReqs(); refreshStats(); showToast('Request denied.','#FF3B30'); };
+window.copyCode=function(id){ var e=T('cval-'+id); if(e) navigator.clipboard.writeText(e.textContent).then(function(){showToast('Code copied!');}); };
 
-window.pushFromMonitor=function(){
-  if(!monitoringClass){showToast('Select a class first.','#FF3B30');return;}
-  pushPostToClass(monitoringClass,mPostType,'monitor');
-};
-
-/* ── SHARED PUSH FUNCTION ── */
-function pushPostToClass(classKey,type,source){
-  var prefix=source==='monitor'?'mpt':'dpt';
-  var post={type:type,postedBy:currentUser.name,time:new Date().toISOString()};
-
-  if(type==='topic'){
-    var title=(document.getElementById(prefix+'Title').value||'').trim();
-    var notes=(document.getElementById(prefix+'Notes').value||'').trim();
-    if(!title&&!notes){showToast('Add a title or notes.','#FF3B30');return;}
-    post.title=title;post.content=notes;
-    document.getElementById(prefix+'Title').value='';
-    document.getElementById(prefix+'Notes').value='';
-  } else if(type==='video'){
-    var url=(document.getElementById(prefix+'VideoUrl').value||'').trim();
-    if(!url){showToast('Enter a video URL.','#FF3B30');return;}
-    post.url=url;
-    document.getElementById(prefix+'VideoUrl').value='';
-  } else if(type==='link'){
-    var lurl=(document.getElementById(prefix+'LinkUrl').value||'').trim();
-    var label=(document.getElementById(prefix+'LinkLabel').value||'').trim();
-    if(!lurl){showToast('Enter a URL.','#FF3B30');return;}
-    post.url=lurl;post.label=label||lurl;
-    document.getElementById(prefix+'LinkUrl').value='';
-    document.getElementById(prefix+'LinkLabel').value='';
-  } else if(type==='announcement'){
-    var afield=prefix==='mpt'?'mptAlert':'dptAlert';
-    var txt=(document.getElementById(afield).value||'').trim();
-    if(!txt){showToast('Enter an announcement.','#FF3B30');return;}
-    post.title='Announcement';post.content=txt;
-    document.getElementById(afield).value='';
-    // Bot notices
-    var bn=sfrom('botNotices',[]);
-    bn.unshift({msg:'📢 '+classKey+': '+txt,time:post.time});
-    sto('botNotices',bn);
-  }
-
-  var posts=sfrom('classPosts_'+classKey,[]);
-  posts.push(post);
-  sto('classPosts_'+classKey,posts);
-
-  // Also push to comments as tutor
-  var comments=sfrom('comments_'+classKey,[]);
-  comments.push({user:currentUser.name,avatar:'👑',msg:'['+type.toUpperCase()+'] '+(post.title||post.url||post.content?.substring(0,80)),time:post.time,role:'tutor'});
-  sto('comments_'+classKey,comments);
-
-  showToast('Posted to '+classKey+' successfully!');
-  if(source==='monitor'&&monitoringClass)loadClassMonitor(monitoringClass);
-}
-
-/* ── ENTER CLASS AS LEADER ── */
-window.enterClassAsLeader=function(){
-  if(!monitoringClass){showToast('Select a class first.','#FF3B30');return;}
-  window.open('classroom.html?class='+encodeURIComponent(monitoringClass),'_blank');
-};
-
-/* ── SQUARE MODERATION ── */
-window.verifyTarget=function(){
-  var id=(document.getElementById('targetID').value||'').trim();
-  if(!id){showToast('Enter a Member ID.','#FF3B30');return;}
-  var users=sfrom('users',[]);
-  var found=users.find(function(u){return u.memberID===id;});
-  var res=document.getElementById('targetResult');
-  res.style.display='block';
-  if(found)res.innerHTML='<strong style="color:var(--green)">✓ VERIFIED:</strong> '+esc(found.name)+' · '+esc(found.email)+' · Role: '+esc(found.role||'member');
-  else res.innerHTML='<span style="color:var(--red)">✗ ID not found in system.</span>';
+/* ══ MODERATION TOOLS ══ */
+window.lookUp=function(){
+  var q=(T('modTarget').value||'').toLowerCase().trim(); if(!q) return;
+  var users=DB.get(DB.KEYS.users,[]);
+  var found=users.find(function(u2){return (u2.name||'').toLowerCase().includes(q)||(u2.memberID||'').toLowerCase()===q;});
+  var res=T('modResult'); res.style.display='block';
+  if(found) res.innerHTML='<strong style="color:var(--green)">✓ FOUND:</strong> '+DB.esc(found.name)+' · ID: '+DB.esc(found.memberID||'—')+' · Role: '+DB.esc(found.role||'member');
+  else res.innerHTML='<span style="color:var(--red)">✗ Member not found.</span>';
 };
 
 window.issueCmd=function(action){
-  var id=(document.getElementById('targetID').value||'').trim();
-  if(!id){showToast('Enter a Member ID first.','#FF3B30');return;}
-  var cmds=sfrom('systemCommands',{});
-  cmds[id]=action;sto('systemCommands',cmds);
-  showToast('Command "'+action+'" sent to '+id);
+  var id=(T('modTarget').value||'').trim(); if(!id){showToast('Enter a member ID first.','#FF3B30');return;}
+  var c=DB.get(DB.KEYS.systemCmds,{}); c[id]=action; DB.set(DB.KEYS.systemCmds,c);
+  showToast('Command "'+action+'" issued to '+id+'.');
 };
 
-window.purgeChatLog=function(){
-  if(confirm('Permanently delete all Square chat messages?')){
-    localStorage.removeItem('threadComments');
-    showToast('Chat log purged.');
-  }
-};
-
-/* ── MEMBER RECOVERY ── */
 window.findMember=function(){
-  var q=(document.getElementById('recovSearch').value||'').toLowerCase();
-  if(!q)return;
-  var users=sfrom('users',[]);
-  var found=users.find(function(u){return (u.name||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q);});
-  var res=document.getElementById('recovResult');
-  res.style.display='block';
+  var q=(T('recovQ').value||'').toLowerCase(); if(!q) return;
+  var users=DB.get(DB.KEYS.users,[]);
+  var found=users.find(function(u2){return (u2.name||'').toLowerCase().includes(q)||(u2.email||'').toLowerCase().includes(q);});
+  var res=T('recovResult'); res.style.display='block';
   if(found){
-    res.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">'+
-      '<div><strong style="color:var(--gold)">'+esc(found.name)+'</strong><br><span style="font-size:11px;color:#555;">ID: '+esc(found.memberID||'—')+'  ·  '+esc(found.email)+'</span></div>'+
-      '<button class="action-btn gold" style="padding:8px 14px;font-size:11px;" onclick="issueRecoveryKey(\''+esc(found.memberID||found.email)+'\')">ISSUE RECOVERY KEY</button>'+
-    '</div>';
-  } else {
-    res.innerHTML='<span style="color:var(--red);font-size:12px;">No member found.</span>';
-  }
+    res.innerHTML='<strong style="color:var(--gold)">'+DB.esc(found.name)+'</strong> · ID: '+DB.esc(found.memberID||'—')+' · '+DB.esc(found.email||'')+
+      ' <button onclick="issueRecovery(\''+DB.esc(found.memberID||found.email)+'\')" style="margin-left:10px;background:var(--gold);color:#000;border:none;padding:5px 13px;border-radius:7px;font-size:10px;font-weight:800;cursor:pointer;">ISSUE RECOVERY KEY</button>';
+  } else { res.innerHTML='<span style="color:var(--red);">No member found.</span>'; }
 };
 
-window.issueRecoveryKey=function(id){
-  if(!confirm('Have two Pioneers verified this person\'s identity?'))return;
-  var users=sfrom('users',[]);
-  var idx=users.findIndex(function(u){return u.memberID===id||u.email===id;});
+window.issueRecovery=function(id){
+  if(!confirm('Confirm: Two Pioneers have verified this person\'s identity?'))return;
+  var users=DB.get(DB.KEYS.users,[]);
+  var idx=users.findIndex(function(u2){return u2.memberID===id||u2.email===id;});
   if(idx===-1){showToast('User not found.','#FF3B30');return;}
-  var tempKey='Declare'+Math.floor(1000+Math.random()*9000);
-  var h=0;for(var i=0;i<tempKey.length;i++){h=((h<<5)-h)+tempKey.charCodeAt(i);h=h&h;}
-  users[idx].passwordHash=h.toString(36);
-  delete users[idx].password;
-  sto('users',users);
-  alert('SUCCESS. Temporary Recovery Key: '+tempKey+'\n\nShare this with the member privately. They can log in then update their password.');
+  var key='Declare'+Math.floor(1000+Math.random()*9000);
+  users[idx].tempKey=key; DB.set(DB.KEYS.users,users);
+  alert('SUCCESS. Temporary Recovery Key: '+key+'\n\nShare this privately with the member. They log in then change their password.');
 };
 
-/* ── PRESENCE HEARTBEAT ── */
-function heartbeat(){
-  if(!currentUser)return;
-  var map=sfrom('presenceMap',{});
-  map[currentUser.email||currentUser.id||currentUser.name]=Date.now();
-  sto('presenceMap',map);
+/* ── FULL REFRESH ── */
+function fullRefresh(){
+  refreshStats();
+  loadRecentPosts();
+  loadBroadcastHistory();
+  loadProjList();
+  loadAchList();
+  loadPrayerMod();
+  loadTalentMod();
+  loadTutorApps();
+  loadPioneerReqs();
+  DB.heartbeat(u);
 }
 
 /* ── INIT ── */
-document.addEventListener('DOMContentLoaded',function(){
-  if(!guardLeader())return;
-
-  var greet=document.getElementById('greetName');
-  if(greet)greet.textContent='Shalom, '+(currentUser.name||'Leader').split(' ')[0];
-  var ln=document.getElementById('leaderName');
-  if(ln)ln.textContent=(currentUser.name||'Pioneer')+' · Active';
-
-  detectDevice();
-  loadTutorApps();
-  loadPioneerRequests();
-  loadAnnouncementHistory();
-  updateLiveCounter();
-  updateStats();
-  rotateQuotes();
-  heartbeat();
-
-  setInterval(rotateQuotes,7000);
-  setInterval(updateLiveCounter,5000);
-  setInterval(function(){loadTutorApps();loadPioneerRequests();updateStats();heartbeat();},8000);
-  window.addEventListener('resize',detectDevice);
-  window.addEventListener('orientationchange',function(){setTimeout(detectDevice,200);});
-});
+fullRefresh();
+rotQ();
+setInterval(fullRefresh, 7000);
+setInterval(rotQ, 7000);
+window.addEventListener('resize',function(){document.body.setAttribute('data-w',window.innerWidth<768?'mob':'desk');});
 
 })();
 </script>
