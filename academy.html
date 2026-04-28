@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Declare Academy | The Training Ground</title>
+<script src="declare-db.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -166,6 +167,17 @@ body{background:var(--dark);color:var(--text);font-family:'Plus Jakarta Sans',sa
 </div>
 
 <script>
+// Responsive detection
+(function(){
+  function dl(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');}
+  dl();window.addEventListener('resize',dl);window.addEventListener('orientationchange',function(){setTimeout(dl,200);});
+})();
+
+// Auth check
+if(typeof DB!=='undefined'&&!DB.isLoggedIn()){window.location.href='login.html';}
+var _u=typeof DB!=='undefined'?DB.currentUser():(function(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}})();
+if(!_u){window.location.href='login.html';}
+
 /* ═══════════════════════════════════
    CLASS DEFINITIONS
 ═══════════════════════════════════ */
