@@ -153,6 +153,12 @@ textarea.ldr-input{resize:vertical;min-height:80px;}
 <div class="toast" id="toast"></div>
 
 <script>
+// Responsive detection
+(function(){
+  function dl(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');}
+  dl();window.addEventListener('resize',dl);window.addEventListener('orientationchange',function(){setTimeout(dl,200);});
+})();
+
 var u = DB.currentUser();
 var isLeader = DB.isLeader(u);
 var activeFilter = 'all';
