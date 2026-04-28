@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Declare Hub | The Living Community</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="declare-db.js"></script>
 <style>
 :root{
   --gold:#FFD700;--gold-soft:rgba(255,215,0,0.1);
@@ -219,7 +220,7 @@ body{
 /* ── RESPONSIVE ───────────────────────────────── */
 @media(min-width:768px){
   body{max-width:600px;margin:0 auto;}
-  .top-nav,.#live-ticker,#bottomNav,#navDrawer{max-width:600px;left:50%;transform:translateX(-50%);}
+  .top-nav,#live-ticker,#bottomNav,#navDrawer{max-width:600px;left:50%;transform:translateX(-50%);}
   #navDrawer{left:50%;transform:translateX(-50%) translateY(100%);}
   #navDrawer.open{transform:translateX(-50%) translateY(0);}
   #live-ticker{left:50%;transform:translateX(-50%);}
@@ -364,16 +365,9 @@ body{
 (function(){
 'use strict';
 
-/* ── HELPERS ─────────────────────────────────── */
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
-function isLeader(r){return r==='admin'||r==='leader';}
-function nowMs(){return Date.now();}
-function fmtTime(ts){return new Date(ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
-function fmtDate(ts){return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
-
-var user=session();
-if(!user){window.location.href='login.html';}
+/* ── GUARD ────────────────────────────────────── */
+if(!DB.isLoggedIn()){ window.location.href='login.html'; }
+var user = DB.currentUser() || {};
 
 /* ── DRAWER ──────────────────────────────────── */
 window.openDrawer=function(){
@@ -384,11 +378,11 @@ window.closeDrawer=function(){
   document.getElementById('navDrawer').classList.remove('open');
   document.getElementById('drawerOverlay').classList.remove('show');
 };
-if(isLeader(user.role||'')){
+if(DB.isLeader(user)){
   var ll=document.getElementById('leaderDrawerLink');if(ll)ll.style.display='flex';
 }
 
-/* ── USER AVATAR ─────────────────────────────── */
+/* ── AVATAR ─────────────────────────────────── */
 function setAvatar(el){
   if(!el)return;
   var photo=user.memberID?localStorage.getItem('photo_'+user.memberID):null;
@@ -421,7 +415,7 @@ var VERSES=[
 ];
 var vIdx=0;
 function setVerse(){
-  var dayIdx=Math.floor(nowMs()/86400000)%VERSES.length;
+  var dayIdx=Math.floor(Date.now()/86400000)%VERSES.length;
   var el=document.getElementById('verseText');if(el)el.textContent=VERSES[dayIdx];
 }
 setVerse();
@@ -431,47 +425,43 @@ setInterval(function(){
   if(el){el.style.opacity='0';setTimeout(function(){el.textContent=VERSES[vIdx];el.style.opacity='1';},500);}
 },9000);
 
-/* ── SESSION SCHEDULE ────────────────────────── */
-// EAT = UTC+3
-var SESSIONS=[
-  {day:2,name:'Prayers & Intercessions',icon:'🙏',color:'var(--purple)'},
-  {day:4,name:'Bible Study',icon:'📖',color:'var(--blue)'},
-  {day:0,name:'Hot Seat Real Talk',icon:'🔥',color:'var(--amber)'}
-];
+/* ── SESSION SCHEDULE (uses DB sessions + defaults) ─── */
 var SESSION_ALL=[
-  {day:2,name:'Prayers & Intercessions',icon:'🙏',time:'Tuesday, 8:30 PM EAT'},
-  {day:4,name:'Bible Study',icon:'📖',time:'Thursday, 8:30 PM EAT'},
-  {day:0,name:'Hot Seat Real Talk',icon:'🔥',time:'Sunday, 8:30 PM EAT'}
+  {day:2,name:'Prayers & Intercessions',icon:'🙏',time:'Tuesday, 8:30 PM EAT',color:'var(--purple)'},
+  {day:4,name:'Bible Study',icon:'📖',time:'Thursday, 8:30 PM EAT',color:'var(--blue)'},
+  {day:0,name:'Hot Seat Real Talk',icon:'🔥',time:'Sunday, 8:30 PM EAT',color:'var(--amber)'}
 ];
 var stripIdx=0;
-
-function eatNow(){
-  var utcMs=Date.now()+new Date().getTimezoneOffset()*60000;
-  return new Date(utcMs+3*3600000);
-}
+function eatNow(){var utcMs=Date.now()+new Date().getTimezoneOffset()*60000;return new Date(utcMs+3*3600000);}
 function checkSessions(){
+  // Merge DB sessions with defaults
+  var dbSessions=DB.getSessions();
+  var upcomingDB=DB.getUpcomingSession();
   var eat=eatNow(),day=eat.getDay(),h=eat.getHours(),m=eat.getMinutes();
   var tot=h*60+m,start=20*60+30,end=21*60+50;
   var ad=document.getElementById('sessionAd'),strip=document.getElementById('sessionStrip');
   var adLabel=document.getElementById('adLabel'),adTitle=document.getElementById('adTitle'),adDesc=document.getElementById('adDesc');
-  var todaySess=SESSIONS.find(function(s){return s.day===day;});
+  var todaySess=SESSION_ALL.find(function(s){return s.day===day;});
 
-  if(todaySess&&tot>=start&&tot<=end){
-    // LIVE NOW
-    ad.classList.add('show');strip.classList.remove('show');
+  if(upcomingDB){
+    if(ad){ad.classList.add('show');}
+    if(strip){strip.classList.remove('show');}
+    if(adLabel)adLabel.textContent='📅 Upcoming Session';
+    if(adTitle)adTitle.textContent=upcomingDB.title||upcomingDB.name||'Family Session';
+    if(adDesc)adDesc.textContent=upcomingDB.timeLabel||'Join the session in The Square';
+  } else if(todaySess&&tot>=start&&tot<=end){
+    if(ad){ad.classList.add('show');}if(strip){strip.classList.remove('show');}
     if(adLabel)adLabel.textContent='🔴 LIVE NOW';
     if(adTitle)adTitle.textContent=todaySess.icon+' '+todaySess.name+' is LIVE';
     if(adDesc)adDesc.textContent='Click to join the session happening right now in The Square!';
   } else if(todaySess&&tot>=start-240&&tot<start){
-    // Within 4 hours
     var minsLeft=start-tot,hrs=Math.floor(minsLeft/60),mins=minsLeft%60;
-    ad.classList.add('show');strip.classList.remove('show');
+    if(ad){ad.classList.add('show');}if(strip){strip.classList.remove('show');}
     if(adLabel)adLabel.textContent='⏰ Coming Up Today';
     if(adTitle)adTitle.textContent=todaySess.icon+' '+todaySess.name;
     if(adDesc)adDesc.textContent='Starts in '+(hrs>0?hrs+'h ':'')+mins+'m — Get ready to join.';
   } else {
-    ad.classList.remove('show');strip.classList.add('show');
-    // Rotate sessions strip
+    if(ad){ad.classList.remove('show');}if(strip){strip.classList.add('show');}
     var s=SESSION_ALL[stripIdx%SESSION_ALL.length];
     var si=document.getElementById('stripIcon'),sn=document.getElementById('stripName'),st=document.getElementById('stripTime'),sc=document.getElementById('stripCat');
     if(si)si.textContent=s.icon;if(sn)sn.textContent=s.name;if(st)st.textContent=s.time;if(sc)sc.textContent='Every Week';
@@ -480,159 +470,120 @@ function checkSessions(){
 checkSessions();setInterval(checkSessions,60000);
 setInterval(function(){stripIdx++;checkSessions();},7000);
 
-/* ── PRESENCE ────────────────────────────────── */
-var PTTL=25000;
-function pingPresence(){
-  var map={};try{map=JSON.parse(localStorage.getItem('presenceMap'))||{};}catch(e){}
-  var n=nowMs();map[user.email||user.memberID||user.id]=n;
-  Object.keys(map).forEach(function(k){if(n-map[k]>PTTL)delete map[k];});
-  localStorage.setItem('presenceMap',JSON.stringify(map));
-  return Object.keys(map).length;
+/* ── ONLINE COUNT (uses DB heartbeat) ────────── */
+function updateOnline(){
+  DB.heartbeat();
+  var c=DB.getOnlineCount();
+  var el=document.getElementById('onlineCount');if(el)el.textContent=c||1;
 }
-function updateOnline(){var c=pingPresence();var el=document.getElementById('onlineCount');if(el)el.textContent=c;}
-updateOnline();setInterval(updateOnline,5000);
+updateOnline();setInterval(updateOnline,15000);
 
-/* ── NOTIFICATIONS ───────────────────────────── */
+/* ── NOTIFICATIONS (uses DB) ─────────────────── */
 function renderNotifications(){
   var list=document.getElementById('notifList');if(!list)return;
-  var notifs=[];
-  // Read from multiple sources
-  var updates=[];try{updates=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){}
-  var botNotices=[];try{botNotices=JSON.parse(localStorage.getItem('botNotices'))||[];}catch(e){}
-  var tutorApps=[];try{tutorApps=JSON.parse(localStorage.getItem('adminNotifications'))||[];}catch(e){}
-
-  updates.slice(0,3).forEach(function(u){
-    notifs.push({icon:u.icon||'📢',title:u.text,sub:u.category||'Update',ts:u.id||0});
-  });
-  botNotices.slice(0,2).forEach(function(n){
-    notifs.push({icon:'🎓',title:n.msg||n,sub:'Academy Notice',ts:nowMs()});
-  });
-  if(isLeader(user.role||'')){
-    tutorApps.slice(0,2).forEach(function(a){
-      notifs.push({icon:'👤',title:a.name+' applied for '+a.class,sub:'Tutor Application',ts:a.id||0,link:'leadership.html'});
-    });
+  var email=user.email||'';
+  var notifs=DB.getNotifications(email).slice(0,6);
+  if(!notifs.length){
+    list.innerHTML='<div style="font-size:12px;color:#444;padding:8px 0;">No new notifications.</div>';
+    return;
   }
-  if(!notifs.length){list.innerHTML='<div style="font-size:12px;color:#444;padding:8px 0;">No new notifications.</div>';return;}
   list.innerHTML=notifs.map(function(n){
-    return '<div class="notif-item"'+(n.link?' style="cursor:pointer;" onclick="window.location.href=\''+n.link+'\'"':'')+'>'+
-      '<span class="notif-icon">'+esc(n.icon)+'</span>'+
-      '<div class="notif-body"><div class="notif-title">'+esc(n.title)+'</div><div class="notif-sub">'+esc(n.sub)+'</div></div>'+
-      '<span class="notif-dot"></span>'+
+    return '<div class="notif-item"'+(n.link?' style="cursor:pointer;" onclick="window.location.href=''+n.link+''"':'')+' onclick="DB.markNotificationsRead()">'+
+      '<span class="notif-icon">'+(n.icon||'📌')+'</span>'+
+      '<div class="notif-body"><div class="notif-title">'+DB.esc(n.title||'')+'</div><div class="notif-sub">'+DB.esc(n.body||DB.fmtTime(n.time))+'</div></div>'+
+      (n.read?'':'<span class="notif-dot"></span>')+
     '</div>';
   }).join('');
 }
 
-/* ── FEED / POSTS ────────────────────────────── */
-var MSG_KEY='hubMessages';
-function loadMsgs(){try{return JSON.parse(localStorage.getItem(MSG_KEY))||[];}catch(e){return[];}}
-function saveMsgs(a){localStorage.setItem(MSG_KEY,JSON.stringify(a.slice(0,300)));}
-
-// Bot post
+/* ── FEED (uses DB.hubMessages) ──────────────── */
 var BOT_ENTRIES=[
   {v:'"Arise, shine; for your light has come." — Isaiah 60:1',m:'Share one goal you are working on this week.'},
   {v:'"The Lord will fight for you; you need only be still." — Exodus 14:14',m:'Encourage a fellow member in the feed today.'},
   {v:'"Let us not become weary in doing good." — Galatians 6:9',m:'What project are you currently building? Share it below.'},
   {v:'"Faith without works is dead." — James 2:26',m:'What action step will you take today? Declare it here.'}
 ];
+
 function injectBot(){
   var feed=document.getElementById('chatFeed');if(!feed)return;
   if(feed.querySelector('.bot-post'))return;
-  var dayIdx=Math.floor(nowMs()/86400000)%BOT_ENTRIES.length;
-  var c=BOT_ENTRIES[dayIdx],n=new Date();
+  var dayIdx=Math.floor(Date.now()/86400000)%BOT_ENTRIES.length;
+  var c=BOT_ENTRIES[dayIdx];var n=new Date();
   var el=document.createElement('div');el.className='post-card bot-post';
   el.innerHTML=
     '<div class="post-head">'+
       '<div class="post-avatar" style="background:#000;color:var(--gold);border:1px solid var(--gold)">DF</div>'+
-      '<div><div class="post-name">Declare Family Intelligence</div><div class="post-meta">'+fmtDate(n)+' · '+fmtTime(n)+'</div></div>'+
+      '<div><div class="post-name">Declare Family Intelligence</div><div class="post-meta">'+n.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' · '+n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</div></div>'+
     '</div>'+
-    '<blockquote style="border-left:3px solid var(--gold);padding-left:12px;margin:0 0 10px;font-style:italic;font-size:13px;color:#aaa;">'+esc(c.v)+'</blockquote>'+
-    '<p class="post-text"><strong>Today\'s Motion:</strong> '+esc(c.m)+'</p>';
+    '<blockquote style="border-left:3px solid var(--gold);padding-left:12px;margin:0 0 10px;font-style:italic;font-size:13px;color:#aaa;">'+DB.esc(c.v)+'</blockquote>'+
+    '<p class="post-text"><strong>Today's Motion:</strong> '+DB.esc(c.m)+'</p>';
   feed.insertBefore(el,feed.firstChild);
 }
 
+var EMOJIS=['🙏','🔥','💛','👏','💡'];
 function renderFeed(){
   var feed=document.getElementById('chatFeed');if(!feed)return;
   var botPost=feed.querySelector('.bot-post');
+  var msgs=DB.getHubMessages();
   feed.innerHTML='';
   if(botPost)feed.appendChild(botPost);
-  var msgs=loadMsgs();
-  var myReactions=getMyReactions();
-  msgs.forEach(function(m,idx){
-    var isLP=isLeader(m.role||'');var isPrayer=m.type==='prayer';
+  var myEmail=user.email||'';
+  msgs.forEach(function(m){
+    var isLP=DB.isLeader({role:m.role});var isPrayer=m.type==='prayer';
     var cls='post-card'+(isLP?' pioneer-post':isPrayer?' prayer-post':'');
     var el=document.createElement('div');el.className=cls;el.dataset.id=m.id;
-
-    // Check user's saved photo
-    var photoKey=m.memberID?'photo_'+m.memberID:null;
-    var savedPic=photoKey?localStorage.getItem(photoKey):null;
-    var avatarHtml=savedPic?
-      '<img src="'+savedPic+'" style="width:100%;height:100%;object-fit:cover;">':
-      esc((m.name||'M').charAt(0).toUpperCase());
-    var avatarBg=savedPic?'background:#333':('background:'+(isLP?'var(--green)':'var(--gold)'));
-
+    var photo=m.memberID?localStorage.getItem('photo_'+m.memberID):null;
+    var avatarHtml=photo?'<img src="'+photo+'" style="width:100%;height:100%;object-fit:cover;">':DB.esc((m.name||'M').charAt(0).toUpperCase());
+    var avatarBg=photo?'background:#333':('background:'+(isLP?'var(--green)':'var(--gold)'));
+    var reactionBar=EMOJIS.map(function(e){
+      var users=(m.reactions&&m.reactions[e])||[];
+      var cnt=users.length;
+      var isMine=users.includes(myEmail);
+      return '<button class="emoji-btn'+(isMine?' mine':'')+'" onclick="reactMsg(''+m.id+'',''+e+'')">'+e+' <span class="react-count">'+cnt+'</span></button>';
+    }).join('');
     el.innerHTML=
       '<div class="post-head">'+
         '<div class="post-avatar" style="'+avatarBg+';color:#000">'+avatarHtml+'</div>'+
         '<div>'+
-          '<div class="post-name">'+esc(m.name||'Member')+(isLP?'<span class="pioneer-tag">PIONEER</span>':'')+(isPrayer?'<span class="prayer-tag">PRAYER</span>':'')+'</div>'+
-          '<div class="post-meta">'+(m.memberID?esc(m.memberID)+' · ':'')+fmtDate(m.time)+' · '+fmtTime(m.time)+'</div>'+
+          '<div class="post-name">'+DB.esc(m.name||'Member')+(isLP?'<span class="pioneer-tag">PIONEER</span>':'')+(isPrayer?'<span class="prayer-tag">PRAYER</span>':'')+'</div>'+
+          '<div class="post-meta">'+(m.memberID?DB.esc(m.memberID)+' · ':'')+DB.fmtTime(m.time)+'</div>'+
         '</div>'+
       '</div>'+
-      '<p class="post-text">'+esc(m.text)+'</p>'+
-      '<div class="reaction-row">'+buildReactBtns(m,idx,myReactions)+
-        '<button class="reply-btn" onclick="replyTo('+idx+')">↩ Reply</button>'+
+      '<p class="post-text">'+DB.esc(m.text||'')+'</p>'+
+      '<div class="reaction-row">'+reactionBar+
+        (DB.isLeader(user)?'<button class="reply-btn" style="color:var(--red);margin-left:8px;" onclick="delMsg(''+m.id+'')">🗑</button>':'')+
+        '<button class="reply-btn" onclick="replyTo(''+DB.esc(m.name||'')+'')">↩ Reply</button>'+
       '</div>';
     feed.appendChild(el);
   });
 }
 
-/* One emoji per user per post — stored as "reacted_<msgId>_<userEmail>" */
-function getMyReactions(){
-  var out={};
-  Object.keys(localStorage).forEach(function(k){
-    if(k.startsWith('reacted_')&&k.endsWith('_'+(user.email||user.memberID))){
-      var msgId=k.replace('reacted_','').replace('_'+(user.email||user.memberID),'');
-      out[msgId]=localStorage.getItem(k);
-    }
-  });
-  return out;
-}
-var EMOJIS=['🙏','🔥','💛','👏','💡'];
-function buildReactBtns(m,idx,myReactions){
-  var myEmoji=myReactions[String(m.id)]||null;
-  return EMOJIS.map(function(e){
-    var cnt=m.reactions&&m.reactions[e]?m.reactions[e]:0;
-    var isMine=myEmoji===e;
-    return '<button class="emoji-btn'+(isMine?' mine':'')+'" onclick="reactPost('+idx+',\''+e+'\')"'+(myEmoji&&!isMine?' disabled':'')+'>'+e+' <span class="react-count">'+cnt+'</span></button>';
-  }).join('');
-}
-
-window.reactPost=function(idx,emoji){
-  var msgs=loadMsgs();if(!msgs[idx])return;
-  var msgId=String(msgs[idx].id);
-  var myKey='reacted_'+msgId+'_'+(user.email||user.memberID);
-  if(localStorage.getItem(myKey))return; // already reacted
-  if(!msgs[idx].reactions)msgs[idx].reactions={};
-  msgs[idx].reactions[emoji]=(msgs[idx].reactions[emoji]||0)+1;
-  localStorage.setItem(myKey,emoji);
-  saveMsgs(msgs);renderFeed();
+window.reactMsg=function(id,emoji){
+  DB.reactToMessage(id,emoji,user.email||user.memberID||'guest');
+  renderFeed();
 };
-
-window.replyTo=function(idx){
-  var msgs=loadMsgs();if(!msgs[idx])return;
+window.delMsg=function(id){
+  if(!DB.isLeader(user))return;
+  DB.deleteHubMessage(id);renderFeed();
+};
+window.replyTo=function(name){
   var inp=document.getElementById('messageInput');
-  if(inp){inp.value='↩ @'+msgs[idx].name+': ';inp.focus();}
+  if(inp){inp.value='↩ @'+name+': ';inp.focus();}
 };
 
 window.sendPost=function(){
   var inp=document.getElementById('messageInput');
   var type=document.getElementById('postType').value;
   var txt=(inp.value||'').trim();if(!txt)return;
-  var msg={id:nowMs(),name:user.name||'Member',memberID:user.memberID||'',role:user.role||'member',text:txt,type:type,time:nowMs(),reactions:{}};
-  var msgs=loadMsgs();msgs.unshift(msg);saveMsgs(msgs);
+  var msg={
+    id:DB.ts(),name:user.name||'Member',
+    memberID:user.memberID||'',role:user.role||'member',
+    text:txt,type:type,time:DB.ts(),reactions:{}
+  };
+  DB.pushHubMessage(msg);
+  // If prayer, also push to prayer wall
   if(type==='prayer'){
-    var prayers=[];try{prayers=JSON.parse(localStorage.getItem('prayerRequests'))||[];}catch(e){}
-    prayers.unshift(msg);localStorage.setItem('prayerRequests',JSON.stringify(prayers.slice(0,200)));
+    DB.pushPrayerPost({author:user.name||'Member',memberID:user.memberID,type:'prayer',text:txt,time:DB.ts()});
   }
   inp.value='';inp.style.height='auto';renderFeed();
 };
@@ -644,23 +595,26 @@ if(ta){
   ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendPost();}});
 }
 
-/* ── BOTTOM TICKER ───────────────────────────── */
+/* ── TICKER (uses DB broadcasts + defaults) ──── */
 var TSEED=[
-  {id:1,cat:'Pioneer Spotlight',icon:'👑',text:'Meet the 2026 Vision Pioneers — 6 leaders steering the family into its greatest chapter.',pinned:true},
-  {id:2,cat:'Session',icon:'🙏',text:'Prayers & Intercessions — Every Tuesday 8:30 PM EAT in The Square.'},
-  {id:3,cat:'Session',icon:'📖',text:'Bible Study — Every Thursday 8:30 PM EAT. Come ready to dig deep.'},
-  {id:4,cat:'Session',icon:'🔥',text:'Hot Seat Real Talk — Every Sunday 8:30 PM EAT. Bold questions. Real answers.'},
-  {id:5,cat:'Project',icon:'🚀',text:'Project Uplift: Civic Support — 85% funded. Targeting 100+ students by June 2026.'},
-  {id:6,cat:'Academy',icon:'🎓',text:'Declare Academy open — Financial Growth, Spiritual Growth, Psychology & Leadership.'}
+  {cat:'Pioneer Spotlight',icon:'👑',text:'Meet the 2026 Vision Pioneers — 6 leaders steering the family into its greatest chapter.',pinned:true},
+  {cat:'Session',icon:'🙏',text:'Prayers & Intercessions — Every Tuesday 8:30 PM EAT in The Square.'},
+  {cat:'Session',icon:'📖',text:'Bible Study — Every Thursday 8:30 PM EAT. Come ready to dig deep.'},
+  {cat:'Session',icon:'🔥',text:'Hot Seat Real Talk — Every Sunday 8:30 PM EAT. Bold questions. Real answers.'},
+  {cat:'Project',icon:'🚀',text:'Project Uplift: Civic Support — 85% funded. Targeting 100+ students by June 2026.'},
+  {cat:'Academy',icon:'🎓',text:'Declare Academy open — Financial Growth, Spiritual Growth, Psychology & Leadership.'}
 ];
-function getTSlides(){var s;try{s=JSON.parse(localStorage.getItem('declareUpdates'))||[];}catch(e){s=[];}if(!s.length)s=TSEED.slice();s.sort(function(a,b){return(b.pinned?1:0)-(a.pinned?1:0);});return s;}
 var tSlides=[],tCur=0,tAuto=null;
+function getTSlides(){
+  var bc=DB.getBroadcasts().slice(0,3).map(function(b){return{cat:'Broadcast',icon:'📢',text:(b.title||'')+': '+(b.body||'').slice(0,60)};});
+  return bc.concat(TSEED);
+}
 function buildTicker(){
   tSlides=getTSlides();var vp=document.getElementById('tickerVp');if(!vp)return;
   vp.innerHTML='';
   tSlides.forEach(function(s,i){
     var el=document.createElement('div');el.className='t-slide'+(i===0?' active':'');
-    el.innerHTML='<span class="t-icon">'+esc(s.icon||'📌')+'</span><div class="t-body"><span class="t-cat">'+esc(s.cat||s.category||'Update')+'</span><span class="t-text">'+esc(s.text||'')+'</span></div>';
+    el.innerHTML='<span class="t-icon">'+DB.esc(s.icon||'📌')+'</span><div class="t-body"><span class="t-cat">'+DB.esc(s.cat||'Update')+'</span><span class="t-text">'+DB.esc(s.text||'')+'</span></div>';
     vp.appendChild(el);
   });
   tCur=0;stopTA();startTA();
@@ -672,14 +626,20 @@ document.getElementById('tPrev').onclick=function(){stopTA();goT(tCur-1);startTA
 document.getElementById('tNext').onclick=function(){stopTA();goT(tCur+1);startTA();};
 
 /* ── REAL-TIME POLL ──────────────────────────── */
-setInterval(function(){renderFeed();renderNotifications();},3000);
+setInterval(function(){renderFeed();renderNotifications();updateOnline();},5000);
+setInterval(function(){buildTicker();},30000);
+
+/* ── RESPONSIVE DETECT ────────────────────────── */
+function detectLayout(){
+  document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');
+}
+detectLayout();
+window.addEventListener('resize',detectLayout);
+window.addEventListener('orientationchange',function(){setTimeout(detectLayout,200);});
 
 /* ── INIT ────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded',function(){
   injectBot();renderFeed();renderNotifications();buildTicker();
-  // Responsive
-  var doL=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');document.body.setAttribute('data-orient',window.innerWidth>window.innerHeight?'landscape':'portrait');};
-  doL();window.addEventListener('resize',doL);window.addEventListener('orientationchange',function(){setTimeout(doL,200);});
 });
 
 })();
