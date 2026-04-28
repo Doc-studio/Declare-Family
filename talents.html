@@ -160,10 +160,18 @@ textarea.modal-input{resize:vertical;min-height:120px;}
 <div class="toast" id="toast"></div>
 
 <script>
+// Auth + responsive
+if(!DB.isLoggedIn()){ window.location.href='login.html'; }
+(function(){
+  function dl(){ document.body.setAttribute('data-layout', window.innerWidth < 600 ? 'mobile' : 'desktop'); }
+  dl(); window.addEventListener('resize', dl);
+  window.addEventListener('orientationchange', function(){ setTimeout(dl, 200); });
+})();
+
 var u = DB.currentUser() || {name:'Guest',role:'member'};
 var isLeader = DB.isLeader(u);
 var activeFilter = 'all';
-var likedPosts = DB.get('talentLikes_'+(u.name||'guest'),[]);
+var likedPosts = (DB.get('talentLikes_'+(u.email||u.name||'guest')) || []);
 
 if(isLeader) document.getElementById('leaderLink').style.display='inline';
 
@@ -192,7 +200,7 @@ window.processUpload = function(e){
     };
     var talents = DB.getTalents();
     talents.unshift(entry);
-    DB.saveTalents(talents);
+    DB.set(DB.KEYS.talents, talents);
     DB.pushHubMessage({id:entry.id,name:u.name,role:u.role||'member',text:u.name+' shared new '+type+': "'+title+'"',type:'talent',time:entry.time,reactions:{}});
     renderGallery();
     showToast('Work published to the showcase!');
@@ -216,7 +224,7 @@ window.submitWrite = function(){
   };
   var talents = DB.getTalents();
   talents.unshift(entry);
-  DB.saveTalents(talents);
+  DB.set(DB.KEYS.talents, talents);
   DB.pushHubMessage({id:entry.id,name:u.name,role:u.role||'member',text:u.name+' posted creative writing: "'+title+'"',type:'talent',time:entry.time,reactions:{}});
   ['writeTitle','writeContent','writeCategory'].forEach(function(id){document.getElementById(id).value='';});
   closeWriteModal();
@@ -236,7 +244,7 @@ function renderGallery(){
     return;
   }
   grid.innerHTML = talents.map(function(item){
-    var isLiked = likedPosts.indexOf(item.id) > -1;
+    var myEmail2 = u.email||u.name||"guest"; var isLiked = Array.isArray(item.likes) ? item.likes.includes(myEmail2) : likedPosts.indexOf(item.id)>-1;
     var mediaHTML = '';
     if(item.type==='image') mediaHTML='<img src="'+item.src+'" alt="'+DB.esc(item.title)+'" loading="lazy">';
     else if(item.type==='video') mediaHTML='<video src="'+item.src+'" controls preload="none"></video>';
@@ -261,7 +269,7 @@ function renderGallery(){
         '<div class="talent-title">'+DB.esc(item.title)+'</div>'+
         '<div class="talent-author">By '+DB.esc(item.author)+'</div>'+
         '<div class="talent-actions">'+
-          '<button class="like-btn'+(isLiked?' liked':'')+'" onclick="likePost('+item.id+',this)">♥ '+(item.likes||0)+'</button>'+
+          '<button class="like-btn'+(isLiked?' liked':'')+'" onclick="likePost('+item.id+',this)">♥ '+(Array.isArray(item.likes)?item.likes.length:(item.likes||0))+'</button>'+
           (isLeader?
             '<div class="leader-actions">'+
               '<button class="ldr-act-btn pin-btn" onclick="togglePin('+item.id+')">📌 '+(item.pinned?'Unpin':'Pin')+'</button>'+
@@ -287,8 +295,8 @@ window.likePost = function(id, btn){
   if(!item) return;
   if(idx > -1){ likedPosts.splice(idx,1); item.likes=Math.max(0,(item.likes||0)-1); btn.classList.remove('liked'); }
   else { likedPosts.push(id); item.likes=(item.likes||0)+1; btn.classList.add('liked'); }
-  DB.saveTalents(talents);
-  DB.set('talentLikes_'+(u.name||'guest'), likedPosts);
+  DB.set(DB.KEYS.talents, talents);
+  DB.set('talentLikes_'+(u.email||u.name||'guest'), likedPosts);
   btn.textContent='♥ '+item.likes;
 };
 
@@ -298,7 +306,7 @@ window.togglePin = function(id){
   var item = talents.find(function(t){return t.id===id;});
   if(!item) return;
   item.pinned = !item.pinned;
-  DB.saveTalents(talents);
+  DB.set(DB.KEYS.talents, talents);
   renderGallery();
   showToast(item.pinned?'Post pinned to top!':'Post unpinned.');
 };
@@ -324,7 +332,7 @@ window.addComment = function(id){
   if(!item) return;
   if(!item.comments) item.comments=[];
   item.comments.push({user:u.name||'Guest',text:txt,time:DB.ts()});
-  DB.saveTalents(talents);
+  DB.set(DB.KEYS.talents, talents);
   input.value='';
   renderGallery();
 };
