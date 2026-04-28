@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Stewardship Portal | Declare Family</title>
+    <script src="declare-db.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -448,6 +449,10 @@ function saveAndRenderLedger(amount, method, mpesaRef) {
         var exp = new Date(); exp.setDate(exp.getDate() + 30);
         allUsers[uIdx].expiryDate = exp.toISOString().split('T')[0];
         localStorage.setItem('users', JSON.stringify(allUsers));
+        // Sync to DB
+        if(typeof DB !== 'undefined' && DB.updateUser){
+          DB.updateUser(loggedInUser.email, {expiryDate: allUsers[uIdx].expiryDate, subscriptionActive: true});
+        }
     }
 
     renderLedger();
