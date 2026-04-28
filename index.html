@@ -9,7 +9,8 @@
     <meta property="og:image"       content="hero-image.jpg.jpeg">
     <meta property="og:type"        content="website">
     <title>Declare Family | Called. Equipped. Sent.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="declare-db.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
     /* ================================================================
@@ -89,7 +90,7 @@
     }
 
     @media (min-width:1024px) {
-        body { margin-top:var(--ticker-h); margin-left:var(--nav-w); }
+        body { margin-top:var(--ticker-h); margin-left:var(--nav-w); padding-bottom:0; }
         nav {
             width:var(--nav-w); height:100vh; top:0; left:0;
             flex-direction:column; justify-content:flex-start; align-items:flex-start;
@@ -941,5 +942,20 @@ function registerUser() {
 })();
 </script>
 
+
+<script>
+// If user is already logged in, redirect to dashboard (index is the landing page)
+// But only if they navigate directly - don't auto-redirect if they came from logout
+(function(){
+  if(typeof DB !== 'undefined' && DB.isLoggedIn() && !sessionStorage.getItem('justLoggedOut')){
+    // Let them stay on landing page - they may want to see it
+    // Just show login/dashboard links based on auth state
+    var loginLinks = document.querySelectorAll('a[href="main.html"], a[href="login.html"]');
+  }
+  // Auto responsive
+  function dl(){document.body.setAttribute('data-layout',window.innerWidth<1024?'mobile':'desktop');}
+  dl();window.addEventListener('resize',dl);window.addEventListener('orientationchange',function(){setTimeout(dl,200);});
+})();
+</script>
 </body>
 </html>
