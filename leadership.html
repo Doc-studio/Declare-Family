@@ -337,6 +337,13 @@ body{background:var(--dark);color:#f0f0f0;font-family:'Plus Jakarta Sans',sans-s
 (function(){
 'use strict';
 
+/* ── RESPONSIVE ── */
+(function(){
+  function dl(){ document.body.setAttribute('data-layout', window.innerWidth < 860 ? 'mobile' : 'desktop'); }
+  dl(); window.addEventListener('resize', dl);
+  window.addEventListener('orientationchange', function(){ setTimeout(dl, 200); });
+})();
+
 /* ── AUTH ── */
 var u = DB.currentUser();
 if(!u){ window.location.href='login.html'; return; }
@@ -374,15 +381,18 @@ function rotQ(){ qi=(qi+1)%QQ.length; var e=T('quoteEl');if(e){e.style.opacity='
 
 /* ── LIVE STATS ── */
 function refreshStats(){
-  var online=DB.getOnlineCount();
-  var ol=T('onlineLbl'); if(ol) ol.textContent=online.pioneers+' Pioneer(s) · '+online.members+' Member(s) Online';
-  T('sM').textContent=(DB.get(DB.KEYS.users,[])).length;
-  T('sO').textContent=online.total;
-  T('sBR').textContent=(DB.get(DB.KEYS.declareUpdates,[])).length;
+  var onlineUsers=DB.getOnlineUsers();
+  var onlinePioneers=onlineUsers.filter(function(u2){return DB.isLeader(u2);}).length;
+  var onlineMembers=onlineUsers.filter(function(u2){return !DB.isLeader(u2);}).length;
+  var ol=T('onlineLbl'); if(ol) ol.textContent=onlinePioneers+' Pioneer(s) · '+onlineMembers+' Member(s) Online';
+  T('sM').textContent=DB.getUsers().length;
+  T('sO').textContent=DB.getOnlineCount();
+  T('sBR').textContent=(DB.getBroadcasts()).length;
   T('sPR').textContent=DB.getProjects().length;
   var CLASSES=['Vertical Growth','Fiscal Kingdom','Inner Psychology','Sovereign Leadership','Social Advancement','Creative Expression'];
-  var tp=0; CLASSES.forEach(function(c){tp+=DB.getClassPosts(c).length;}); T('sCP').textContent=tp;
-  var pending=DB.getTutorApps().length+DB.getPioneerRequests().length;
+  var tp=0; CLASSES.forEach(function(c){tp+=DB.getClassComments(c).length;}); T('sCP').textContent=tp;
+  var tutorApps2=[];try{tutorApps2=JSON.parse(localStorage.getItem('tutorApplications'))||[];}catch(e){}
+var pending=tutorApps2.length+DB.getPioneerRequests().length;
   T('sPE').textContent=pending;
   var d=T('appDot'),b=T('appBadge');
   if(d) d.style.display=pending>0?'block':'none';
@@ -428,8 +438,12 @@ window.pushToClass=function(){
     post.title='Announcement'; post.content=atxt;
     T('pt-alert').value='';
   }
-  DB.pushClassPost(cls, post);
-  DB.pushComment(cls,{user:u.name,avatar:'👑',msg:'['+aPT.toUpperCase()+'] '+(post.title||post.url||'').substring(0,100),role:'tutor'});
+  // Store as class post in localStorage (leader-panel compatible)
+  var lsPosts=[];try{lsPosts=JSON.parse(localStorage.getItem('classPosts_'+cls))||[];}catch(e){}
+  post.id=DB.ts();post.time=DB.ts();
+  lsPosts.push(post);localStorage.setItem('classPosts_'+cls,JSON.stringify(lsPosts));
+  // Also push to DB class comments
+  DB.pushClassComment(cls,{author:u.name,memberID:u.memberID||'',role:'tutor',text:'['+aPT.toUpperCase()+'] '+(post.title||post.url||'').substring(0,100),time:DB.ts(),isTutor:true});
   loadRecentPosts(); refreshStats();
   showToast('✅ Posted to '+cls+' — visible in classroom now!');
 };
@@ -437,7 +451,7 @@ window.pushToClass=function(){
 function loadRecentPosts(){
   var CLASSES=['Vertical Growth','Fiscal Kingdom','Inner Psychology','Sovereign Leadership','Social Advancement','Creative Expression'];
   var all=[];
-  CLASSES.forEach(function(c){ DB.getClassPosts(c).forEach(function(p){all.push(Object.assign({},p,{_class:c}));}); });
+  CLASSES.forEach(function(c){ DB.getClassComments(c).forEach(function(p){all.push(Object.assign({},p,{_class:c}));}); });
   all.sort(function(a,b){return b.time-a.time;});
   var el=T('recentPosts'); if(!el) return;
   if(!all.length){el.innerHTML='<p style="color:#222;font-size:11px;">No posts yet.</p>';return;}
@@ -455,7 +469,11 @@ function loadRecentPosts(){
 
 window.delClassPost=function(cls,id){
   if(!confirm('Remove this post from '+cls+'?'))return;
-  DB.deleteClassPost(cls,id); loadRecentPosts(); refreshStats();
+  var delPosts=[];try{delPosts=JSON.parse(localStorage.getItem('classPosts_'+cls))||[];}catch(e){}
+  delPosts=delPosts.filter(function(p){return p.id!=id;});
+  localStorage.setItem('classPosts_'+cls,JSON.stringify(delPosts));
+  DB.deleteClassComment(cls, id);
+  loadRecentPosts(); refreshStats();
   showToast('Post removed from '+cls+'.');
 };
 
@@ -466,14 +484,14 @@ window.broadcast=function(){
   var cat=T('annCat').value;
   var date=T('annDate').value;
   var icons={Announcement:'📢','Upcoming Session':'📅','Physical Event':'📍','Current Project':'🚀','Pioneer Spotlight':'👑',"Today's Momentum":'⚡',Partnership:'🤝'};
-  DB.pushUpdate({category:cat,icon:icons[cat]||'📢',text:txt,date:date,postedBy:u.name});
+  DB.pushBroadcast({title:cat,body:txt,date:date,postedBy:u.name,category:cat,icon:icons[cat]||'📢'});
   T('annInput').value=''; T('annDate').value='';
   loadBroadcastHistory(); refreshStats();
   showToast('📢 Broadcast sent! Visible across all portals immediately.');
 };
 
 function loadBroadcastHistory(){
-  var updates=DB.get(DB.KEYS.declareUpdates,[]);
+  var updates=DB.getBroadcasts();
   var el=T('broadcastHistory'); if(!el) return;
   if(!updates.length){el.innerHTML='';return;}
   el.innerHTML=updates.slice(0,5).map(function(upd){
@@ -486,8 +504,8 @@ function loadBroadcastHistory(){
 }
 
 window.delBroadcast=function(id){
-  var u2=DB.get(DB.KEYS.declareUpdates,[]).filter(function(x){return x.id!==id;});
-  DB.set(DB.KEYS.declareUpdates,u2); loadBroadcastHistory(); refreshStats();
+  var u2=DB.getBroadcasts().filter(function(x){return x.id!==id;});
+  DB.set(DB.KEYS.broadcasts,u2); loadBroadcastHistory(); refreshStats();
 };
 
 /* ══ PROJECTS ══ */
@@ -565,7 +583,7 @@ window.delAch=function(id){
 
 /* ══ PRAYER WALL MOD ══ */
 function loadPrayerMod(){
-  var prayers=DB.getPrayers();
+  var prayers=DB.getPrayerPosts();
   var el=T('prayerModList'); if(!el) return;
   if(!prayers.length){el.innerHTML='<p style="color:#222;font-size:11px;">Prayer wall is empty.</p>';return;}
   el.innerHTML=prayers.slice(0,10).map(function(p){
@@ -582,15 +600,15 @@ function loadPrayerMod(){
 }
 
 window.markAnswered=function(id){
-  var pp=DB.getPrayers(); var p=pp.find(function(x){return x.id===id;});
-  if(p){p.status='answered'; DB.savePrayers(pp);}
+  var pp=DB.getPrayerPosts(); var p=pp.find(function(x){return x.id===id;});
+  if(p){p.status='answered'; DB.set(DB.KEYS.prayerWall, pp);}
   loadPrayerMod();
   showToast('✅ Marked as answered. Visible on faith.html now.');
 };
 
 window.delPrayer=function(id){
   if(!confirm('Remove this prayer post?'))return;
-  DB.savePrayers(DB.getPrayers().filter(function(p){return p.id!==id;}));
+  DB.savePrayers(DB.getPrayerPosts().filter(function(p){return p.id!==id;}));
   loadPrayerMod();
   showToast('Prayer post removed.');
 };
@@ -614,7 +632,7 @@ function loadTalentMod(){
 
 window.pinTalent=function(id){
   var tts=DB.getTalents(); var t=tts.find(function(x){return x.id===id;});
-  if(t){t.pinned=!t.pinned; DB.saveTalents(tts);}
+  if(t){ DB.pinTalent(id, !t.pinned); }
   loadTalentMod();
   showToast(t&&t.pinned?'📌 Pinned to top!':'Post unpinned.');
 };
@@ -627,7 +645,7 @@ window.delTalent=function(id){
 
 /* ══ TUTOR APPROVALS ══ */
 function loadTutorApps(){
-  var apps=DB.getTutorApps();
+  var apps=[];try{apps=JSON.parse(localStorage.getItem('tutorApplications'))||[];}catch(e){}
   var el=T('tutorList'); if(!el) return;
   if(!apps.length){el.innerHTML='<p style="color:#333;font-size:12px;padding:6px 0;">No pending tutor applications.</p>';return;}
   el.innerHTML=apps.map(function(app){
@@ -644,11 +662,24 @@ function loadTutorApps(){
 }
 
 window.approveTutor=function(id){
-  DB.approveTutor(id); loadTutorApps(); refreshStats();
+  // Approve tutor from localStorage tutorApplications
+  var tapps=[];try{tapps=JSON.parse(localStorage.getItem('tutorApplications'))||[];}catch(e){}
+  var tapproved=tapps.find(function(a){return a.id===id;});
+  if(tapproved){
+    var aTutors=[];try{aTutors=JSON.parse(localStorage.getItem('approvedTutors'))||[];}catch(e){}
+    aTutors.push(tapproved);
+    localStorage.setItem('approvedTutors',JSON.stringify(aTutors));
+    tapps=tapps.filter(function(a){return a.id!==id;});
+    localStorage.setItem('tutorApplications',JSON.stringify(tapps));
+  }
+  loadTutorApps(); refreshStats();
   showToast('✅ Tutor approved! They are notified in-portal automatically.');
 };
 window.denyTutor=function(id){
-  DB.denyTutor(id); loadTutorApps(); refreshStats();
+  var tapps2=[];try{tapps2=JSON.parse(localStorage.getItem('tutorApplications'))||[];}catch(e){}
+  tapps2=tapps2.filter(function(a){return a.id!==id;});
+  localStorage.setItem('tutorApplications',JSON.stringify(tapps2));
+  loadTutorApps(); refreshStats();
   showToast('Application denied.','#FF3B30');
 };
 
