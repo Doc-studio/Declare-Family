@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dashboard | Declare Family</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="declare-db.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
     :root {
         --gold: #ffd700;
@@ -110,6 +111,18 @@
         .user-header h2 { font-size: 20px; }
         .id-value { font-size: 15px; }
     }
+
+    /* Mobile improvements */
+    @media (max-width: 480px) {
+        .container { padding: 14px; }
+        .user-header h2 { font-size: 18px; }
+        .id-value { font-size: 13px; }
+        .grid { grid-template-columns: 1fr; }
+        nav { padding: 0 3%; }
+    }
+    @media (max-width: 360px) {
+        .id-card { flex-direction: column; gap: 12px; }
+    }
     </style>
 </head>
 <body>
@@ -191,9 +204,18 @@
 
     <script>
     window.addEventListener('DOMContentLoaded', function() {
-        const session = JSON.parse(localStorage.getItem('loggedInUser'));
+        // Responsive detect
+        function dl(){document.body.setAttribute('data-layout',window.innerWidth<600?'mobile':'desktop');}
+        dl();window.addEventListener('resize',dl);window.addEventListener('orientationchange',function(){setTimeout(dl,200);});
 
-        if (!session) {
+        // Try DB layer first, fall back to raw localStorage
+        var currentUser = null;
+        if(typeof DB !== 'undefined' && DB.isLoggedIn()){
+            currentUser = DB.currentUser();
+        } else {
+            currentUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        }
+        if (!currentUser) {
             window.location.href = 'login.html';
             return;
         }
@@ -247,8 +269,7 @@
 
         // Logout
         document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('loggedInUser');
-            window.location.href = 'login.html';
+            if(typeof DB !== 'undefined') DB.logout(); else { localStorage.removeItem('loggedInUser'); window.location.href='login.html'; }
         });
     });
     </script>
