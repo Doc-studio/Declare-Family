@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Prayer Room | Declare Family</title>
+<script src="declare-db.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -180,23 +181,22 @@ textarea.prayer-input:focus{border-color:var(--purple);}
 (function(){
 'use strict';
 
-var PRAYER_KEY='prayerRequests';
-var PRAYER_TTL=48*60*60*1000; // 48 hours
+if(!DB.isLoggedIn()){ window.location.href='login.html'; }
+var user = DB.currentUser() || {};
+var isLeaderUser = DB.isLeader(user);
 
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
-function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
-var user=session();
+// Responsive
+(function(){function dl(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');}dl();window.addEventListener('resize',dl);window.addEventListener('orientationchange',function(){setTimeout(dl,200);});})();
 
 /* ── VERSE ────────────────────────────────────── */
 var VERSES=[
-  '"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you." — Matthew 7:7',
+  '"Ask and it will be given to you; seek and you will find." — Matthew 7:7',
   '"Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God." — Philippians 4:6',
   '"The prayer of a righteous person is powerful and effective." — James 5:16',
   '"Cast your cares on the Lord and He will sustain you." — Psalm 55:22',
   '"Call to me and I will answer you and tell you great and unsearchable things." — Jeremiah 33:3',
-  '"If my people, who are called by my name, will humble themselves and pray and seek my face... I will hear from heaven." — 2 Chr 7:14',
-  '"The Lord is near to all who call on him, to all who call on him in truth." — Psalm 145:18'
+  '"If my people, who are called by my name, will humble themselves and pray... I will hear from heaven." — 2 Chr 7:14',
+  '"The Lord is near to all who call on him in truth." — Psalm 145:18'
 ];
 function setVerse(){
   var dayIdx=Math.floor(Date.now()/86400000)%VERSES.length;
@@ -210,9 +210,7 @@ setVerse();
 var currentType='prayer';
 window.setType=function(t){
   currentType=t;
-  ['Prayer','Insight','Motiv'].forEach(function(id){
-    document.getElementById('type'+id).classList.remove('active');
-  });
+  ['Prayer','Insight','Motiv'].forEach(function(id){document.getElementById('type'+id).classList.remove('active');});
   var map={prayer:'Prayer',insight:'Insight',motivation:'Motiv'};
   var btn=document.getElementById('type'+map[t]);if(btn)btn.classList.add('active');
   var ta=document.getElementById('prayerInput');
@@ -220,137 +218,90 @@ window.setType=function(t){
   if(ta)ta.placeholder=placeholders[t]||'Share with the family...';
 };
 
-/* ── LOAD / SAVE ──────────────────────────────── */
-function loadPrayers(){
-  var data=[];try{data=JSON.parse(localStorage.getItem(PRAYER_KEY))||[];}catch(e){}
-  // Filter out posts older than 48 hours
-  var now=Date.now();
-  data=data.filter(function(p){return now-p.time<PRAYER_TTL;});
-  localStorage.setItem(PRAYER_KEY,JSON.stringify(data));
-  return data;
-}
-function savePrayers(data){localStorage.setItem(PRAYER_KEY,JSON.stringify(data));}
-
-/* ── POST PRAYER ──────────────────────────────── */
+/* ── POST PRAYER (uses DB) ──────────────────── */
 window.postPrayer=function(){
-  if(!user){alert('Please log in to post to the prayer wall.');return;}
   var ta=document.getElementById('prayerInput');
   var txt=(ta.value||'').trim();if(!txt)return;
-
   var post={
-    id:Date.now(),
-    name:user.name||'Member',
-    memberID:user.memberID||'',
-    role:user.role||'member',
-    text:txt,
-    type:currentType,
-    time:Date.now(),
-    reactions:{},
-    agreements:0,
-    status:'open'
+    author:user.name||'Member',memberID:user.memberID||'',
+    role:user.role||'member',text:txt,type:currentType,
+    time:DB.ts(),amens:[],answered:false,status:'open'
   };
-
-  var prayers=loadPrayers();
-  prayers.unshift(post);
-  savePrayers(prayers);
-
-  // Also save to hub messages so it appears in the main feed
-  var msgs=[];try{msgs=JSON.parse(localStorage.getItem('hubMessages'))||[];}catch(e){}
-  msgs.unshift({id:post.id,name:post.name,memberID:post.memberID,role:post.role,text:post.text,type:'prayer',time:post.time,reactions:{},status:'open'});
-  localStorage.setItem('hubMessages',JSON.stringify(msgs.slice(0,300)));
-
+  DB.pushPrayerPost(post);
+  // Also push to hub feed
+  DB.pushHubMessage({name:user.name||'Member',memberID:user.memberID||'',role:user.role||'member',
+    text:'['+currentType.toUpperCase()+'] '+txt,type:'prayer',time:DB.ts(),reactions:{}});
   ta.value='';renderWall();
 };
 
 /* ── REACTIONS ────────────────────────────────── */
-window.reactPrayer=function(id,emoji){
-  var prayers=loadPrayers();
-  var p=prayers.find(function(x){return x.id===id;});
-  if(!p)return;
-  if(!p.reactions)p.reactions={};
-  p.reactions[emoji]=(p.reactions[emoji]||0)+1;
-  savePrayers(prayers);renderWall();
-};
-
-window.agreePrayer=function(id){
-  var prayers=loadPrayers();
-  var p=prayers.find(function(x){return x.id===id;});
-  if(!p)return;
-  p.agreements=(p.agreements||0)+1;
-  savePrayers(prayers);renderWall();
-};
-
-window.markAnswered=function(id){
-  if(!isLeader(user)){alert('Only Pioneers can mark posts as answered.');return;}
-  var prayers=loadPrayers();
-  var p=prayers.find(function(x){return x.id===id;});
-  if(!p)return;
-  p.status='answered';
-  savePrayers(prayers);renderWall();
-};
-
-window.deletePost=function(id){
-  if(!isLeader(user)){alert('Only Pioneers can delete posts.');return;}
-  if(!confirm('Remove this post?'))return;
-  var prayers=loadPrayers();
-  savePrayers(prayers.filter(function(p){return p.id!==id;}));
+window.amenPost=function(id){
+  DB.amenPrayerPost(id, user.email||user.memberID||'guest');
   renderWall();
 };
 
+window.markAnsweredPost=function(id){
+  if(!isLeaderUser){return;}
+  DB.markAnswered(id);renderWall();
+};
+
+window.deletePost=function(id){
+  if(!isLeaderUser){return;}
+  if(!confirm('Remove this post?'))return;
+  DB.deletePrayerPost(id);renderWall();
+};
+
 /* ── RENDER WALL ──────────────────────────────── */
+var PRAYER_TTL=48*60*60*1000;
 function renderWall(){
-  var prayers=loadPrayers();
+  var prayers=DB.getPrayerPosts();
+  // Filter to 48h
+  var now=Date.now();
+  prayers=prayers.filter(function(p){return now-p.time<PRAYER_TTL;});
+  
   var el=document.getElementById('prayerWall');if(!el)return;
   var countEl=document.getElementById('wallCount');
   if(countEl)countEl.textContent=prayers.length+' active post'+(prayers.length!==1?'s':'');
-
   if(!prayers.length){
     el.innerHTML='<div class="empty-wall"><div class="empty-icon">🕊️</div><p>The prayer wall is quiet.<br>Be the first to post a prayer or insight.</p></div>';
     return;
   }
-
   var EMOJIS=['🙏','🔥','❤️','💛','👏'];
   el.innerHTML=prayers.map(function(p){
-    var isLeaderPost=isLeader({role:p.role});
+    var isLP=DB.isLeader({role:p.role});
     var cls='prayer-card '+p.type+'-type';
-    var badgeCls='type-badge badge-'+(p.type==='prayer'?'prayer':p.type==='insight'?'insight':'motivation');
     var badgeLabel=p.type==='prayer'?'🙏 Prayer Request':p.type==='insight'?'💡 Insight':'🔥 Motivation';
-    var now2=Date.now();
-    var age=now2-p.time;
-    var pctLeft=Math.max(0,100-(age/PRAYER_TTL*100));
-    var timeStr=new Date(p.time).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    var reactHTML=EMOJIS.map(function(e){var c=p.reactions&&p.reactions[e]?p.reactions[e]:0;return '<button class="react-btn" onclick="reactPrayer('+p.id+',\''+e+'\')">'+e+' <span>'+c+'</span></button>';}).join('');
-    var totalAgree=p.agreements||0;
-    var adminButtons=isLeader(user)?
-      '<button onclick="markAnswered('+p.id+')" style="background:rgba(0,255,148,.08);border:1px solid rgba(0,255,148,.3);color:var(--green);padding:4px 12px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;margin-left:6px;">✓ Mark Answered</button>'+
-      '<button onclick="deletePost('+p.id+')" style="background:none;border:1px solid #333;color:#555;padding:4px 10px;border-radius:8px;font-size:10px;cursor:pointer;margin-left:4px;">✕ Remove</button>':'';
+    var badgeCls='type-badge badge-'+(p.type||'prayer');
+    var pctLeft=Math.max(0,100-((now-p.time)/PRAYER_TTL*100));
+    var timeStr=DB.fmtTime(p.time);
+    var myEmail=user.email||'';
+    var iAmened=(p.amens||[]).includes(myEmail);
+    var amenCount=(p.amens||[]).length;
     return '<div class="'+cls+'">'+
       '<span class="'+badgeCls+'">'+badgeLabel+'</span>'+
       '<div class="prayer-head">'+
-        '<div class="prayer-avatar" style="background:'+(isLeaderPost?'var(--green)':'var(--purple)')+'">'+esc((p.name||'M').charAt(0).toUpperCase())+'</div>'+
+        '<div class="prayer-avatar" style="background:'+(isLP?'var(--green)':'var(--purple)')+'">'+DB.esc((p.author||'M').charAt(0).toUpperCase())+'</div>'+
         '<div>'+
-          '<div class="prayer-name">'+esc(p.name||'Member')+'</div>'+
-          '<div class="prayer-meta">'+(p.memberID?esc(p.memberID)+' · ':'')+timeStr+'</div>'+
+          '<div class="prayer-name">'+DB.esc(p.author||'Member')+'</div>'+
+          '<div class="prayer-meta">'+(p.memberID?DB.esc(p.memberID)+' · ':'')+timeStr+'</div>'+
         '</div>'+
-        '<span class="status-tag '+(p.status==='answered'?'status-answered':'status-open')+'">'+esc(p.status)+'</span>'+
+        '<span class="status-tag '+(p.answered?'status-answered':'status-open')+'">'+(p.answered?'Answered':'Open')+'</span>'+
       '</div>'+
-      '<p class="prayer-body">'+esc(p.text)+'</p>'+
-      '<div class="reaction-row">'+reactHTML+
-        '<button class="agree-btn" onclick="agreePrayer('+p.id+')">🤝 Agree ('+totalAgree+')</button>'+
-        adminButtons+
+      '<p class="prayer-body">'+DB.esc(p.text||'')+'</p>'+
+      '<div class="reaction-row">'+
+        '<button class="agree-btn'+(iAmened?' active':'')+'" onclick="amenPost(''+p.id+'')">🤝 Amen ('+amenCount+')</button>'+
+        (isLeaderUser?
+          '<button onclick="markAnsweredPost(''+p.id+'')" style="background:rgba(0,255,148,.08);border:1px solid rgba(0,255,148,.3);color:var(--green);padding:4px 12px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;margin-left:6px;">✓ Mark Answered</button>'+
+          '<button onclick="deletePost(''+p.id+'')" style="background:none;border:1px solid #333;color:#555;padding:4px 10px;border-radius:8px;font-size:10px;cursor:pointer;margin-left:4px;">✕ Remove</button>':'')+
       '</div>'+
       '<div class="expiry-bar"><div class="expiry-fill" style="width:'+pctLeft+'%"></div></div>'+
     '</div>';
   }).join('');
 }
 
-document.addEventListener('DOMContentLoaded',function(){
-  renderWall();setInterval(renderWall,30000);
-  var doLayout=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');};
-  doLayout();window.addEventListener('resize',doLayout);window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
-});
+document.addEventListener('DOMContentLoaded',function(){renderWall();setInterval(renderWall,8000);});
 
 })();
-</script>
+
 </body>
 </html>
