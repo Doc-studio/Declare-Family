@@ -152,6 +152,12 @@ select.ldr-input{cursor:pointer;}
 <div class="toast" id="toast"></div>
 
 <script>
+// Responsive detection
+(function(){
+  function dl(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');}
+  dl();window.addEventListener('resize',dl);window.addEventListener('orientationchange',function(){setTimeout(dl,200);});
+})();
+
 var u = DB.currentUser();
 var isLeader = DB.isLeader(u);
 
@@ -241,7 +247,7 @@ function showToast(msg,color){
 seedDefaults();
 initUI();
 renderTimeline();
-setInterval(renderTimeline,10000);
+setInterval(renderTimeline,5000);
 </script>
 </body>
 </html>
