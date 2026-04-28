@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Register | Declare Family</title>
+<script src="declare-db.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#FFD700;--dark:#0a0a0a;--panel:#121212;--border:rgba(255,255,255,0.08);--green:#00FF94;}
@@ -37,6 +38,7 @@ select option{background:#111;}
 .request-btn{width:100%;padding:12px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:10px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;transition:.2s;margin-bottom:10px;}
 .request-btn:hover{background:var(--gold);color:#000;}
 .request-btn:disabled{opacity:.5;cursor:default;}
+@media(max-width:360px){.container{padding:28px 16px;}.logo-area h2{font-size:16px;}}
 .success-note{background:rgba(0,255,148,.06);border:1px solid rgba(0,255,148,.25);color:var(--green);padding:10px 14px;border-radius:8px;font-size:12px;display:none;margin-top:8px;}
 </style>
 </head>
@@ -78,7 +80,7 @@ select option{background:#111;}
       <p>Don't have a code yet? Request Pioneer access below. An admin will verify and provide your code.</p>
       <div class="field" style="margin-bottom:10px;">
         <label>Reason for Requesting Pioneer Access</label>
-        <input type="text" id="requestReason" placeholder="e.g. Invited by Gadner Amos, Vision Pioneer">
+        <input type="text" id="requestReason" placeholder="e.g. I'm a Vision Pioneer">
       </div>
       <button class="request-btn" id="reqBtn" onclick="submitPioneerRequest()">📩 Request Pioneer Access</button>
       <div class="success-note" id="requestSuccess">✅ Request submitted! An admin will review and provide your access code shortly.</div>
@@ -107,6 +109,25 @@ select option{background:#111;}
 <script>
 (function(){
 'use strict';
+
+// Responsive
+(function(){
+  function dl(){ document.body.setAttribute('data-layout', window.innerWidth < 480 ? 'mobile' : 'desktop'); }
+  dl(); window.addEventListener('resize', dl);
+})();
+
+// Auto-redirect if already logged in
+(function(){
+  var s = null;
+  try{
+    if(typeof DB !== 'undefined' && DB.isLoggedIn()){ s = DB.currentUser(); }
+    else { s = JSON.parse(localStorage.getItem('loggedInUser')); }
+  }catch(e){}
+  if(s){
+    if(s.role==='admin' || s.role==='leader'){ window.location.href='leadership.html'; }
+    else{ window.location.href='Dashboard.html'; }
+  }
+})();
 
 function simpleHash(str){
   var hash=0;
@@ -141,8 +162,13 @@ window.submitPioneerRequest=function(){
     document.getElementById('requestSuccess').textContent='✅ Your request was already submitted. Please wait for an admin to provide your code.';
     return;
   }
-  reqs.push({id:Date.now(),name:name,email:email,reason:reason,roleRequested:document.getElementById('role').value,submittedAt:new Date().toISOString(),status:'pending'});
+  var newReq={id:Date.now(),name:name,email:email,reason:reason,roleRequested:document.getElementById('role').value,submittedAt:new Date().toISOString(),status:'pending'};
+  reqs.push(newReq);
   localStorage.setItem('pioneerRequests',JSON.stringify(reqs));
+  // Also sync to df_ key used by DB layer
+  var dfReqs=[];try{dfReqs=JSON.parse(localStorage.getItem('df_pioneerRequests'))||[];}catch(e){}
+  dfReqs.push(newReq);
+  localStorage.setItem('df_pioneerRequests',JSON.stringify(dfReqs));
   document.getElementById('requestSuccess').style.display='block';
   document.getElementById('reqBtn').disabled=true;document.getElementById('reqBtn').textContent='✓ REQUEST SENT';
 };
@@ -199,6 +225,17 @@ window.handleRegister=function(){
     var newUser={name:name,email:email,role:role,memberID:memberID,passwordHash:simpleHash(password),joinedDate:new Date().toLocaleDateString('en-GB')};
     users.push(newUser);
     localStorage.setItem('users',JSON.stringify(users));
+    // Also notify DB layer
+    if(typeof DB !== 'undefined'){
+      // DB reads from the same localStorage key (df_users), but our main.html uses 'users'
+      // Copy to df_users so DB can find it
+      var dfUsers = [];
+      try{ dfUsers = JSON.parse(localStorage.getItem('df_users')) || []; }catch(e){}
+      if(!dfUsers.find(function(u){ return u.email===newUser.email; })){
+        dfUsers.push(newUser);
+        localStorage.setItem('df_users', JSON.stringify(dfUsers));
+      }
+    }
 
     // Mark pioneer code as used
     if(codeResult){
@@ -212,6 +249,8 @@ window.handleRegister=function(){
     // Store session
     var sess={name:newUser.name,email:newUser.email,role:newUser.role,memberID:newUser.memberID,joinedDate:newUser.joinedDate};
     localStorage.setItem('loggedInUser',JSON.stringify(sess));
+    // Heartbeat for presence
+    if(typeof DB !== 'undefined') DB.heartbeat();
 
     // ── REDIRECT: leaders → leadership, new members → profile.html ──
     if(role==='admin'||role==='leader'){
