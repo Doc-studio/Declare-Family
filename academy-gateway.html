@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Declare Academy | Class Enrollment</title>
+<script src="declare-db.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#FFD700;--dark:#050505;--panel:#0E0E10;--border:rgba(255,255,255,0.1);--green:#00FF94;--red:#FF3B30;}
@@ -199,170 +200,138 @@ select option{background:#111;}
 </div><!-- .portal-wrap -->
 
 <script>
-/* ═══════════════════════════════════
-   STATE
-═══════════════════════════════════ */
-let currentMode = 'learner';
-let currentStep = 0;
-let selectedAvatar = '🎓';
-const AVATARS = ['🎓','💡','🔥','⚡','🌟','👑','🚀','🏆','💎','🌍','🙏','🎯'];
+(function(){
+'use strict';
 
-/* ═══════════════════════════════════
-   URL PARAMS
-═══════════════════════════════════ */
-const params = new URLSearchParams(window.location.search);
-const preClass = params.get('class');
-if(preClass){
-  const sel = document.getElementById('regClass');
-  // match by value
-  for(let i=0;i<sel.options.length;i++){
-    if(sel.options[i].value===preClass){sel.selectedIndex=i;break;}
+// Responsive
+(function(){function dl(){document.body.setAttribute('data-layout',window.innerWidth<480?'mobile':'desktop');}dl();window.addEventListener('resize',dl);})();
+
+// Auth
+if(typeof DB!=='undefined'&&!DB.isLoggedIn()){window.location.href='login.html';}
+var user=typeof DB!=='undefined'?DB.currentUser():(function(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}})();
+if(!user){window.location.href='login.html';}
+
+var mode='learner';
+var selectedAvatar='📚';
+var currentStep=0;
+var regData={};
+
+/* ── AVATARS ─────────────────────────────────── */
+var AVATARS=['📚','🎓','👑','💡','🌍','✍️','🎨','🏆','🌟','🙏','🔥','🤝'];
+var avatarGrid=document.getElementById('avatarGrid');
+if(avatarGrid){
+  avatarGrid.innerHTML=AVATARS.map(function(a){
+    return '<div class="avatar-opt'+(a==='📚'?' selected':'')+'" onclick="selectAvatar(''+a+'')" data-av="'+a+'">'+a+'</div>';
+  }).join('');
+}
+
+window.selectAvatar=function(a){
+  selectedAvatar=a;
+  document.querySelectorAll('.avatar-opt').forEach(function(el){el.classList.remove('selected');});
+  var sel=document.querySelector('[data-av="'+a+'"]');if(sel)sel.classList.add('selected');
+};
+
+/* ── MODE TABS ───────────────────────────────── */
+window.setMode=function(m){
+  mode=m;
+  document.getElementById('learnerTab').classList.toggle('active',m==='learner');
+  document.getElementById('tutorTab').classList.toggle('active',m==='tutor');
+  currentStep=0;updateSteps();
+};
+
+function updateSteps(){
+  for(var i=0;i<3;i++){
+    var step=document.getElementById('step'+i);
+    var dot=document.getElementById('dot'+i);
+    if(step){step.classList.toggle('active',i===currentStep);}
+    if(dot){dot.classList.toggle('done',i<=currentStep);}
   }
-  // Check if already registered — skip directly to classroom
-  if(localStorage.getItem(`isRegistered_${preClass}`)==='true'){
-    window.location.href=`classroom.html?class=${encodeURIComponent(preClass)}`;
-  }
 }
 
-/* ═══════════════════════════════════
-   RENDER AVATARS
-═══════════════════════════════════ */
-function renderAvatars(){
-  const grid = document.getElementById('avatarGrid');
-  grid.innerHTML = AVATARS.map((a,i)=>`
-    <div class="avatar-opt ${i===0?'selected':''}" onclick="selectAvatar('${a}',this)">${a}</div>
-  `).join('');
-}
-function selectAvatar(a, el){
-  selectedAvatar = a;
-  document.querySelectorAll('.avatar-opt').forEach(e=>e.classList.remove('selected'));
-  el.classList.add('selected');
-}
+/* ── STEP 1 → 2 ──────────────────────────────── */
+window.goStep1=function(){
+  var name=(document.getElementById('regName').value||'').trim();
+  var cls=document.getElementById('regClass').value;
+  if(!name||!cls){showMsg('Please fill in your name and select a class.','error');return;}
+  regData.name=name;regData.classKey=cls;
+  currentStep=1;updateSteps();showMsg('','');
+};
 
-/* ═══════════════════════════════════
-   MODE SWITCH
-═══════════════════════════════════ */
-function setMode(mode){
-  currentMode = mode;
-  document.getElementById('learnerTab').classList.toggle('active', mode==='learner');
-  document.getElementById('tutorTab').classList.toggle('active', mode==='tutor');
-}
+/* ── COMPLETE REGISTRATION ───────────────────── */
+window.completeRegistration=function(){
+  var role=document.getElementById('regRole').value;
+  var goal=(document.getElementById('regGoal').value||'').trim();
+  var location=(document.getElementById('regLocation').value||'').trim();
 
-/* ═══════════════════════════════════
-   STEP NAVIGATION
-═══════════════════════════════════ */
-function showStep(n){
-  document.querySelectorAll('.step').forEach((el,i)=>{
-    el.classList.toggle('active',i===n);
-  });
-  document.querySelectorAll('.step-dot').forEach((el,i)=>{
-    el.classList.toggle('done',i<=n);
-  });
-  currentStep=n;
-}
+  regData.avatar=selectedAvatar;
+  regData.role=role;regData.goal=goal;regData.location=location;
 
-function showError(msg){
-  const el=document.getElementById('errorMsg');
-  el.textContent=msg;el.style.display='block';
-  setTimeout(()=>el.style.display='none',4000);
-}
+  // Generate admission number
+  var classAbbr=regData.classKey.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,3);
+  var num=100+Math.floor(Math.random()*900);
+  var admNum='DA-'+classAbbr+'-'+new Date().getFullYear().toString().slice(2)+'-'+num;
+  regData.admNumber=admNum;
 
-function goStep1(){
-  const name=document.getElementById('regName').value.trim();
-  const cls=document.getElementById('regClass').value;
-  if(!name){showError('Please enter your full name.');return;}
-
-  // If already registered for this class, go directly
-  if(localStorage.getItem(`isRegistered_${cls}`)==='true'){
-    window.location.href=`classroom.html?class=${encodeURIComponent(cls)}`;
-    return;
-  }
-
-  renderAvatars();
-  showStep(1);
-}
-
-function goBack(){showStep(0);}
-
-/* ═══════════════════════════════════
-   GENERATE ADMISSION NUMBER
-═══════════════════════════════════ */
-function generateAdmission(cls){
-  const prefix = cls.replace(/\s/g,'').substring(0,3).toUpperCase();
-  const ts = Date.now().toString().slice(-6);
-  const rand = Math.floor(100+Math.random()*900);
-  return `${prefix}-${ts}-${rand}`;
-}
-
-/* ═══════════════════════════════════
-   COMPLETE REGISTRATION
-═══════════════════════════════════ */
-function completeRegistration(){
-  const name = document.getElementById('regName').value.trim();
-  const cls = document.getElementById('regClass').value;
-  const role = document.getElementById('regRole').value;
-  const goal = document.getElementById('regGoal').value.trim();
-  const location = document.getElementById('regLocation').value.trim();
-
-  const admission = generateAdmission(cls);
-
-  const profile = {
-    name, class:cls, adm:admission,
-    avatar:selectedAvatar,
-    role:role||'Student',
-    goal, location,
-    progress:0, lastScroll:0,
-    joinedAt: new Date().toISOString()
-  };
-
-  if(currentMode==='learner'){
-    // Save student profile
-    localStorage.setItem(`student_${cls}`, JSON.stringify(profile));
-    localStorage.setItem(`isRegistered_${cls}`, 'true');
-
-    // Update enrolled list
-    let enrolled = JSON.parse(localStorage.getItem('enrolledClasses')||'[]');
-    if(!enrolled.includes(cls)){enrolled.push(cls);}
-    localStorage.setItem('enrolledClasses', JSON.stringify(enrolled));
-
-    // Add to enrolled list for this class (for leader monitoring)
-    let classMembers = JSON.parse(localStorage.getItem(`classMembers_${cls}`)||'[]');
-    classMembers.push({name,adm:admission,avatar:selectedAvatar,role:role||'Student',joinedAt:profile.joinedAt});
-    localStorage.setItem(`classMembers_${cls}`, JSON.stringify(classMembers));
-
-    document.getElementById('admDisplay').textContent = admission;
-    document.getElementById('admClassDisplay').textContent = cls;
-    showStep(2);
-
-  } else {
-    // Tutor application
-    let apps = JSON.parse(localStorage.getItem('adminNotifications')||'[]');
-    const app = {
-      id:Date.now(), name, class:cls, adm:admission,
-      avatar:selectedAvatar, role:'Tutor Applicant',
-      goal, location, mode:'tutor',
-      title:name, status:'pending',
-      appliedAt: new Date().toISOString()
+  // Save enrollment
+  var enrollments=[];try{enrollments=JSON.parse(localStorage.getItem('classEnrollments'))||[];}catch(e){}
+  var existing=enrollments.find(function(e){return e.email===(user.email||user.memberID)&&e.classKey===regData.classKey;});
+  if(!existing){
+    var newEnrollment={
+      id:Date.now(),
+      name:regData.name,email:user.email||user.memberID||'',
+      memberID:user.memberID||'',avatar:regData.avatar,
+      classKey:regData.classKey,role:regData.role||'Student',
+      goal:regData.goal,location:regData.location,
+      admNumber:admNum,time:Date.now()
     };
-    apps.unshift(app);
-    localStorage.setItem('adminNotifications', JSON.stringify(apps));
-
-    // Notify tutor their application is pending
-    localStorage.setItem(`tutorApp_${name}_${cls}`, JSON.stringify({...app,status:'pending'}));
-
-    document.getElementById('successMsg').textContent = 'Tutor application submitted. You will be notified upon approval.';
-    document.getElementById('successMsg').style.display='block';
-    setTimeout(()=>{window.location.href='academy.html';},3000);
+    enrollments.push(newEnrollment);
+    localStorage.setItem('classEnrollments',JSON.stringify(enrollments));
   }
+
+  // Update academy enrolled list for this user
+  var enrolled=[];try{enrolled=JSON.parse(localStorage.getItem('enrolled_'+user.email))||[];}catch(e){}
+  if(!enrolled.includes(regData.classKey)){enrolled.push(regData.classKey);}
+  localStorage.setItem('enrolled_'+user.email,JSON.stringify(enrolled));
+
+  // Update DB
+  if(typeof DB!=='undefined'&&DB.updateUser){
+    var dbEnrolled=(user.enrolledClasses||[]);
+    if(!dbEnrolled.includes(regData.classKey))dbEnrolled.push(regData.classKey);
+    DB.updateUser(user.email,{enrolledClasses:dbEnrolled});
+  }
+
+  // Push a class notification
+  if(typeof DB!=='undefined'){
+    DB.pushClassComment(regData.classKey,{
+      author:regData.name,memberID:user.memberID||'',
+      role:'student',text:regData.name+' joined the class! 🎓',
+      isSystem:true,time:Date.now()
+    });
+  }
+
+  // Display
+  document.getElementById('admDisplay').textContent=admNum;
+  document.getElementById('admClassDisplay').textContent=regData.classKey;
+  currentStep=2;updateSteps();showMsg('','');
+};
+
+window.enterClassroom=function(){
+  localStorage.setItem('activeClass',regData.classKey);
+  localStorage.setItem('activeAdmission',regData.admNumber);
+  window.location.href='classroom.html';
+};
+
+window.goBack=function(){currentStep=0;updateSteps();};
+
+function showMsg(msg,type){
+  var e=document.getElementById('errorMsg');var s=document.getElementById('successMsg');
+  if(e){e.textContent=type==='error'?msg:'';e.style.display=type==='error'&&msg?'block':'none';}
+  if(s){s.textContent=type==='success'?msg:'';s.style.display=type==='success'&&msg?'block':'none';}
 }
 
-/* ═══════════════════════════════════
-   ENTER CLASSROOM
-═══════════════════════════════════ */
-function enterClassroom(){
-  const cls = document.getElementById('regClass').value;
-  window.location.href = `classroom.html?class=${encodeURIComponent(cls)}`;
-}
+updateSteps();
+
+})();
 </script>
 </body>
 </html>
