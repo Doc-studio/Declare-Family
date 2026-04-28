@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tutor Command | Declare Academy</title>
+<script src="declare-db.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -196,7 +197,16 @@ function showToast(msg,color){
   t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3500);
 }
 
-var currentUser=sfrom('loggedInUser',null);
+// Auth
+if(typeof DB !== 'undefined' && !DB.isLoggedIn()){ window.location.href='login.html'; }
+var currentUser = (typeof DB !== 'undefined' ? DB.currentUser() : null) || sfrom('loggedInUser', null);
+
+// Responsive
+(function(){
+  function dl(){ document.body.setAttribute('data-layout', window.innerWidth < 900 ? 'mobile' : 'desktop'); }
+  dl(); window.addEventListener('resize', dl);
+  window.addEventListener('orientationchange', function(){ setTimeout(dl, 200); });
+})();
 var myApprovedClasses=[];
 var activeClass=null;
 var postType='topic';
@@ -385,7 +395,18 @@ function renderPostsList(posts,classKey){
 }
 
 /* ── RENDER MEMBERS LIST ── */
-function renderMembersList(members,classKey){
+function renderMembersList(members, classKey){
+  // Also pull from DB enrollments
+  if(typeof DB !== 'undefined'){
+    var dbUsers = DB.getUsers();
+    dbUsers.forEach(function(u){
+      var enrolled = u.enrolledClasses || [];
+      if(enrolled.includes(classKey)){
+        var already = members.find(function(m){ return m.email===u.email || m.name===u.name; });
+        if(!already) members.push({name:u.name||'Member', adm:u.memberID||'', avatar:'👤', email:u.email});
+      }
+    });
+  }
   if(!members.length)return '<p style="color:#333;font-size:13px;text-align:center;padding:16px;">No students enrolled yet.</p>';
   return members.map(function(m){
     var stu=sfrom('student_'+classKey,null);
@@ -406,6 +427,19 @@ function renderMembersList(members,classKey){
 
 /* ── RENDER COMMENTS LIST ── */
 function renderCommentsList(comments){
+  // Merge with DB comments for richer cross-page data
+  if(activeClass && typeof DB !== 'undefined'){
+    var dbComments = DB.getClassComments(activeClass);
+    dbComments.forEach(function(dc){
+      var exists = comments.find(function(lc){ return lc.id == dc.id; });
+      if(!exists) comments.push({
+        user: dc.author||'Member', avatar: dc.isTutor ? '🌿' : '👤',
+        msg: dc.text||'', time: dc.time ? new Date(dc.time).toISOString() : '',
+        role: dc.role||'student', id: dc.id
+      });
+    });
+    comments.sort(function(a,b){ return new Date(a.time||0) - new Date(b.time||0); });
+  }
   if(!comments.length)return '<p style="color:#333;font-size:13px;text-align:center;padding:16px;">No interactions yet.</p>';
   return comments.slice().reverse().slice(0,10).map(function(c){
     return '<div class="comment-item">'+
@@ -470,11 +504,21 @@ window.pushPost=function(){
 
   var posts=sfrom('classPosts_'+activeClass,[]);
   posts.push(post);
+  post.id = Date.now(); post.time = new Date().toISOString();
   sto('classPosts_'+activeClass,posts);
 
-  // Add to comments as tutor post
+  // Sync to DB class comments for cross-page visibility
+  if(typeof DB !== 'undefined'){
+    DB.pushClassComment(activeClass, {
+      author: name, memberID: currentUser ? (currentUser.memberID||'') : '',
+      role: 'tutor', text: '['+postType.toUpperCase()+'] '+(post.title||post.url||'').substring(0,100),
+      time: Date.now(), isTutor: true
+    });
+  }
+
+  // Add to local comments
   var comments=sfrom('comments_'+activeClass,[]);
-  comments.push({user:name,avatar:'🌿',msg:'['+postType.toUpperCase()+'] '+(post.title||post.url||post.content.substring(0,80)),time:post.time,role:'tutor'});
+  comments.push({user:name,avatar:'🌿',msg:'['+postType.toUpperCase()+'] '+(post.title||post.url||(post.content||'').substring(0,80)),time:post.time,role:'tutor'});
   sto('comments_'+activeClass,comments);
 
   showToast('Content pushed to class!');
