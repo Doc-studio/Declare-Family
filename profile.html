@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>My Profile | Declare Family</title>
+<script src="declare-db.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -390,15 +391,24 @@ input[type="file"]{display:none;}
 (function(){
 'use strict';
 
-/* ── helpers ─────────────────────────────────── */
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function session(){try{return JSON.parse(localStorage.getItem('loggedInUser'));}catch(e){return null;}}
-function getUsers(){try{return JSON.parse(localStorage.getItem('users'))||[];}catch(e){return[];}}
-function saveUsers(u){localStorage.setItem('users',JSON.stringify(u));}
-function isLeader(s){return s&&(s.role==='admin'||s.role==='leader');}
+/* ── AUTH ─────────────────────────────────── */
+if(typeof DB !== 'undefined' && !DB.isLoggedIn()){ window.location.href='login.html'; }
+var user = (typeof DB !== 'undefined' ? DB.currentUser() : null) ||
+           (function(){ try{ return JSON.parse(localStorage.getItem('loggedInUser')); }catch(e){ return null; } })();
+if(!user){ window.location.href='login.html'; }
 
-var user=session();
-if(!user){window.location.href='login.html';}
+/* ── RESPONSIVE ──────────────────────────────── */
+(function(){
+  function dl(){ document.body.setAttribute('data-layout', window.innerWidth < 768 ? 'mobile' : 'desktop'); }
+  dl(); window.addEventListener('resize', dl);
+  window.addEventListener('orientationchange', function(){ setTimeout(dl, 200); });
+})();
+
+/* ── helpers ─────────────────────────────────── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getUsers(){ return (typeof DB!=='undefined' ? DB.getUsers() : null) || (function(){ try{ return JSON.parse(localStorage.getItem('users'))||[]; }catch(e){ return []; } })(); }
+function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u)); }
+function isLeader(s){ return s && (s.role==='admin' || s.role==='leader'); }
 
 /* ── quotes ─────────────────────────────────── */
 var QUOTES=[
@@ -423,57 +433,51 @@ var RHEMAS=[
   '"Greater is He that is in you than he that is in the world." — 1 John 4:4'
 ];
 function setQuotes(){
-  var dayIdx=Math.floor(Date.now()/86400000);
-  var qEl=document.getElementById('quoteText'),tEl=document.getElementById('quoteTime');
-  var rEl=document.getElementById('dailyRhema');
-  if(qEl)qEl.textContent='✨ '+QUOTES[dayIdx%QUOTES.length];
-  if(rEl)rEl.textContent='"'+RHEMAS[dayIdx%RHEMAS.length]+'"';
-  if(tEl){var n=new Date();tEl.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+  var dayIdx = Math.floor(Date.now()/86400000);
+  var qEl = document.getElementById('quoteText'), tEl = document.getElementById('quoteTime');
+  var rEl = document.getElementById('dailyRhema');
+  if(qEl) qEl.textContent = '✨ ' + QUOTES[dayIdx % QUOTES.length];
+  if(rEl) rEl.textContent = RHEMAS[dayIdx % RHEMAS.length];
+  if(tEl){ var n = new Date(); tEl.textContent = n.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
 }
-setQuotes();setInterval(function(){var n=new Date();var tEl=document.getElementById('quoteTime');if(tEl)tEl.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});},60000);
-
-// Rotating quotes every 8s
-var qIdx=0;
+setQuotes();
+var qIdx = 0;
 setInterval(function(){
-  qIdx=(qIdx+1)%QUOTES.length;
-  var el=document.getElementById('quoteText');
-  if(el){el.style.opacity='0';setTimeout(function(){if(el){el.textContent='✨ '+QUOTES[qIdx];el.style.opacity='1';}},500);}
-},8000);
+  qIdx = (qIdx+1) % QUOTES.length;
+  var el = document.getElementById('quoteText');
+  if(el){ el.style.opacity='0'; setTimeout(function(){ if(el){ el.textContent='✨ '+QUOTES[qIdx]; el.style.opacity='1'; } }, 500); }
+}, 8000);
+setInterval(function(){ var n=new Date(); var tEl=document.getElementById('quoteTime'); if(tEl) tEl.textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }, 60000);
 
-/* ── momentum animation ──────────────────────── */
+/* ── momentum ──────────────────────────────── */
 function animateMomentum(target){
-  var current=0;
-  var el=document.getElementById('momentumVal');
-  var iv=setInterval(function(){
-    if(current>=target){clearInterval(iv);return;}
-    current++;if(el)el.textContent=current+'%';
-  },18);
+  var current=0; var el=document.getElementById('momentumVal');
+  var iv=setInterval(function(){ if(current>=target){clearInterval(iv);return;} current++; if(el) el.textContent=current+'%'; }, 18);
 }
 animateMomentum(82);
 
-/* ── load profile data ───────────────────────── */
-var PROFILE_KEY='profile_'+( user.memberID||user.email||'guest');
-function getProfile(){try{return JSON.parse(localStorage.getItem(PROFILE_KEY))||{};}catch(e){return {};}}
-function saveProfileData(data){localStorage.setItem(PROFILE_KEY,JSON.stringify(data));}
+/* ── load/save profile ──────────────────────── */
+var PROFILE_KEY = 'profile_' + (user.memberID || user.email || 'guest');
+function getProfile(){ try{ return JSON.parse(localStorage.getItem(PROFILE_KEY))||{}; }catch(e){ return {}; } }
+function saveProfileData(data){ localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); }
 
 function populateForm(){
-  var p=getProfile();
-  var fields={pName:'name',pPhone:'phone',pBirthday:'birthday',pGender:'gender',
-               pAbout:'about',pCountry:'country',pCounty:'county',
-               pProfession:'profession',pOccupation:'occupation',pPrivateNote:'privateNote'};
+  var p = getProfile();
+  var fields = {pName:'name',pPhone:'phone',pBirthday:'birthday',pGender:'gender',
+                pAbout:'about',pCountry:'country',pCounty:'county',
+                pProfession:'profession',pOccupation:'occupation',pPrivateNote:'privateNote'};
   Object.keys(fields).forEach(function(id){
-    var el=document.getElementById(id);if(el&&p[fields[id]])el.value=p[fields[id]];
+    var el = document.getElementById(id); if(el && p[fields[id]]) el.value = p[fields[id]];
   });
-  if(p.country)updateCounty(p.county);
+  if(p.country) updateCounty(p.county);
   updateCharCount();
-  // Notes
-  var notesEl=document.getElementById('personalNotes');
-  if(notesEl)notesEl.value=localStorage.getItem('notes_'+(user.memberID||user.email))||'';
+  var notesEl = document.getElementById('personalNotes');
+  if(notesEl) notesEl.value = localStorage.getItem('notes_'+(user.memberID||user.email)) || '';
 }
 
 /* ── county/region data ──────────────────────── */
-var COUNTIES={
-  Kenya:['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret (Uasin Gishu)','Machakos','Meru','Embu','Nyeri','Kilifi','Kakamega','Kisii','Migori','Homa Bay','Siaya','Vihiga','Bungoma','Trans Nzoia','West Pokot','Baringo','Laikipia','Nyandarua','Murang\'a','Kiambu','Kajiado','Narok','Kericho','Bomet','Nandi','Elgeyo Marakwet','Samburu','Isiolo','Marsabit','Mandera','Wajir','Garissa','Tana River','Lamu','Taita Taveta','Kwale','Makueni','Kitui','Tharaka Nithi','Kirinyaga','Nyamira','Turkana','Pokot','Other'],
+var COUNTIES = {
+  Kenya:['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret (Uasin Gishu)','Machakos','Meru','Embu','Nyeri','Kilifi','Kakamega','Kisii','Migori','Homa Bay','Siaya','Vihiga','Bungoma','Trans Nzoia','West Pokot','Baringo','Laikipia','Nyandarua',"Murang'a",'Kiambu','Kajiado','Narok','Kericho','Bomet','Nandi','Elgeyo Marakwet','Samburu','Isiolo','Marsabit','Mandera','Wajir','Garissa','Tana River','Lamu','Taita Taveta','Kwale','Makueni','Kitui','Tharaka Nithi','Kirinyaga','Nyamira','Turkana','Other'],
   Uganda:['Kampala','Wakiso','Mukono','Jinja','Mbale','Gulu','Mbarara','Lira','Arua','Other'],
   Tanzania:['Dar es Salaam','Arusha','Mwanza','Dodoma','Mbeya','Zanzibar','Other'],
   Rwanda:['Kigali','Northern Province','Southern Province','Eastern Province','Western Province'],
@@ -485,178 +489,185 @@ var COUNTIES={
   Canada:['Ontario','British Columbia','Quebec','Alberta','Manitoba','Other'],
   Other:['Other']
 };
-window.updateCounty=function(preselect){
-  var country=document.getElementById('pCountry').value;
-  var countyEl=document.getElementById('pCounty');
-  countyEl.innerHTML='<option value="">Select region</option>';
-  var list=COUNTIES[country]||['Other'];
+window.updateCounty = function(preselect){
+  var country = document.getElementById('pCountry').value;
+  var countyEl = document.getElementById('pCounty');
+  countyEl.innerHTML = '<option value="">Select region</option>';
+  var list = COUNTIES[country] || ['Other'];
   list.forEach(function(c){
-    var opt=document.createElement('option');opt.value=c;opt.textContent=c;
-    if(c===preselect)opt.selected=true;
+    var opt = document.createElement('option'); opt.value=c; opt.textContent=c;
+    if(c === preselect) opt.selected = true;
     countyEl.appendChild(opt);
   });
 };
 
-window.updateCharCount=function(){
-  var el=document.getElementById('pAbout'),cc=document.getElementById('charCount');
-  if(el&&cc)cc.textContent=el.value.length;
+window.updateCharCount = function(){
+  var el = document.getElementById('pAbout'), cc = document.getElementById('charCount');
+  if(el && cc) cc.textContent = el.value.length;
 };
 
 /* ── CROP ENGINE ─────────────────────────────── */
-var rawImg=new Image(),offsetX=0,offsetY=0,isDragging=false,startX,startY;
+var rawImg = new Image(), offsetX=0, offsetY=0, isDragging=false, startX, startY;
 
-window.initCrop=function(input){
-  if(input.files&&input.files[0]){
-    var reader=new FileReader();
-    reader.onload=function(e){
-      rawImg.onload=function(){
-        document.getElementById('cropOverlay').style.display='flex';
-        renderCanvas();
-      };
-      rawImg.src=e.target.result;
+window.initCrop = function(input){
+  if(input.files && input.files[0]){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      rawImg.onload = function(){ document.getElementById('cropOverlay').style.display='flex'; renderCanvas(); };
+      rawImg.src = e.target.result;
     };
     reader.readAsDataURL(input.files[0]);
   }
 };
 function renderCanvas(){
-  var cvs=document.getElementById('cropCanvas'),ctx=cvs.getContext('2d');
-  cvs.width=500;cvs.height=500;ctx.clearRect(0,0,500,500);
-  var scale=Math.max(500/rawImg.width,500/rawImg.height);
-  ctx.drawImage(rawImg,offsetX,offsetY,rawImg.width*scale,rawImg.height*scale);
+  var cvs = document.getElementById('cropCanvas'), ctx = cvs.getContext('2d');
+  cvs.width=500; cvs.height=500; ctx.clearRect(0,0,500,500);
+  var scale = Math.max(500/rawImg.width, 500/rawImg.height);
+  ctx.drawImage(rawImg, offsetX, offsetY, rawImg.width*scale, rawImg.height*scale);
 }
-var cvs=document.getElementById('cropCanvas');
-cvs.addEventListener('touchstart',function(e){isDragging=true;startX=e.touches[0].clientX-offsetX;startY=e.touches[0].clientY-offsetY;e.preventDefault();},{passive:false});
-cvs.addEventListener('touchmove',function(e){if(!isDragging)return;offsetX=e.touches[0].clientX-startX;offsetY=e.touches[0].clientY-startY;renderCanvas();e.preventDefault();},{passive:false});
-cvs.addEventListener('touchend',function(){isDragging=false;});
-cvs.addEventListener('mousedown',function(e){isDragging=true;startX=e.clientX-offsetX;startY=e.clientY-offsetY;});
-cvs.addEventListener('mousemove',function(e){if(!isDragging)return;offsetX=e.clientX-startX;offsetY=e.clientY-startY;renderCanvas();});
-cvs.addEventListener('mouseup',function(){isDragging=false;});
+var cvs = document.getElementById('cropCanvas');
+cvs.addEventListener('touchstart', function(e){ isDragging=true; startX=e.touches[0].clientX-offsetX; startY=e.touches[0].clientY-offsetY; e.preventDefault(); }, {passive:false});
+cvs.addEventListener('touchmove',  function(e){ if(!isDragging) return; offsetX=e.touches[0].clientX-startX; offsetY=e.touches[0].clientY-startY; renderCanvas(); e.preventDefault(); }, {passive:false});
+cvs.addEventListener('touchend',   function(){ isDragging=false; });
+cvs.addEventListener('mousedown',  function(e){ isDragging=true; startX=e.clientX-offsetX; startY=e.clientY-offsetY; });
+cvs.addEventListener('mousemove',  function(e){ if(!isDragging) return; offsetX=e.clientX-startX; offsetY=e.clientY-startY; renderCanvas(); });
+cvs.addEventListener('mouseup',    function(){ isDragging=false; });
 
-window.saveCroppedImage=function(){
-  var dataURL=document.getElementById('cropCanvas').toDataURL('image/jpeg',0.85);
-  document.getElementById('profileImg').src=dataURL;
-  // Store against memberID so it propagates everywhere
-  var key='photo_'+(user.memberID||user.email||'guest');
-  localStorage.setItem(key,dataURL);
+window.saveCroppedImage = function(){
+  var dataURL = document.getElementById('cropCanvas').toDataURL('image/jpeg', 0.85);
+  document.getElementById('profileImg').src = dataURL;
+  var key = 'photo_' + (user.memberID || user.email || 'guest');
+  localStorage.setItem(key, dataURL);
+  // Push update to DB user record
+  if(typeof DB !== 'undefined' && DB.updateUser) DB.updateUser(user.email, {hasPhoto: true});
   closeCrop();
 };
-window.closeCrop=function(){document.getElementById('cropOverlay').style.display='none';};
+window.closeCrop = function(){ document.getElementById('cropOverlay').style.display='none'; };
 
 /* ── SAVE PROFILE ────────────────────────────── */
-window.saveProfile=function(){
-  var data={
-    name:document.getElementById('pName').value.trim()||user.name,
-    phone:document.getElementById('pPhone').value.trim(),
-    birthday:document.getElementById('pBirthday').value.trim(),
-    gender:document.getElementById('pGender').value,
-    about:document.getElementById('pAbout').value.trim(),
-    country:document.getElementById('pCountry').value,
-    county:document.getElementById('pCounty').value,
-    profession:document.getElementById('pProfession').value.trim(),
-    occupation:document.getElementById('pOccupation').value,
-    privateNote:document.getElementById('pPrivateNote').value.trim(),
-    savedAt:new Date().toISOString()
+window.saveProfile = function(){
+  var data = {
+    name:        document.getElementById('pName').value.trim() || user.name,
+    phone:       document.getElementById('pPhone').value.trim(),
+    birthday:    document.getElementById('pBirthday').value.trim(),
+    gender:      document.getElementById('pGender').value,
+    about:       document.getElementById('pAbout').value.trim(),
+    country:     document.getElementById('pCountry').value,
+    county:      document.getElementById('pCounty').value,
+    profession:  document.getElementById('pProfession').value.trim(),
+    occupation:  document.getElementById('pOccupation').value,
+    privateNote: document.getElementById('pPrivateNote').value.trim(),
+    savedAt:     new Date().toISOString()
   };
   saveProfileData(data);
+  localStorage.setItem('notes_'+(user.memberID||user.email), document.getElementById('personalNotes').value);
 
-  // Persist notes separately
-  localStorage.setItem('notes_'+(user.memberID||user.email),document.getElementById('personalNotes').value);
-
-  // Update user record
-  var users=getUsers();
-  var idx=users.findIndex(function(u){return u.email===user.email;});
-  if(idx>=0){
-    users[idx].name=data.name||users[idx].name;
-    users[idx].profileComplete=true;
+  // Update users store
+  var users = getUsers();
+  var idx = users.findIndex(function(u){ return u.email===user.email; });
+  if(idx >= 0){
+    users[idx].name = data.name || users[idx].name;
+    users[idx].profileComplete = true;
+    users[idx].country = data.country;
+    users[idx].occupation = data.occupation;
     saveUsers(users);
   }
   // Update session
-  var sess=session();if(sess){sess.profileComplete=true;sess.name=data.name||sess.name;localStorage.setItem('loggedInUser',JSON.stringify(sess));}
+  var sess = (function(){ try{ return JSON.parse(localStorage.getItem('loggedInUser')); }catch(e){ return null; } })();
+  if(sess){ sess.profileComplete=true; sess.name=data.name||sess.name; localStorage.setItem('loggedInUser', JSON.stringify(sess)); }
 
-  // Mark profile setup done — so login won't redirect here again
-  localStorage.setItem('profileSetupDone_'+user.email,'true');
+  // Update DB
+  if(typeof DB !== 'undefined' && DB.updateUser){
+    DB.updateUser(user.email, {name:data.name, profileComplete:true, country:data.country, occupation:data.occupation});
+  }
 
-  // Show success
-  var panel=document.getElementById('successPanel');
-  var msg=document.getElementById('successMsg');
-  if(panel){panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'center'});}
+  localStorage.setItem('profileSetupDone_' + user.email, 'true');
+
+  var panel = document.getElementById('successPanel');
+  var msg   = document.getElementById('successMsg');
+  if(panel){ panel.style.display='block'; panel.scrollIntoView({behavior:'smooth', block:'center'}); }
   if(msg){
-    var isNew=!localStorage.getItem('_profileSavedBefore_'+user.email);
-    localStorage.setItem('_profileSavedBefore_'+user.email,'1');
-    msg.textContent=isNew?
-      'Welcome to the Declare Global Family, '+data.name+'! Your profile is set up. You can now explore the family.':
-      'Your profile has been updated successfully.';
+    var isNew = !localStorage.getItem('_profileSavedBefore_'+user.email);
+    localStorage.setItem('_profileSavedBefore_'+user.email, '1');
+    msg.textContent = isNew
+      ? 'Welcome to the Declare Global Family, '+data.name+'! Your profile is set up. You can now explore the family.'
+      : 'Your profile has been updated successfully.';
   }
 };
 
-/* ── CONNECTIONS ─────────────────────────────── */
-var CONN_KEY='connections_'+(user.memberID||user.email||'guest');
-function getMyConns(){try{return JSON.parse(localStorage.getItem(CONN_KEY))||[];}catch(e){return[];}}
-function saveMyConns(a){localStorage.setItem(CONN_KEY,JSON.stringify(a));}
-
-function updateConnectionUI(){
-  var conns=getMyConns();
-  var countEl=document.getElementById('connectCount');
-  if(countEl)countEl.textContent=conns.length+' Connection'+(conns.length!==1?'s':'');
-  renderConnectionsList();
+/* ── CONNECTIONS (uses DB) ─────────────────── */
+function getMyConns(){
+  if(typeof DB !== 'undefined') return DB.getConnections(user.email || user.memberID || '');
+  try{ return JSON.parse(localStorage.getItem('connections_'+(user.memberID||user.email)))||[]; }catch(e){ return []; }
 }
 
-function renderConnectionsList(){
-  var conns=getMyConns();var list=document.getElementById('connectionsList');if(!list)return;
-  if(!conns.length){list.innerHTML='<div style="padding:14px 16px;font-size:12px;color:#555;">No connections yet. Connect with members below.</div>';return;}
-  list.innerHTML=conns.map(function(c){
+function updateConnectionUI(){
+  var conns = getMyConns();
+  var countEl = document.getElementById('connectCount');
+  if(countEl) countEl.textContent = conns.length + ' Connection' + (conns.length!==1?'s':'');
+  renderConnectionsList(conns);
+}
+
+function renderConnectionsList(conns){
+  var list = document.getElementById('connectionsList'); if(!list) return;
+  if(!conns.length){
+    list.innerHTML = '<div style="padding:14px 16px;font-size:12px;color:#555;">No connections yet. Connect with members below.</div>';
+    return;
+  }
+  // Resolve names from users store
+  var users = getUsers();
+  list.innerHTML = conns.map(function(emailOrId){
+    var m = users.find(function(u){ return u.email===emailOrId || u.memberID===emailOrId; });
+    var name = m ? (m.name||'Member') : emailOrId;
+    var mid  = m ? (m.memberID||'') : '';
     return '<div class="conn-item">'+
-      '<div class="conn-avatar">'+esc((c.name||'?').charAt(0).toUpperCase())+'</div>'+
-      '<div class="conn-info"><div class="conn-name">'+esc(c.name||'Member')+'</div><div class="conn-id">'+esc(c.memberID||'')+'</div></div>'+
+      '<div class="conn-avatar">'+esc((name||'?').charAt(0).toUpperCase())+'</div>'+
+      '<div class="conn-info"><div class="conn-name">'+esc(name)+'</div><div class="conn-id">'+esc(mid)+'</div></div>'+
     '</div>';
   }).join('');
 }
 
-window.toggleConnectionsList=function(){
-  var list=document.getElementById('connectionsList');
-  if(list)list.style.display=list.style.display==='block'?'none':'block';
+window.toggleConnectionsList = function(){
+  var list = document.getElementById('connectionsList');
+  if(list) list.style.display = list.style.display==='block' ? 'none' : 'block';
 };
 
-window.connectMember=function(memberID,name,btn){
-  var conns=getMyConns();
-  if(conns.find(function(c){return c.memberID===memberID;})){return;}
-  conns.push({memberID:memberID,name:name,connectedAt:new Date().toISOString()});
-  saveMyConns(conns);
-
-  // Also update the other member's connection count
-  var theirKey='connections_'+memberID;
-  var theirConns=[];try{theirConns=JSON.parse(localStorage.getItem(theirKey))||[];}catch(e){}
-  if(!theirConns.find(function(c){return c.memberID===(user.memberID||user.email);})){
-    theirConns.push({memberID:user.memberID||'',name:user.name||'Member',connectedAt:new Date().toISOString()});
-    localStorage.setItem(theirKey,JSON.stringify(theirConns));
+window.connectMember = function(targetEmail, name, btn){
+  if(typeof DB !== 'undefined'){
+    DB.addConnection(user.email || user.memberID || 'guest', targetEmail);
+  } else {
+    var key = 'connections_'+(user.memberID||user.email||'guest');
+    var conns = []; try{ conns=JSON.parse(localStorage.getItem(key))||[]; }catch(e){}
+    if(!conns.includes(targetEmail)){ conns.push(targetEmail); localStorage.setItem(key, JSON.stringify(conns)); }
   }
-
-  if(btn){btn.textContent='✓ Connected';btn.classList.add('connected');btn.disabled=true;}
+  if(btn){ btn.textContent='✓ Connected'; btn.classList.add('connected'); btn.disabled=true; }
   updateConnectionUI();
 };
 
 function renderMembersGrid(){
-  var users=getUsers();
-  var grid=document.getElementById('membersGrid');
-  var countLabel=document.getElementById('memberCountLabel');
-  if(!grid)return;
-  // Filter out self
-  var others=users.filter(function(u){return u.email!==user.email;});
-  if(countLabel)countLabel.textContent=others.length+' registered member'+(others.length!==1?'s':'');
-  if(!others.length){grid.innerHTML='<div style="font-size:13px;color:#555;padding:20px 0;">No other members registered yet.</div>';return;}
-  var conns=getMyConns();
-  grid.innerHTML=others.map(function(m){
-    var isConn=conns.find(function(c){return c.memberID===m.memberID;});
-    var savedPhoto=m.memberID?localStorage.getItem('photo_'+m.memberID):null;
-    var avatarHTML=savedPhoto?
-      '<img src="'+savedPhoto+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 10px;">':
-      '<div class="mc-avatar">'+esc((m.name||'?').charAt(0).toUpperCase())+'</div>';
+  var users  = getUsers();
+  var grid   = document.getElementById('membersGrid');
+  var countLabel = document.getElementById('memberCountLabel');
+  if(!grid) return;
+  var others = users.filter(function(u){ return u.email !== user.email; });
+  if(countLabel) countLabel.textContent = others.length + ' registered member'+(others.length!==1?'s':'');
+  if(!others.length){
+    grid.innerHTML = '<div style="font-size:13px;color:#555;padding:20px 0;">No other members registered yet.</div>';
+    return;
+  }
+  var myConns = getMyConns();
+  grid.innerHTML = others.map(function(m){
+    var isConn = myConns.includes(m.email) || myConns.includes(m.memberID);
+    var savedPhoto = m.memberID ? localStorage.getItem('photo_'+m.memberID) : null;
+    var avatarHTML = savedPhoto
+      ? '<img src="'+savedPhoto+'" style="width:50px;height:50px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 10px;">'
+      : '<div class="mc-avatar">'+esc((m.name||'?').charAt(0).toUpperCase())+'</div>';
     return '<div class="member-card">'+
       avatarHTML+
       '<div class="mc-name">'+esc(m.name||'Member')+'</div>'+
       '<div class="mc-id">'+esc(m.memberID||m.role||'')+'</div>'+
       '<button class="connect-btn'+(isConn?' connected':'')+'" '+(isConn?'disabled':'')+
-        ' onclick="connectMember(\''+esc(m.memberID||m.email)+'\',\''+esc(m.name||'Member')+'\',this)">'+
+        ' onclick="connectMember(''+esc(m.email||m.memberID)+'',''+esc(m.name||'Member')+'',this)">'+
         (isConn?'✓ Connected':'Connect')+
       '</button>'+
     '</div>';
@@ -665,46 +676,41 @@ function renderMembersGrid(){
 
 /* ── POPULATE HEADER ─────────────────────────── */
 function populateHeader(){
-  var h=new Date().getHours();
-  var greet=h<12?'Good Morning':'h<18'?'Good Afternoon':'Good Evening';
-  if(h>=12&&h<18)greet='Good Afternoon';
-  else if(h>=18)greet='Good Evening';
-  var nameEl=document.getElementById('welcomeGreeting');
-  if(nameEl)nameEl.textContent='Hello there, '+(user.name||'Pioneer')+'!';
-  var subEl=document.getElementById('welcomeSub');
-  if(subEl)subEl.textContent='Welcome to the Declare Global Family. Your Member ID is: '+(user.memberID||'—');
-  var idEl=document.getElementById('headerMemberID');
-  if(idEl)idEl.textContent=user.memberID||'Loading...';
-  var mIdEl=document.getElementById('memberIDDisplay');
-  if(mIdEl)mIdEl.textContent=user.memberID||'';
-  var mNameEl=document.getElementById('memberNameDisplay');
-  if(mNameEl)mNameEl.textContent=user.name||'Your Name';
-  var roleEl=document.getElementById('roleBadge');
+  var nameEl = document.getElementById('welcomeGreeting');
+  if(nameEl) nameEl.textContent = 'Hello there, '+(user.name||'Pioneer')+'!';
+  var subEl = document.getElementById('welcomeSub');
+  if(subEl) subEl.textContent = 'Welcome to the Declare Global Family. Your Member ID is: '+(user.memberID||'—');
+  var idEl = document.getElementById('headerMemberID');
+  if(idEl) idEl.textContent = user.memberID || 'Loading...';
+  var mIdEl = document.getElementById('memberIDDisplay');
+  if(mIdEl) mIdEl.textContent = user.memberID || '';
+  var mNameEl = document.getElementById('memberNameDisplay');
+  if(mNameEl) mNameEl.textContent = user.name || 'Your Name';
+  var roleEl = document.getElementById('roleBadge');
   if(roleEl){
-    var role=(user.role||'member').toLowerCase();
-    roleEl.textContent=(role==='admin'?'SYSTEM ADMIN':role==='leader'?'VISION PIONEER':'MEMBER');
-    roleEl.className='member-role-badge '+(role==='admin'?'role-admin':role==='leader'?'role-leader':'role-member');
+    var role = (user.role||'member').toLowerCase();
+    roleEl.textContent = role==='admin' ? 'SYSTEM ADMIN' : role==='leader' ? 'VISION PIONEER' : 'MEMBER';
+    roleEl.className = 'member-role-badge ' + (role==='admin'?'role-admin':role==='leader'?'role-leader':'role-member');
   }
-  // Load saved photo
-  var photoKey='photo_'+(user.memberID||user.email||'guest');
-  var saved=localStorage.getItem(photoKey);
-  if(saved){var img=document.getElementById('profileImg');if(img)img.src=saved;}
+  var photoKey = 'photo_' + (user.memberID || user.email || 'guest');
+  var saved = localStorage.getItem(photoKey);
+  if(saved){ var img = document.getElementById('profileImg'); if(img) img.src = saved; }
 }
 
 /* ── AUTO-SAVE NOTES ─────────────────────────── */
-var notesEl=document.getElementById('personalNotes');
-if(notesEl)notesEl.addEventListener('input',function(){localStorage.setItem('notes_'+(user.memberID||user.email),this.value);});
+var notesEl = document.getElementById('personalNotes');
+if(notesEl) notesEl.addEventListener('input', function(){ localStorage.setItem('notes_'+(user.memberID||user.email), this.value); });
 
 /* ── INIT ────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded', function(){
   populateHeader();
   populateForm();
   updateConnectionUI();
   renderMembersGrid();
-
-  // Responsive
-  var doLayout=function(){document.body.setAttribute('data-layout',window.innerWidth<768?'mobile':'desktop');document.body.setAttribute('data-orient',window.innerWidth>window.innerHeight?'landscape':'portrait');};
-  doLayout();window.addEventListener('resize',doLayout);window.addEventListener('orientationchange',function(){setTimeout(doLayout,200);});
+  // Refresh members grid every 15s so newly registered members appear
+  setInterval(renderMembersGrid, 15000);
+  // DB heartbeat
+  if(typeof DB !== 'undefined') DB.heartbeat();
 });
 
 })();
